@@ -8,10 +8,6 @@
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <!-- AR.js を読み込む -->
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    <!-- A-Frame animation mixer component を読み込む -->
-    <script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/loaders/GLTFLoader.js"></script>
-    <script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/animation/AnimationMixer.js"></script>
     <title>任意のページタイトル</title>
   </head>
   <body style="margin: 0; overflow: hidden">
@@ -21,17 +17,37 @@
 	    
       <!-- 3DCGモデルを読み込む -->
       <a-assets>
-        <a-asset-item id="Logo" src="./OTK_Logo.glb"></a-asset-item>
+        <a-asset-item id="Logo" src="./OTK_LogoAll.glb"></a-asset-item>
       </a-assets>
 
       <!-- マーカーの.pattファイルを読み込む -->
       <a-marker type="pattern" url="./OTK_Logo_ARMarker_1080.patt">
-        <!-- 3Dモデルを呼び出し、アニメーションを自動再生 -->
-        <a-entity gltf-model="#Logo" animation-mixer></a-entity>
+        <!-- 3Dモデルを呼び出す -->
+        <a-entity gltf-model="#Logo"></a-entity>
       </a-marker>
 
       <!-- カメラを追加 -->
       <a-entity camera></a-entity>
+
+      <!-- マーカー認識状態を表示するテキスト -->
+      <a-text id="status" value="マーカー未検出" position="0 2 -2"></a-text>
     </a-scene>
+
+    <script>
+      // マーカー要素を取得
+      var marker = document.querySelector('a-marker');
+
+      // マーカーが認識されたときのイベントリスナーを追加
+      marker.addEventListener('markerFound', function() {
+        var status = document.querySelector('#status');
+        status.setAttribute('value', 'マーカー認識済');
+      });
+
+      // マーカーが見失われたときのイベントリスナーを追加
+      marker.addEventListener('markerLost', function() {
+        var status = document.querySelector('#status');
+        status.setAttribute('value', 'マーカー未検出');
+      });
+    </script>
   </body>
 </html>
