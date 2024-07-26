@@ -26,7 +26,7 @@
       <!-- カメラを追加 -->
       <a-entity camera></a-entity>
       <!-- マーカー認識状態を表示するテキスト -->
-      <a-entity id="status" text="value: マーカー未検出; color: #BBB; align: center; width: 6" position="0 0 -2"></a-entity>
+      <a-entity id="status" text="value: マーカー未検出; color: #BBB; align: center; width: 24" position="0 0 -2"></a-entity>
       <!-- マーカー画像を表示 -->
       <a-image id="markerHint" src="#markerImage" position="0 -1 -3" scale="0.5 0.5 0.5" visible="true"></a-image>
     </a-scene>
@@ -38,13 +38,13 @@
       // マーカーが認識されたときのイベントリスナーを追加
       marker.addEventListener('markerFound', function() {
         var status = document.querySelector('#status');
-        status.setAttribute('text', 'value: マーカー認識済; color: #BBB; align: center; width: 6');
+        status.setAttribute('text', 'value: マーカー認識済; color: #BBB; align: center; width: 24');
         markerHint.setAttribute('visible', 'false');
       });
       // マーカーが見失われたときのイベントリスナーを追加
       marker.addEventListener('markerLost', function() {
         var status = document.querySelector('#status');
-        status.setAttribute('text', 'value: マーカー未検出; color: #BBB; align: center; width: 6');
+        status.setAttribute('text', 'value: マーカー未検出; color: #BBB; align: center; width: 24');
         markerHint.setAttribute('visible', 'true');
       });
     </script>
