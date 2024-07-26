@@ -16,10 +16,10 @@
     <a-scene embedded arjs vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true;">
       <!-- 画像を読み込む -->
       <a-assets>
-        <img id="Logo" src="https://github.com/Tegakist/Tegakist/blob/main/WebAR/OTK_Logo_ARMarker_1080_B.png">
+        <img id="Logo" src="./OTK_Logo_ARMarker_1080_B.png">
       </a-assets>
       <!-- マーカーのディスクリプタファイルを読み込む -->
-      <a-nft type="nft" url="https://github.com/Tegakist/Tegakist/blob/main/WebAR/OTK_Logo_ARMarker_1080">
+      <a-nft type="nft" url="./OTK_Logo_ARMarker_1080">
         <!-- 画像を呼び出す -->
         <a-image src="#Logo"></a-image>
       </a-nft>
@@ -28,7 +28,7 @@
       <!-- マーカー認識状態を表示するテキスト -->
       <a-entity id="status" text="value: マーカー未検出; color: #BBB; align: center; width: 6" position="0 0 -2"></a-entity>
       <!-- マーカー画像を表示 -->
-      <a-image id="markerHint" src="#markerImage" position="0 -1.5 -3" scale="0.5 0.5 0.5" visible="false"></a-image>
+      <a-image id="markerHint" src="#markerImage" position="0 -1.5 -3" scale="0.5 0.5 0.5" visible="true"></a-image>
     </a-scene>
     <script>
       // マーカー要素を取得
