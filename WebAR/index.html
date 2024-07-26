@@ -8,22 +8,26 @@
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <!-- AR.js を読み込む -->
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <!-- A-Frame animation mixer component を読み込む -->
+    <script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://raw.githubusercontent.com/mrdoob/three.js/master/examples/js/animation/AnimationMixer.js"></script>
     <title>任意のページタイトル</title>
   </head>
   <body style="margin: 0; overflow: hidden">
 	  
     <!-- A-FrameにAR.jsを紐づけ、VRボタン非表示、深度バッファ追加 -->
-    <a-scene embedded arjs vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: True;">
+    <a-scene embedded arjs vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true;">
 	    
-      <!-- 画像を読み込む -->
+      <!-- 3DCGモデルを読み込む -->
       <a-assets>
-        <img id="Logo" src="./Logo.png">
+        <a-asset-item id="Logo" src="./OTK_LogoAll.glb"></a-asset-item>
       </a-assets>
 
       <!-- マーカーの.pattファイルを読み込む -->
       <a-marker type="pattern" url="./OTK_Logo_ARMarker_1080.patt">
-        <!-- 画像を呼び出す -->
-        <a-image src="#Logo"></a-image>
+        <!-- 3Dモデルを呼び出し、アニメーションを自動再生 -->
+        <a-entity gltf-model="#Logo" animation-mixer></a-entity>
       </a-marker>
 
       <!-- カメラを追加 -->
