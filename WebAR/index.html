@@ -18,10 +18,11 @@
       <!-- 3DCGモデルを読み込む -->
       <a-assets>
         <a-asset-item id="Logo" src="./OTK_LogoAll.glb"></a-asset-item>
+        <img id="markerImage" src="./OTK_Logo_ARMarker_1080.png">
       </a-assets>
 
       <!-- マーカーの.pattファイルを読み込む -->
-      <a-marker type="pattern" url="./OTK_Logo_ARMarker_1080.png">
+      <a-marker type="pattern" url="./OTK_Logo_ARMarker_1080.patt">
         <!-- 3Dモデルを呼び出す -->
         <a-entity gltf-model="#Logo"></a-entity>
       </a-marker>
@@ -31,22 +32,30 @@
 
       <!-- マーカー認識状態を表示するテキスト -->
       <a-text id="status" value="マーカー未検出" position="0 2 -2"></a-text>
+
+      <!-- マーカー画像を表示 -->
+      <a-image id="markerHint" src="#markerImage" position="0 1 -3" visible="false"></a-image>
     </a-scene>
 
     <script>
       // マーカー要素を取得
       var marker = document.querySelector('a-marker');
 
+      // マーカーヒント要素を取得
+      var markerHint = document.querySelector('#markerHint');
+
       // マーカーが認識されたときのイベントリスナーを追加
       marker.addEventListener('markerFound', function() {
         var status = document.querySelector('#status');
         status.setAttribute('value', 'マーカー認識済');
+        markerHint.setAttribute('visible', 'false');
       });
 
       // マーカーが見失われたときのイベントリスナーを追加
       marker.addEventListener('markerLost', function() {
         var status = document.querySelector('#status');
         status.setAttribute('value', 'マーカー未検出');
+        markerHint.setAttribute('visible', 'true');
       });
     </script>
   </body>
