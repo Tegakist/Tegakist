@@ -15,15 +15,15 @@
     <!-- A-FrameにAR.jsを紐づけ、VRボタン非表示、深度バッファ追加 -->
     <a-scene embedded arjs vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true;">
 	    
-      <!-- 3DCGモデルを読み込む -->
+      <!-- 画像を読み込む -->
       <a-assets>
-        <a-asset-item id="Logo" src="./OTK_LogoAll.glb"></a-asset-item>
+        <img id="Logo" src="./Logo.png">
       </a-assets>
 
       <!-- マーカーの.pattファイルを読み込む -->
       <a-marker type="pattern" url="./OTK_Logo_ARMarker_1080.patt">
-        <!-- 3Dモデルを呼び出す -->
-        <a-entity gltf-model="#Logo"></a-entity>
+        <!-- 画像を呼び出す -->
+        <a-image src="#Logo"></a-image>
       </a-marker>
 
       <!-- カメラを追加 -->
