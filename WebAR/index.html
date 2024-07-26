@@ -17,12 +17,12 @@
 	    
       <!-- 3DCGモデルを読み込む -->
       <a-assets>
-        <a-asset-item id="Logo" src="./OTK_LogoAll.glb"></a-asset-item>
+        <a-asset-item id="Logo" src="./OTK_Logo.glb"></a-asset-item>
         <img id="markerImage" src="./OTK_Logo_ARMarker_1080.png">
       </a-assets>
 
       <!-- マーカーの.pattファイルを読み込む -->
-      <a-marker type="pattern" url="./OTK_Logo_ARMarker_1080.patt">
+      <a-marker type="pattern" url="./OTK_Logo_ARMarker_1080.png">
         <!-- 3Dモデルを呼び出す -->
         <a-entity gltf-model="#Logo"></a-entity>
       </a-marker>
