@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- ビューポートを最適化 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <!-- 最新バージョンのA-Frameを読み込む -->
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
     <!-- AR.js を読み込む -->
@@ -11,49 +12,39 @@
     <title>任意のページタイトル</title>
   </head>
   <body style="margin: 0; overflow: hidden">
-	  
     <!-- A-FrameにAR.jsを紐づけ、VRボタン非表示、深度バッファ追加 -->
     <a-scene embedded arjs vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true;">
-	    
       <!-- 画像を読み込む -->
       <a-assets>
         <img id="Logo" src="./OTK_Logo_ARMarker_1080_B.png">
       </a-assets>
-
       <!-- マーカーのディスクリプタファイルを読み込む -->
       <a-nft type="nft" url="./OTK_Logo_ARMarker_1080">
         <!-- 画像を呼び出す -->
         <a-image src="#Logo"></a-image>
       </a-nft>
-
       <!-- カメラを追加 -->
       <a-entity camera></a-entity>
-
       <!-- マーカー認識状態を表示するテキスト -->
-      <a-entity id="status" text="value: マーカー未検出; color: #BBB; align: center;" position="0 2 -2"></a-entity>
-
+      <a-entity id="status" text="value: マーカー未検出; color: #BBB; align: center; width: 6" position="0 0 -2"></a-entity>
       <!-- マーカー画像を表示 -->
-      <a-image id="markerHint" src="#markerImage" position="0 1 -3" visible="true"></a-image>
+      <a-image id="markerHint" src="#markerImage" position="0 -1 -3" scale="0.5 0.5 0.5" visible="false"></a-image>
     </a-scene>
-
     <script>
       // マーカー要素を取得
       var marker = document.querySelector('a-nft');
-
       // マーカーヒント要素を取得
       var markerHint = document.querySelector('#markerHint');
-
       // マーカーが認識されたときのイベントリスナーを追加
       marker.addEventListener('markerFound', function() {
         var status = document.querySelector('#status');
-        status.setAttribute('text', 'value: マーカー認識済; color: #BBB; align: center;');
+        status.setAttribute('text', 'value: マーカー認識済; color: #BBB; align: center; width: 6');
         markerHint.setAttribute('visible', 'false');
       });
-
       // マーカーが見失われたときのイベントリスナーを追加
       marker.addEventListener('markerLost', function() {
         var status = document.querySelector('#status');
-        status.setAttribute('text', 'value: マーカー未検出; color: #BBB; align: center;');
+        status.setAttribute('text', 'value: マーカー未検出; color: #BBB; align: center; width: 6');
         markerHint.setAttribute('visible', 'true');
       });
     </script>
