@@ -25,12 +25,16 @@
       <a-assets>
         <img id="Logo" src="./OTK_Logo_ARMarker_1080.B.png">
       </a-assets>
-      <a-marker type="pattern" url="./pattern-a.png" emitevents>
+      <a-marker type="pattern" url="./pattern-a.patt">
+<!--
+      <a-marker type="pattern" url="./pattern-a.patt" emitevents>
+-->
         <a-image src="#Logo" position="0 0 0" scale="1 1 1" rotation="0 0 0"></a-image>
       </a-marker>
       <!-- カメラを追加 -->
       <a-entity camera></a-entity>
     </a-scene>
+<!--
     <script>
       var marker = document.querySelector('a-marker');
       var statusText = document.querySelector('#status');
@@ -49,5 +53,6 @@
         }, 1000);
       });
     </script>
+ -->
   </body>
 </html>
