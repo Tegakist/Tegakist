@@ -47,17 +47,18 @@
       var statusText = document.querySelector('#status');
       var markerImage = document.querySelector('#markerImage');
       marker.addEventListener('markerFound', function () {
+        statusText.innerText = 'マーカー検出済';
         markerImage.style.display = 'none';
       });
       marker.addEventListener('markerLost', function () {
-        statusText.innerText = 'Marker Lost';
+        statusText.innerText = 'マーカー未検出';
         markerImage.style.display = 'block';
       });
       window.addEventListener('load', function () {
         setTimeout(function () {
           statusText.innerText = '画像読込完了';
           setTimeout(function () {
-            statusText.innerText = 'Detecting Marker';
+            statusText.innerText = '';
           }, 1000);
         }, 1000);
       });
