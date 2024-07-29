@@ -27,5 +27,23 @@
       </a-marker>
       <a-entity camera></a-entity>
     </a-scene>
+    <script>
+      var marker = document.querySelector('a-marker');
+      var statusText = document.querySelector('#status');
+      marker.addEventListener('markerFound', function () {
+        statusText.innerText = '';
+      });
+      marker.addEventListener('markerLost', function () {
+        statusText.innerText = 'Marker Lost';
+      });
+      window.addEventListener('load', function () {
+        setTimeout(function () {
+          statusText.innerText = '画像読込完了';
+          setTimeout(function () {
+            statusText.innerText = 'Detecting Marker';
+          }, 1000);
+        }, 1000);
+      });
+    </script>
   </body>
 </html>
