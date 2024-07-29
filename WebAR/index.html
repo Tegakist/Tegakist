@@ -33,6 +33,9 @@
     <img id="markerImage" src="./OTK_Logo_ARMarker_1080.B.png">
     <!-- A-FrameにAR.jsを紐づけ、VRボタン非表示、深度バッファ追加 -->
     <a-scene embedded arjs vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true;">
+      <a-assets>
+        <img id="Logo" src="./OTK_Logo_ARMarker_1080.B.png">
+      </a-assets>
       <a-marker type="pattern" url="./pattern-a.patt" emitevents>
         <a-image src="#Logo" position="0 0 0" scale="1 1 1" rotation="0 0 0"></a-image>
       </a-marker>
@@ -42,17 +45,19 @@
     <script>
       var marker = document.querySelector('a-marker');
       var statusText = document.querySelector('#status');
+      var markerImage = document.querySelector('#markerImage');
       marker.addEventListener('markerFound', function () {
-        statusText.innerText = 'マーカー検出済';
+        markerImage.style.display = 'none';
       });
       marker.addEventListener('markerLost', function () {
-        statusText.innerText = 'マーカー未検出';
+        statusText.innerText = 'Marker Lost';
+        markerImage.style.display = 'block';
       });
       window.addEventListener('load', function () {
         setTimeout(function () {
           statusText.innerText = '画像読込完了';
           setTimeout(function () {
-            statusText.innerText = '';
+            statusText.innerText = 'Detecting Marker';
           }, 1000);
         }, 1000);
       });
