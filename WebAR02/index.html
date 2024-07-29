@@ -28,9 +28,11 @@
       var marker = document.querySelector('a-marker');
       var statusText = document.querySelector('#status');
       marker.addEventListener('markerFound', function () {
+        console.log('markerFound event fired'); // 追加
         statusText.innerText = '';
       });
       marker.addEventListener('markerLost', function () {
+        console.log('markerLost event fired'); // 追加
         statusText.innerText = '見失いました';
       });
     </script>
