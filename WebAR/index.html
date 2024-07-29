@@ -4,9 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- A-Frame を読み込む -->
     <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1.3.0/dist/aframe-master.min.js"></script>
-    <!-- AR.js を読み込む -->
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <title>任意のページタイトル</title>
     <style>
@@ -20,43 +18,28 @@
   </head>
   <body style="margin: 0; overflow: hidden">
     <div id="status">画像読込中</div>
-    <!-- ARシーンを開始します。AR.jsとA-Frameを紐づけ、VRモードのUIを無効にし、深度バッファを有効にします。 -->
     <a-scene embedded arjs vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true;">
-      <!-- アセット管理システムを開始します。これは、画像や音声などのアセットを一元管理するためのものです。 -->
       <a-assets>
-        <!-- マーカーとして使用する画像をアセットとして登録します。 -->
         <img id="Logo" src="./OTK_Logo_ARMarker_1080.B.png">
       </a-assets>
-      <!-- ARマーカーを定義します。type="pattern"は、パターンマーカーを使用することを示します。urlはパターンファイルのURLを指定します。emiteventsは、マーカーの検出・未検出時にイベントを発火することを示します。 -->
       <a-marker type="pattern" url="./pattern-a.patt" emitevents>
-        <!-- マーカー上に表示する画像を定義します。srcは画像のURL（ここでは先ほどアセットとして登録した画像を使用）、positionは画像の位置、scaleは画像のスケール、rotationは画像の回転を指定します。 -->
         <a-image src="#Logo" position="0 0 0" scale="1 1 1" rotation="0 0 0"></a-image>
       </a-marker>
-      <!-- カメラを定義します。これにより、ユーザーの視点がカメラになります。 -->
       <a-entity camera></a-entity>
     </a-scene>
     <script>
       var marker = document.querySelector('a-marker');
       var statusText = document.querySelector('#status');
-      <!-- マーカーが検出されたときのイベントリスナーを追加します。 -->
       marker.addEventListener('markerFound', function () {
-        <!-- マーカーが検出されたときはステータステキストを空にします。 -->
         statusText.innerText = '';
       });
-      <!-- マーカーが未検出になったときのイベントリスナーを追加します。 -->
       marker.addEventListener('markerLost', function () {
-        <!-- マーカーが未検出になったときはステータステキストを「Marker Lost」にします。 -->
         statusText.innerText = 'Marker Lost';
       });
-      <!-- ページの読み込みが完了したときのイベントリスナーを追加します。 -->
       window.addEventListener('load', function () {
-        <!-- 1秒後に実行する関数を設定します。 -->
         setTimeout(function () {
-          <!-- 1秒後にステータステキストを「画像読込完了」にします。 -->
           statusText.innerText = '画像読込完了';
-          <!-- さらに1秒後に実行する関数を設定します。 -->
           setTimeout(function () {
-            <!-- さらに1秒後にステータステキストを「Detecting Marker」にします。 -->
             statusText.innerText = 'Detecting Marker';
           }, 1000);
         }, 1000);
