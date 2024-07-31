@@ -49,7 +49,7 @@
     </style>
   </head>
   <body style="margin: 0; overflow: hidden">
-    <div id="status">Ver.2407311355</div>
+    <div id="status">Ver.2407311400</div>
     <img id="markerImage" src="pattern-a.png">
     <!-- シャッターボタンを追加 -->
     <button id="shutter-button"></button> <!-- 「📷」を削除しました -->
@@ -121,14 +121,14 @@
       // スクリーンショットを取る関数
       function takeScreenshot() {
         var canvas = document.createElement('canvas');
-        var video = document.querySelector('video');
-        var width = video.videoWidth;
-        var height = video.videoHeight;
+        var renderer = document.querySelector('a-scene').components.renderer; // AR.jsが使用しているレンダラーを取得
+        var width = renderer.getSize().width;
+        var height = renderer.getSize().height;
 
         canvas.width = width;
         canvas.height = height;
         var ctx = canvas.getContext('2d');
-        ctx.drawImage(video, 0, 0, width, height);
+        ctx.drawImage(renderer.domElement, 0, 0, width, height); // レンダラーのDOM要素（キャンバス）を描画
 
         return canvas.toDataURL('image/png');
       }
