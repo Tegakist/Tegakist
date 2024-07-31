@@ -30,74 +30,25 @@
         width: 200px; /* ここでマーカー画像の大きさを設定します */
         height: 200px; /* ここでマーカー画像の大きさを設定します */
       }
-      /* シャッターボタンのスタイルを追加 */
-      #shutter-button {
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: white;
-        border: none;
-        border-radius: 50%;
-        width: 60px;
-        height: 60px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        font-size: 30px;
-        line-height: 60px;
-        text-align: center;
-      }
     </style>
   </head>
   <body style="margin: 0; overflow: hidden">
-    <div id="status">Ver.2407311423</div>
+    <div id="status">Ver.2407311321</div>
     <img id="markerImage" src="pattern-a.png">
-    <!-- シャッターボタンを追加 -->
-    <button id="shutter-button"></button> <!-- 「📷」を削除しました -->
     <!-- A-FrameにAR.jsを紐づけ、VRボタン非表示、深度バッファ追加 -->
     <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; patternRatio: 0.90; detectionMode: mono_and_matrix; matrixCodeType: 3x3_PARITY65;" vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true;">
       <a-assets>
-        <img id="Logo" src="./a.png">
+        <a-asset-item id="Logo" src="./Logo.glb"></a-asset-item>
       </a-assets>
       <a-marker id="marker" type='pattern' url="./pattern-a.patt" emitevents>
+        <!-- a-imageをa-gltf-modelに変更し、srcを./Logo.glbに変更 -->
+        <a-gltf-model src="./Logo.glb" position="0 0 0" scale="1 1 1" rotation="-90 0 0"></a-gltf-model>
       </a-marker>
       <!-- カメラを追加 -->
       <a-entity camera></a-entity>
     </a-scene>
     
     <script>
-      // シャッターボタンをクリックしたときの処理
-      document.querySelector('#shutter-button').addEventListener('click', function() {
-        console.log('Shutter button clicked!'); // デバッグメッセージを出力
-        var screenshotDataUrl = takeScreenshot();
-        // ここでscreenshotDataUrlを使用してスクリーンショットを保存します
-        // 例えば新しいウィンドウで表示する場合は以下のようにします
-        // window.open(screenshotDataUrl, '_blank');
-        downloadImage(screenshotDataUrl, 'screenshot.png');
-      });
-
-      // スクリーンショットを取る関数
-      function takeScreenshot() {
-        var canvas = document.createElement('canvas');
-        var renderer = document.querySelector('a-scene').components.renderer; // AR.jsが使用しているレンダラーを取得
-        var width = renderer.getSize().width;
-        var height = renderer.getSize().height;
-
-        canvas.width = width;
-        canvas.height = height;
-        var ctx = canvas.getContext('2d');
-        ctx.drawImage(renderer.domElement, 0, 0, width, height); // レンダラーのDOM要素（キャンバス）を描画
-
-        return canvas.toDataURL('image/png');
-      }
-
-      // 画像をダウンロードする関数
-      function downloadImage(data, filename) {
-        var link = document.createElement('a');
-        link.href = data;
-        link.download = filename;
-        link.click();
-      }
-
       var marker = document.querySelector('#marker');
       var statusText = document.querySelector('#status');
       var markerImage = document.querySelector('#markerImage');
@@ -107,12 +58,6 @@
       marker.addEventListener('markerFound', function () {
         clearTimeout(markerLostTimeout);
         markerImage.style.display = 'none';
-        var image = document.createElement('a-image');
-        image.setAttribute('src', '#Logo');
-        image.setAttribute('position', '0 0 0');
-        image.setAttribute('scale', '1 1 1');
-        image.setAttribute('rotation', '-90 0 0');
-        marker.appendChild(image);
         imageDisplayed = true;
       });
 
@@ -141,7 +86,6 @@
           }, 0);
         }, 3000);
       });
-
     </script>
   </body>
 </html>
