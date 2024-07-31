@@ -21,7 +21,7 @@
   <body style="margin: 0; overflow: hidden">
     <div id="status">Ver.2407302059</div>
     <!-- A-FrameにAR.jsを紐づけ、VRボタン非表示、深度バッファ追加 -->
-    <a-scene embedded arjs vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true;">
+    <a-scene embedded arjs="debugUIEnabled: false; patternRatio=0.90" vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true;">
       <a-assets>
         <img id="Logo" src="./OTK_Logo_ARMarker_1080.B.png">
       </a-assets>
