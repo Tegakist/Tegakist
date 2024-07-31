@@ -25,11 +25,13 @@
         transform: translate(-50%, -50%);
         opacity: 0.5;
         display: none;
+        width: 200px; /* ここでマーカー画像の大きさを設定します */
+        height: 200px; /* ここでマーカー画像の大きさを設定します */
       }
     </style>
   </head>
   <body style="margin: 0; overflow: hidden">
-    <div id="status">Ver.2407311053</div>
+    <div id="status">Ver.2407311101</div>
     <img id="markerImage" src="pattern-a.png">
     <!-- A-FrameにAR.jsを紐づけ、VRボタン非表示、深度バッファ追加 -->
     <a-scene embedded arjs="debugUIEnabled: false; detectionMode: 'mono_and_matrix'; matrixCodeType: '4x4_BCH_13_5_5';" vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true;">
