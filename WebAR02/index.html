@@ -65,6 +65,38 @@
     </a-scene>
     
     <script>
+      // シャッターボタンをクリックしたときの処理
+      document.querySelector('#shutter-button').addEventListener('click', function() {
+        var screenshotDataUrl = takeScreenshot();
+        // ここでscreenshotDataUrlを使用してスクリーンショットを保存します
+        // 例えば新しいウィンドウで表示する場合は以下のようにします
+        // window.open(screenshotDataUrl, '_blank');
+        downloadImage(screenshotDataUrl, 'screenshot.png');
+      });
+
+      // スクリーンショットを取る関数
+      function takeScreenshot() {
+        var canvas = document.createElement('canvas');
+        var renderer = document.querySelector('a-scene').components.renderer; // AR.jsが使用しているレンダラーを取得
+        var width = renderer.getSize().width;
+        var height = renderer.getSize().height;
+
+        canvas.width = width;
+        canvas.height = height;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(renderer.domElement, 0, 0, width, height); // レンダラーのDOM要素（キャンバス）を描画
+
+        return canvas.toDataURL('image/png');
+      }
+
+      // 画像をダウンロードする関数
+      function downloadImage(data, filename) {
+        var link = document.createElement('a');
+        link.href = data;
+        link.download = filename;
+        link.click();
+      }
+
       var marker = document.querySelector('#marker');
       var statusText = document.querySelector('#status');
       var markerImage = document.querySelector('#markerImage');
@@ -109,37 +141,6 @@
         }, 3000);
       });
 
-      // シャッターボタンをクリックしたときの処理
-      document.querySelector('#shutter-button').addEventListener('click', function() {
-        var screenshotDataUrl = takeScreenshot();
-        // ここでscreenshotDataUrlを使用してスクリーンショットを保存します
-        // 例えば新しいウィンドウで表示する場合は以下のようにします
-        // window.open(screenshotDataUrl, '_blank');
-        downloadImage(screenshotDataUrl, 'screenshot.png');
-      });
-
-      // スクリーンショットを取る関数
-      function takeScreenshot() {
-        var canvas = document.createElement('canvas');
-        var renderer = document.querySelector('a-scene').components.renderer; // AR.jsが使用しているレンダラーを取得
-        var width = renderer.getSize().width;
-        var height = renderer.getSize().height;
-
-        canvas.width = width;
-        canvas.height = height;
-        var ctx = canvas.getContext('2d');
-        ctx.drawImage(renderer.domElement, 0, 0, width, height); // レンダラーのDOM要素（キャンバス）を描画
-
-        return canvas.toDataURL('image/png');
-      }
-
-      // 画像をダウンロードする関数
-      function downloadImage(data, filename) {
-        var link = document.createElement('a');
-        link.href = data;
-        link.download = filename;
-        link.click();
-      }
     </script>
   </body>
 </html>
