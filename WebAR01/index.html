@@ -1,73 +1,50 @@
 <!DOCTYPE html>
 <html lang="ja">
   <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- A-Frame を読み込む -->
-    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-    <!-- AR.js を読み込む -->
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    <title>Test</title>
-    <style>
-      #status {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-    </style>
+    <!-- 省略 -->
   </head>
   <body style="margin: 0; overflow: hidden">
-    <div id="status">Ver.2407302328</div>
-    <!-- A-FrameにAR.jsを紐づけ、VRボタン非表示、深度バッファ追加 -->
-    <a-scene embedded arjs="debugUIEnabled: false;" vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true;">
-      <a-assets>
-        <img id="Logo" src="./a.png">
-      </a-assets>
-      <a-marker id="marker" type='pattern' url="./pattern-a.patt" emitevents>
-      </a-marker>
-      <!-- カメラを追加 -->
-      <a-entity camera></a-entity>
-    </a-scene>
-    
-<script>
-  var marker = document.querySelector('#marker');
-  var statusText = document.querySelector('#status');
-  var imageDisplayed = false;
+    <div id="status">Ver.2407310917</div>
+    <img id="markerImage" src="pattern-a.png" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.5;" />
+    <!-- 省略 -->
+    <script>
+      var marker = document.querySelector('#marker');
+      var statusText = document.querySelector('#status');
+      var markerImage = document.querySelector('#markerImage');
+      var imageDisplayed = false;
 
-  marker.addEventListener('markerFound', function () {
-    statusText.innerText = '';
-    var image = document.createElement('a-image');
-    image.setAttribute('src', '#Logo');
-    image.setAttribute('position', '0 0 0');
-    image.setAttribute('scale', '1 1 1');
-    image.setAttribute('rotation', '-90 0 0');
-    marker.appendChild(image);
-    imageDisplayed = true;
-  });
+      marker.addEventListener('markerFound', function () {
+        statusText.innerText = '';
+        markerImage.style.display = 'none';
+        var image = document.createElement('a-image');
+        image.setAttribute('src', '#Logo');
+        image.setAttribute('position', '0 0 0');
+        image.setAttribute('scale', '1 1 1');
+        image.setAttribute('rotation', '-90 0 0');
+        marker.appendChild(image);
+        imageDisplayed = true;
+      });
 
-  marker.addEventListener('markerLost', function () {
-    statusText.innerText = 'Marker Lost';
-    setTimeout(function () {
-      if (!imageDisplayed) {
-        while (marker.firstChild) {
-          marker.removeChild(marker.firstChild);
-        }
-      }
-    }, 3000); // 3秒間待つ
-    imageDisplayed = false;
-  });
+      marker.addEventListener('markerLost', function () {
+        statusText.innerText = 'Marker Lost';
+        setTimeout(function () {
+          if (!imageDisplayed) {
+            while (marker.firstChild) {
+              marker.removeChild(marker.firstChild);
+            }
+          }
+        }, 3000); // 3秒間待つ
+        imageDisplayed = false;
+      });
 
-  window.addEventListener('load', function () {
-    setTimeout(function () {
-      statusText.innerText = '画像読込完了';
-      setTimeout(function () {
-        statusText.innerText = 'Detecting Marker';
-      }, 1000);
-    }, 3000);
-  });
-</script>
-
+      window.addEventListener('load', function () {
+        setTimeout(function () {
+          statusText.innerText = '画像読込完了';
+          setTimeout(function () {
+            markerImage.style.display = 'block';
+          }, 1000);
+        }, 3000);
+      });
+    </script>
   </body>
 </html>
