@@ -23,7 +23,7 @@
     <div id="version">Ver.1.0</div>
     <script>
         // バージョン番号を指定
-        var versionNumber = "2408011800";
+        var versionNumber = "2408011801";
         document.getElementById("version").innerText = "Ver." + versionNumber;
 
         // バージョン表示を3秒間表示
@@ -37,7 +37,7 @@
 
         // ARToolkitのコンテキストを初期化
         var arToolkitContext = new THREEx.ArToolkitContext({
-            cameraParametersUrl: './camera_para.dat', 
+            cameraParametersUrl: 'camera_para.dat', 
             detectionMode: 'mono'
         });
 
@@ -89,7 +89,7 @@
 
         var arMarkerControls = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
             type: 'pattern',
-            patternUrl: './pattern-a.patt'
+            patternUrl: 'pattern-a.patt'
         });
 
         // マーカー上にキューブを追加
