@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ARToolkit5 WebAR Example</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.rawgit.com/artoolkit/jsartoolkit5/master/build/artoolkit.min.js"></script>
+    <script src="https://cdn.rawgit.com/artoolkit/jsartoolkit5/master/build/artoolkit.api.js"></script>
+    <script src="https://cdn.rawgit.com/artoolkit/jsartoolkit5/master/build/artoolkit.three.js"></script>
+</head>
+<body>
+    <script>
+        // ARToolkitのコンテキストを初期化
+        var arToolkitContext = new THREEx.ArToolkitContext({
+            cameraParametersUrl: 'data/camera_para.dat',
+            detectionMode: 'mono'
+        });
+
+        // ARToolkitのソースを初期化
+        var arToolkitSource = new THREEx.ArToolkitSource({
+            sourceType: 'webcam'
+        });
+
+        arToolkitSource.init(function onReady() {
+            onResize();
+        });
+
+        // ウィンドウサイズ変更時の処理
+        window.addEventListener('resize', function() {
+            onResize();
+        });
+
+        function onResize() {
+            arToolkitSource.onResizeElement();
+            arToolkitSource.copyElementSizeTo(renderer.domElement);
+            if (arToolkitContext.arController !== null) {
+                arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas);
+            }
+        }
+
+        // シーンを作成
+        var scene = new THREE.Scene();
+
+        // カメラを作成
+        var camera = new THREE.Camera();
+        scene.add(camera);
+
+        // レンダラーを作成
+        var renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            alpha: true
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // ARToolkitのコンテキストを初期化
+        arToolkitContext.init(function onCompleted() {
+            camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix());
+        });
+
+        // マーカーを作成
+        var markerRoot = new THREE.Group();
+        scene.add(markerRoot);
+
+        var arMarkerControls = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
+            type: 'pattern',
+            patternUrl: 'data/patt.hiro'
+        });
+
+        // マーカー上にキューブを追加
+        var geometry = new THREE.BoxGeometry(1, 1, 1);
+        var material = new THREE.MeshNormalMaterial();
+        var cube = new THREE.Mesh(geometry, material);
+        markerRoot.add(cube);
+
+        // シーンをレンダリング
+        function render() {
+            requestAnimationFrame(render);
+            if (arToolkitSource.ready === false) return;
+            arToolkitContext.update(arToolkitSource.domElement);
+            markerRoot.visible = camera.visible;
+            renderer.render(scene, camera);
+        }
+
+        render();
+    </script>
+</body>
+</html>
