@@ -20,14 +20,14 @@
 <body style='margin: 0; overflow: hidden;'>
     <div id="version">Ver.1.0</div>
     <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; patternRatio: 0.90; detectionMode: mono_and_matrix; matrixCodeType: 3x3_PARITY65;" vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true;">
-        <a-marker type='pattern' url='./pattern-a.patt' emitevents>
+        <a-marker type='pattern' url='./pattern-a.patt' emitevents markerhandler>
             <a-box position='0 0.5 0' material='color: yellow;' visible="false"></a-box>
         </a-marker>
         <a-entity camera></a-entity>
     </a-scene>
     <script>
         // バージョン番号を指定
-        var versionNumber = "2408011920"; // ここでバージョン番号を指定
+        var versionNumber = "2408011930"; // ここでバージョン番号を指定
         document.getElementById("version").innerText = "Ver." + versionNumber;
 
         // バージョン表示を3秒間表示
