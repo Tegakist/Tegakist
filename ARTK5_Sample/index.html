@@ -6,9 +6,34 @@
     <script src="https://cdn.rawgit.com/artoolkit/jsartoolkit5/master/build/artoolkit.min.js"></script>
     <script src="https://cdn.rawgit.com/artoolkit/jsartoolkit5/master/build/artoolkit.api.js"></script>
     <script src="https://cdn.rawgit.com/artoolkit/jsartoolkit5/master/build/artoolkit.three.js"></script>
+    <style>
+        #version {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <script>
+        // バージョン番号を指定
+        var versionNumber = "2408011625";
+        document.getElementById("version").innerText = "Ver." + versionNumber;
+
+        // バージョン表示を3秒間表示
+        window.onload = function() {
+            var versionDiv = document.getElementById("version");
+            versionDiv.style.display = "block";
+            setTimeout(function() {
+                versionDiv.style.display = "none";
+            }, 3000);
+        };
+
         // ARToolkitのコンテキストを初期化
         var arToolkitContext = new THREEx.ArToolkitContext({
             cameraParametersUrl: 'camera_para.dat',
