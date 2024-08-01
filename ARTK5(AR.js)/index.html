@@ -21,13 +21,13 @@
     <div id="version">Ver.1.0</div>
     <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; patternRatio: 0.90; detectionMode: mono_and_matrix; matrixCodeType: 3x3_PARITY65;" vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true;">
         <a-marker type='pattern' url='./pattern-a.patt' emitevents markerhandler>
-            <a-box position='0 0.5 0' material='color: yellow;' visible="true"></a-box>
+            <a-box position='0 0.5 0' material='color: yellow;' visible="false"></a-box>
         </a-marker>
         <a-entity camera></a-entity>
     </a-scene>
     <script>
         // バージョン番号を指定
-        var versionNumber = "2408011851"; // ここでバージョン番号を指定
+        var versionNumber = "2408011854"; // ここでバージョン番号を指定
         document.getElementById("version").innerText = "Ver." + versionNumber;
 
         // バージョン表示を3秒間表示
@@ -48,6 +48,8 @@
 
                 marker.addEventListener('markerFound', () => {
                     box.setAttribute('visible', true);
+                    lastPosition.copy(marker.object3D.position);
+                    lastRotation.copy(marker.object3D.quaternion);
                 });
 
                 marker.addEventListener('markerLost', () => {
@@ -55,26 +57,6 @@
                     box.object3D.position.copy(lastPosition);
                     box.object3D.quaternion.copy(lastRotation);
                 });
-
-                this.el.sceneEl.addEventListener('markerFound', () => {
-                    lastPosition.copy(box.object3D.position);
-                    lastRotation.copy(box.object3D.quaternion);
-                });
-
-                this.el.sceneEl.addEventListener('markerLost', () => {
-                    box.setAttribute('visible', true);
-                });
-            },
-            tick: function () {
-                const marker = this.el;
-                const box = document.querySelector('a-box');
-                if (marker.object3D.visible) {
-                    lastPosition.copy(marker.object3D.position);
-                    lastRotation.copy(marker.object3D.quaternion);
-                } else {
-                    box.object3D.position.copy(lastPosition);
-                    box.object3D.quaternion.copy(lastRotation);
-                }
             }
         });
     </script>
