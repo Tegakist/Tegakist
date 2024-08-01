@@ -23,7 +23,7 @@
     <div id="version">Ver.1.0</div>
     <script>
         // バージョン番号を指定
-        var versionNumber = "2408011646";
+        var versionNumber = "2408011701";
         document.getElementById("version").innerText = "Ver." + versionNumber;
 
         // バージョン表示を3秒間表示
@@ -37,7 +37,7 @@
 
         // ARToolkitのコンテキストを初期化
         var arToolkitContext = new THREEx.ArToolkitContext({
-            cameraParametersUrl: './camera_para.dat', // パスを修正
+            cameraParametersUrl: './camera_para.dat', 
             detectionMode: 'mono'
         });
 
@@ -98,12 +98,27 @@
         var cube = new THREE.Mesh(geometry, material);
         markerRoot.add(cube);
 
+        // マーカーの最後の位置と回転を保持する変数
+        var lastMarkerPosition = new THREE.Vector3();
+        var lastMarkerRotation = new THREE.Quaternion();
+
         // シーンをレンダリング
         function render() {
             requestAnimationFrame(render);
             if (arToolkitSource.ready === false) return;
             arToolkitContext.update(arToolkitSource.domElement);
-            markerRoot.visible = camera.visible;
+
+            // マーカーが見つかった場合、位置と回転を更新
+            if (markerRoot.visible) {
+                lastMarkerPosition.copy(markerRoot.position);
+                lastMarkerRotation.copy(markerRoot.quaternion);
+            } else {
+                // マーカーが見失われた場合、最後の位置と回転を使用
+                markerRoot.position.copy(lastMarkerPosition);
+                markerRoot.quaternion.copy(lastMarkerRotation);
+                markerRoot.visible = true; // マーカーが見失われても表示を続ける
+            }
+
             renderer.render(scene, camera);
         }
 
