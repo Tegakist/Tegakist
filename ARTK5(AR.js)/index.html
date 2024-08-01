@@ -27,7 +27,7 @@
     </a-scene>
     <script>
         // バージョン番号を指定
-        var versionNumber = "2408011854"; // ここでバージョン番号を指定
+        var versionNumber = "2408011839"; // ここでバージョン番号を指定
         document.getElementById("version").innerText = "Ver." + versionNumber;
 
         // バージョン表示を3秒間表示
@@ -56,6 +56,15 @@
                     box.setAttribute('visible', true);
                     box.object3D.position.copy(lastPosition);
                     box.object3D.quaternion.copy(lastRotation);
+                });
+
+                this.el.sceneEl.addEventListener('markerFound', () => {
+                    lastPosition.copy(box.object3D.position);
+                    lastRotation.copy(box.object3D.quaternion);
+                });
+
+                this.el.sceneEl.addEventListener('markerLost', () => {
+                    box.setAttribute('visible', true);
                 });
             }
         });
