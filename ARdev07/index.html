@@ -1,1 +1,91 @@
 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>A-Frame WebAR Example</title>
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
+    <style>
+        #version {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-family: 'Yu Gothic', sans-serif;
+            color: gray;
+            opacity: 0.5;
+            visibility: visible; 
+        }
+    </style>
+</head>
+<body style='margin: 0; overflow: hidden;'>
+    <div id="version">Ver.1.0</div>
+
+    <script>
+        //////////////////// Ver. ////////////////////
+        var versionNumber = "2408021404"; 
+        document.getElementById("version").innerText = "Ver." + versionNumber;
+    </script>
+    
+<!-- シーン -->
+    <a-scene
+        embedded
+        arjs="
+            sourceType: webcam;
+            debugUIEnabled: false;
+            patternRatio: 0.90;
+            detectionMode: mono_and_matrix;
+            matrixCodeType: 3x3_PARITY65;
+            "
+        vr-mode-ui="enabled: false;"
+        renderer="logarithmicDepthBuffer: true;"
+    >
+<!-- マーカーパターン
+    例）パターン：type="pattern" url="pattern-a.patt"
+-->　　
+        <a-marker 
+            type="pattern" 
+            url="pattern-a.patt"
+        >
+<!-- 表示するオブジェクト
+    例）ボックス：<a-box position="0 0.5 0" material="color: red; opacity: 0.5;"></a-box>
+-->
+            <a-box position="0 0.5 0" material="color: red; opacity: 0.5;" smooth-movement="factor: 0.01"></a-box>
+        </a-marker>
+        <a-entity camera></a-entity>
+    </a-scene>
+
+    <script>
+        AFRAME.registerComponent('smooth-movement', {
+            schema: {
+                factor: {type: 'number', default: 0.1}
+            },
+            init: function () {
+                this.previousPosition = new THREE.Vector3();
+                this.previousRotation = new THREE.Euler();
+            },
+            tick: function () {
+                var el = this.el;
+                var currentPosition = el.object3D.position;
+                var currentRotation = el.object3D.rotation;
+
+                // 平滑化
+                currentPosition.x = this.previousPosition.x + (currentPosition.x - this.previousPosition.x) * this.data.factor;
+                currentPosition.y = this.previousPosition.y + (currentPosition.y - this.previousPosition.y) * this.data.factor;
+                currentPosition.z = this.previousPosition.z + (currentPosition.z - this.previousPosition.z) * this.data.factor;
+
+                currentRotation.x = this.previousRotation.x + (currentRotation.x - this.previousRotation.x) * this.data.factor;
+                currentRotation.y = this.previousRotation.y + (currentRotation.y - this.previousRotation.y) * this.data.factor;
+                currentRotation.z = this.previousRotation.z + (currentRotation.z - this.previousRotation.z) * this.data.factor;
+
+                // 更新
+                this.previousPosition.copy(currentPosition);
+                this.previousRotation.copy(currentRotation);
+            }
+        });
+    </script>
+</body>
+</html>
+
