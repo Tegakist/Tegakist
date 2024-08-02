@@ -24,7 +24,7 @@
 
     <script>
         //////////////////// Ver. ////////////////////
-        var versionNumber = "2408021523"; 
+        var versionNumber = "2408021528"; 
         document.getElementById("version").innerText = "Ver." + versionNumber;
     </script>
     
@@ -100,21 +100,9 @@
             var marker = evt.target;
             var object = marker.querySelector('#box');
             object.setAttribute('visible', true);
-            object.setAttribute('position', object.object3D.position);
-            object.setAttribute('rotation', object.object3D.rotation);
+            object.setAttribute('position', object.object3D.position.clone());
+            object.setAttribute('rotation', object.object3D.rotation.clone());
         });
-
-        // マーカーを見失った後もオブジェクトを表示し続ける
-        AFRAME.registerComponent('keep-visible', {
-            init: function () {
-                var el = this.el;
-                el.addEventListener('markerLost', function () {
-                    el.setAttribute('visible', true);
-                });
-            }
-        });
-
-        document.querySelector('#box').setAttribute('keep-visible', '');
     </script>
 </body>
 </html>
