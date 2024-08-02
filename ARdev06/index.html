@@ -41,12 +41,19 @@
             patternRatio: 0.90;
             detectionMode: mono_and_matrix;
             matrixCodeType: 3x3_PARITY65;
-        "
+            "
         vr-mode-ui="enabled: false;"
         renderer="logarithmicDepthBuffer: true;"
     >
-        <a-marker preset="custom" type="pattern" url="pattern-a.patt">
+        <a-marker 
+            preset="custom" 
+            type="pattern" 
+            url="pattern-a.patt"
+        >
+////////// 表示する画像・オブジェクト・ビデオ //////////
+//////////////////// 例）ボックス表示：<a-box position="0 0.5 0" material="color: red; opacity: 0.5;"></a-box> //
             <a-box position="0 0.5 0" material="color: red; opacity: 0.5;"></a-box>
+            
         </a-marker>
         <a-entity camera></a-entity>
     </a-scene>
