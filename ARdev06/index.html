@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Three.js WebAR Example</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/three.js/build/ar.js"></script>
+    <title>A-Frame WebAR Example</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
     <style>
         #version {
             position: fixed;
@@ -21,7 +21,7 @@
     <div id="version">Ver.1.0</div>
     <script>
         // バージョン番号を指定
-        var versionNumber = "2408021105"; // ここでバージョン番号を指定
+        var versionNumber = "2408021115"; // ここでバージョン番号を指定
         document.getElementById("version").innerText = "Ver." + versionNumber;
 
         // バージョン表示を3秒間表示
@@ -33,67 +33,11 @@
             }, 3000);
         };
     </script>
-    <script>
-        // WebARの設定
-        var scene = new THREE.Scene();
-        var camera = new THREE.Camera();
-        scene.add(camera);
-
-        var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
-
-        var arToolkitSource = new THREE.ArToolkitSource({
-            sourceType: 'webcam'
-        });
-
-        arToolkitSource.init(function onReady() {
-            onResize();
-        });
-
-        window.addEventListener('resize', function() {
-            onResize();
-        });
-
-        var arToolkitContext = new THREE.ArToolkitContext({
-            cameraParametersUrl: 'https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/three.js/data/camera_para.dat',
-            detectionMode: 'mono'
-        });
-
-        arToolkitContext.init(function onCompleted() {
-            camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix());
-        });
-
-        var markerRoot = new THREE.Group();
-        scene.add(markerRoot);
-
-        var markerControls = new THREE.ArMarkerControls(arToolkitContext, markerRoot, {
-            type: 'pattern',
-            patternUrl: 'pattern-a.patt'
-        });
-
-        var geometry = new THREE.BoxGeometry(1, 1, 1);
-        var material = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.5 });
-        var cube = new THREE.Mesh(geometry, material);
-        cube.position.y = 0.5;
-        markerRoot.add(cube);
-
-        function onResize() {
-            arToolkitSource.onResizeElement();
-            arToolkitSource.copyElementSizeTo(renderer.domElement);
-            if (arToolkitContext.arController !== null) {
-                arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas);
-            }
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            if (arToolkitSource.ready === false) return;
-            arToolkitContext.update(arToolkitSource.domElement);
-            renderer.render(scene, camera);
-        }
-
-        animate();
-    </script>
+    <a-scene embedded arjs>
+        <a-marker preset="custom" type="pattern" url="pattern-a.patt">
+            <a-box position="0 0.5 0" material="color: red; opacity: 0.5;"></a-box>
+        </a-marker>
+        <a-entity camera></a-entity>
+    </a-scene>
 </body>
 </html>
