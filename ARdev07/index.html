@@ -43,7 +43,7 @@
 
     <script>
         //////////////////// Ver. ////////////////////
-        var versionNumber = "2408021623"; 
+        var versionNumber = "2408021648"; 
         document.getElementById("version").innerText = "Ver." + versionNumber;
     </script>
     
@@ -126,8 +126,7 @@
             var marker = evt.target;
             var object = marker.querySelector('#box');
             object.setAttribute('visible', true);
-            object.object3D.position.copy(marker.object3D.position);
-            object.object3D.rotation.copy(marker.object3D.rotation);
+            
             markerVisible = true;
             document.getElementById('markerStatus').innerText = "Marker Status: Detected";
         });
