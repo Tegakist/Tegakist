@@ -24,7 +24,7 @@
 
     <script>
         //////////////////// Ver. ////////////////////
-        var versionNumber = "2408021510"; 
+        var versionNumber = "2408021520"; 
         document.getElementById("version").innerText = "Ver." + versionNumber;
     </script>
     
@@ -52,7 +52,7 @@
 <!-- 表示するオブジェクト
     例）ボックス：<a-box position="0 0.5 0" material="color: red; opacity: 0.5;"></a-box>
 -->
-            <a-box position="0 0.5 0" material="color: red; opacity: 0.5;" smooth-movement="factor: 0.01"></a-box>
+            <a-box id="box" position="0 0.5 0" material="color: red; opacity: 0.5;" smooth-movement="factor: 0.01"></a-box>
         </a-marker>
         <a-entity camera></a-entity>
     </a-scene>
@@ -89,7 +89,7 @@
         // マーカー検知時及び再検知時にオブジェクト表示を即時更新
         document.querySelector('a-marker').addEventListener('markerFound', function (evt) {
             var marker = evt.target;
-            var object = marker.querySelector('a-box');
+            var object = marker.querySelector('#box');
             object.setAttribute('visible', true);
             object.object3D.position.copy(marker.object3D.position);
             object.object3D.rotation.copy(marker.object3D.rotation);
@@ -98,8 +98,10 @@
         // マーカーを見失う直前の位置でオブジェクトを空間上に留める
         document.querySelector('a-marker').addEventListener('markerLost', function (evt) {
             var marker = evt.target;
-            var object = marker.querySelector('a-box');
+            var object = marker.querySelector('#box');
             object.setAttribute('visible', true);
+            object.setAttribute('position', object.object3D.position);
+            object.setAttribute('rotation', object.object3D.rotation);
         });
     </script>
 </body>
