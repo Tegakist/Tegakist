@@ -43,7 +43,7 @@
 
     <script>
         //////////////////// Ver. ////////////////////
-        var versionNumber = "2408021614"; 
+        var versionNumber = "2408021623"; 
         document.getElementById("version").innerText = "Ver." + versionNumber;
     </script>
     
@@ -79,6 +79,7 @@
     <script>
         var lastPosition = new THREE.Vector3();
         var lastRotation = new THREE.Euler();
+        var markerVisible = false;
 
         AFRAME.registerComponent('smooth-movement', {
             schema: {
@@ -93,22 +94,24 @@
                 var currentPosition = el.object3D.position;
                 var currentRotation = el.object3D.rotation;
 
-                // 平滑化
-                currentPosition.x = this.previousPosition.x + (currentPosition.x - this.previousPosition.x) * this.data.factor;
-                currentPosition.y = this.previousPosition.y + (currentPosition.y - this.previousPosition.y) * this.data.factor;
-                currentPosition.z = this.previousPosition.z + (currentPosition.z - this.previousPosition.z) * this.data.factor;
+                if (markerVisible) {
+                    // 平滑化
+                    currentPosition.x = this.previousPosition.x + (currentPosition.x - this.previousPosition.x) * this.data.factor;
+                    currentPosition.y = this.previousPosition.y + (currentPosition.y - this.previousPosition.y) * this.data.factor;
+                    currentPosition.z = this.previousPosition.z + (currentPosition.z - this.previousPosition.z) * this.data.factor;
 
-                currentRotation.x = this.previousRotation.x + (currentRotation.x - this.previousRotation.x) * this.data.factor;
-                currentRotation.y = this.previousRotation.y + (currentRotation.y - this.previousRotation.y) * this.data.factor;
-                currentRotation.z = this.previousRotation.z + (currentRotation.z - this.previousRotation.z) * this.data.factor;
+                    currentRotation.x = this.previousRotation.x + (currentRotation.x - this.previousRotation.x) * this.data.factor;
+                    currentRotation.y = this.previousRotation.y + (currentRotation.y - this.previousRotation.y) * this.data.factor;
+                    currentRotation.z = this.previousRotation.z + (currentRotation.z - this.previousRotation.z) * this.data.factor;
 
-                // 更新
-                this.previousPosition.copy(currentPosition);
-                this.previousRotation.copy(currentRotation);
+                    // 更新
+                    this.previousPosition.copy(currentPosition);
+                    this.previousRotation.copy(currentRotation);
 
-                // 最新の位置と回転を保存
-                lastPosition.copy(currentPosition);
-                lastRotation.copy(currentRotation);
+                    // 最新の位置と回転を保存
+                    lastPosition.copy(currentPosition);
+                    lastRotation.copy(currentRotation);
+                }
 
                 // 情報を更新
                 document.getElementById('currentPosition').innerText = `Current Position: (${currentPosition.x.toFixed(2)}, ${currentPosition.y.toFixed(2)}, ${currentPosition.z.toFixed(2)})`;
@@ -125,6 +128,7 @@
             object.setAttribute('visible', true);
             object.object3D.position.copy(marker.object3D.position);
             object.object3D.rotation.copy(marker.object3D.rotation);
+            markerVisible = true;
             document.getElementById('markerStatus').innerText = "Marker Status: Detected";
         });
 
@@ -134,6 +138,7 @@
             object.setAttribute('visible', true);
             object.object3D.position.copy(lastPosition);
             object.object3D.rotation.copy(lastRotation);
+            markerVisible = false;
             document.getElementById('markerStatus').innerText = "Marker Status: Not Detected";
         });
     </script>
