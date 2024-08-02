@@ -21,7 +21,7 @@
 
     <script>
         //////////////////// Ver. ////////////////////
-        var versionNumber = "24080211156"; 
+        var versionNumber = "24080211158"; 
         document.getElementById("version").innerText = "Ver." + versionNumber;
 
         // バージョン表示を3秒間表示
@@ -61,36 +61,5 @@
         </a-marker>
         <a-entity camera></a-entity>
     </a-scene>
-<!-- スムージングフィルター -->    
-    <script>
-        AFRAME.registerComponent('smooth-movement', {
-            schema: {
-                factor: {type: 'number', default: 0.1}
-            },
-            init: function () {
-                this.previousPosition = new THREE.Vector3();
-                this.previousRotation = new THREE.Euler();
-            },
-            tick: function () {
-                var el = this.el;
-                var currentPosition = el.object3D.position;
-                var currentRotation = el.object3D.rotation;
-
-                // 平滑化
-                currentPosition.lerp(this.previousPosition, this.data.factor);
-                currentRotation.set(
-                    THREE.Math.lerp(currentRotation.x, this.previousRotation.x, this.data.factor),
-                    THREE.Math.lerp(currentRotation.y, this.previousRotation.y, this.data.factor),
-                    THREE.Math.lerp(currentRotation.z, this.previousRotation.z, this.data.factor)
-                );
-
-                // 更新
-                this.previousPosition.copy(currentPosition);
-                this.previousRotation.copy(currentRotation);
-            }
-        });
-
-        document.querySelector('#smooth-box').setAttribute('smooth-movement', 'factor: 0.1');
-    </script>
 </body>
 </html>
