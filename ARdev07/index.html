@@ -45,7 +45,7 @@
 
     <script>
         //////////////////// Ver. ////////////////////
-        var versionNumber = "2408021723"; 
+        var versionNumber = "2408021725"; 
         document.getElementById("version").innerText = "Ver." + versionNumber;
     </script>
     
@@ -83,6 +83,9 @@
         var lastRotation = new THREE.Euler();
 
         AFRAME.registerComponent('smooth-movement', {
+            schema: {
+                factor: {type: 'number'}
+            },
             init: function () {
                 this.previousPosition = new THREE.Vector3();
                 this.previousRotation = new THREE.Euler();
