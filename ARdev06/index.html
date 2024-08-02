@@ -14,8 +14,8 @@
             font-size: 16px;
             font-family: 'Yu Gothic', sans-serif;
             color: gray;
-            opacity: 0.5
-            display: none;
+            opacity: 0.5;
+            visibility: hidden; 
         }
     </style>
 </head>
@@ -24,15 +24,15 @@
 
     <script>
         //////////////////// Ver. ////////////////////
-        var versionNumber = "2408021351"; 
+        var versionNumber = "2408021356"; 
         document.getElementById("version").innerText = "Ver." + versionNumber;
 
         // バージョン表示を3秒間表示
         window.onload = function() {
             var versionDiv = document.getElementById("version");
-            versionDiv.style.display = "block";
+            versionDiv.style.visibility = "visible"; /* 変更点 */
             setTimeout(function() {
-                versionDiv.style.display = "none";
+                versionDiv.style.visibility = "hidden"; /* 変更点 */
             }, 3000);
         };
     </script>
