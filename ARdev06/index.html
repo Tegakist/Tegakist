@@ -3,7 +3,7 @@
 <head>
     <title>Three.js WebAR Example</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/three.js/build/ar.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/three.js/build/ar.js"></script>
     <style>
         #version {
             position: fixed;
@@ -21,7 +21,7 @@
     <div id="version">Ver.1.0</div>
     <script>
         // バージョン番号を指定
-        var versionNumber = "2408021006"; 
+        var versionNumber = "2408021105"; // ここでバージョン番号を指定
         document.getElementById("version").innerText = "Ver." + versionNumber;
 
         // バージョン表示を3秒間表示
@@ -32,64 +32,67 @@
                 versionDiv.style.display = "none";
             }, 3000);
         };
-
-        // Three.jsのシーン、カメラ、レンダラーの設定
+    </script>
+    <script>
+        // WebARの設定
         var scene = new THREE.Scene();
         var camera = new THREE.Camera();
         scene.add(camera);
 
-        var renderer = new THREE.WebGLRenderer({
-            antialias: true,
-            alpha: true
-        });
+        var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // ARToolkitの設定
-        var arToolkitSource = new THREEx.ArToolkitSource({
+        var arToolkitSource = new THREE.ArToolkitSource({
             sourceType: 'webcam'
         });
 
-        var arToolkitContext = new THREEx.ArToolkitContext({
-            cameraParametersUrl: 'camera_para.dat', // 相対パスに変更
-            detectionMode: 'mono_and_matrix'
+        arToolkitSource.init(function onReady() {
+            onResize();
         });
 
-        arToolkitContext.init(function onCompleted(){
+        window.addEventListener('resize', function() {
+            onResize();
+        });
+
+        var arToolkitContext = new THREE.ArToolkitContext({
+            cameraParametersUrl: 'https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/three.js/data/camera_para.dat',
+            detectionMode: 'mono'
+        });
+
+        arToolkitContext.init(function onCompleted() {
             camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix());
         });
 
-        // マーカーの設定
-        var markerControls = new THREEx.ArMarkerControls(arToolkitContext, camera, {
+        var markerRoot = new THREE.Group();
+        scene.add(markerRoot);
+
+        var markerControls = new THREE.ArMarkerControls(arToolkitContext, markerRoot, {
             type: 'pattern',
-            patternUrl: 'pattern-a.patt',
-            changeMatrixMode: 'cameraTransformMatrix'
+            patternUrl: 'pattern-a.patt'
         });
 
-        // ボックスの作成
         var geometry = new THREE.BoxGeometry(1, 1, 1);
-        var material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-        var box = new THREE.Mesh(geometry, material);
-        box.visible = false;
-        scene.add(box);
+        var material = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.5 });
+        var cube = new THREE.Mesh(geometry, material);
+        cube.position.y = 0.5;
+        markerRoot.add(cube);
 
-        // マーカーのイベントリスナー
-        markerControls.addEventListener('markerFound', function() {
-            box.visible = true;
-        });
+        function onResize() {
+            arToolkitSource.onResizeElement();
+            arToolkitSource.copyElementSizeTo(renderer.domElement);
+            if (arToolkitContext.arController !== null) {
+                arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas);
+            }
+        }
 
-        markerControls.addEventListener('markerLost', function() {
-            box.visible = false;
-        });
-
-        // アニメーションループ
         function animate() {
             requestAnimationFrame(animate);
-            if (arToolkitSource.ready) {
-                arToolkitContext.update(arToolkitSource.domElement);
-            }
+            if (arToolkitSource.ready === false) return;
+            arToolkitContext.update(arToolkitSource.domElement);
             renderer.render(scene, camera);
         }
+
         animate();
     </script>
 </body>
