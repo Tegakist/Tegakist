@@ -24,7 +24,7 @@
 
     <script>
         //////////////////// Ver. ////////////////////
-        var versionNumber = "2408021520"; 
+        var versionNumber = "2408021523"; 
         document.getElementById("version").innerText = "Ver." + versionNumber;
     </script>
     
@@ -103,6 +103,18 @@
             object.setAttribute('position', object.object3D.position);
             object.setAttribute('rotation', object.object3D.rotation);
         });
+
+        // マーカーを見失った後もオブジェクトを表示し続ける
+        AFRAME.registerComponent('keep-visible', {
+            init: function () {
+                var el = this.el;
+                el.addEventListener('markerLost', function () {
+                    el.setAttribute('visible', true);
+                });
+            }
+        });
+
+        document.querySelector('#box').setAttribute('keep-visible', '');
     </script>
 </body>
 </html>
