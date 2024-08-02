@@ -24,7 +24,7 @@
 
     <script>
         //////////////////// Ver. ////////////////////
-        var versionNumber = "2408021528"; 
+        var versionNumber = "2408021542"; 
         document.getElementById("version").innerText = "Ver." + versionNumber;
     </script>
     
@@ -58,6 +58,9 @@
     </a-scene>
 
     <script>
+        var lastPosition = new THREE.Vector3();
+        var lastRotation = new THREE.Euler();
+
         AFRAME.registerComponent('smooth-movement', {
             schema: {
                 factor: {type: 'number', default: 0.1}
@@ -83,6 +86,10 @@
                 // 更新
                 this.previousPosition.copy(currentPosition);
                 this.previousRotation.copy(currentRotation);
+
+                // 最新の位置と回転を保存
+                lastPosition.copy(currentPosition);
+                lastRotation.copy(currentRotation);
             }
         });
 
@@ -97,11 +104,10 @@
 
         // マーカーを見失う直前の位置でオブジェクトを空間上に留める
         document.querySelector('a-marker').addEventListener('markerLost', function (evt) {
-            var marker = evt.target;
-            var object = marker.querySelector('#box');
+            var object = document.querySelector('#box');
             object.setAttribute('visible', true);
-            object.setAttribute('position', object.object3D.position.clone());
-            object.setAttribute('rotation', object.object3D.rotation.clone());
+            object.object3D.position.copy(lastPosition);
+            object.object3D.rotation.copy(lastRotation);
         });
     </script>
 </body>
