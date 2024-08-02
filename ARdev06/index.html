@@ -21,7 +21,7 @@
 
     <script>
         //////////////////// Ver. ////////////////////
-        var versionNumber = "24080211306"; 
+        var versionNumber = "24080211317"; 
         document.getElementById("version").innerText = "Ver." + versionNumber;
 
         // バージョン表示を3秒間表示
@@ -73,8 +73,8 @@
             },
             tick: function () {
                 var el = this.el;
-                var currentPosition = el.object3D.position;
-                var currentRotation = el.object3D.rotation;
+                var currentPosition = el.object3D.position.clone();
+                var currentRotation = el.object3D.rotation.clone();
 
                 // 平滑化
                 currentPosition.lerp(this.previousPosition, this.data.factor);
@@ -85,6 +85,9 @@
                 );
 
                 // 更新
+                el.object3D.position.copy(currentPosition);
+                el.object3D.rotation.copy(currentRotation);
+
                 this.previousPosition.copy(currentPosition);
                 this.previousRotation.copy(currentRotation);
             }
