@@ -21,7 +21,7 @@
 
     <script>
         //////////////////// Ver. ////////////////////
-        var versionNumber = "2408021302"; 
+        var versionNumber = "24080211306"; 
         document.getElementById("version").innerText = "Ver." + versionNumber;
 
         // バージョン表示を3秒間表示
@@ -39,7 +39,7 @@
         embedded
         arjs="
             sourceType: webcam;
-            debugUIEnabled: false;
+            debugUIEnabled: true;
             patternRatio: 0.90;
             detectionMode: mono_and_matrix;
             matrixCodeType: 3x3_PARITY65;
@@ -57,7 +57,7 @@
 <!-- 表示するオブジェクト
     例）ボックス：<a-box position="0 0.5 0" material="color: red; opacity: 0.5;"></a-box>
 -->
-            <a-box position="0 0.5 0" material="color: red; opacity: 0.5;" smooth-movement></a-box>
+            <a-box position="0 0.5 0" material="color: red; opacity: 0.5;" smooth-movement="factor: 0.05"></a-box>
         </a-marker>
         <a-entity camera></a-entity>
     </a-scene>
@@ -90,6 +90,5 @@
             }
         });
     </script>
-    
 </body>
 </html>
