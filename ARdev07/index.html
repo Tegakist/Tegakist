@@ -35,17 +35,17 @@
     <div id="version">Ver.1.0</div>
     <div id="info">
         <div id="markerStatus">Marker Status: Not Detected</div>
+        <div id="markerPosition">Marker Position: N/A</div>
+        <div id="markerRotation">Marker Rotation: N/A</div>
         <div id="currentPosition">Current Position: N/A</div>
         <div id="currentRotation">Current Rotation: N/A</div>
         <div id="lastPosition">Last Position: N/A</div>
         <div id="lastRotation">Last Rotation: N/A</div>
-        <div id="markerPosition">Marker Position: N/A</div>
-        <div id="markerRotation">Marker Rotation: N/A</div>
     </div>
 
     <script>
         //////////////////// Ver. ////////////////////
-        var versionNumber = "2408021748"; 
+        var versionNumber = "2408021758"; 
         document.getElementById("version").innerText = "Ver." + versionNumber;
     </script>
     
@@ -73,7 +73,7 @@
 <!-- 表示するオブジェクト
     例）ボックス：<a-box position="0 0.5 0" material="color: red; opacity: 0.5;"></a-box>
 -->
-            <a-box id="box" position="0 0 0" material="color: red; opacity: 0.5;" smooth-movement="factor: 0.01"></a-box>
+            <a-box id="box" position="0 0.5 0" material="color: red; opacity: 0.5;" smooth-movement="factor: 0.01"></a-box>
         </a-marker>
         <a-entity camera></a-entity>
     </a-scene>
@@ -105,13 +105,13 @@
                 }
 
                 // 平滑化
-                currentPosition.x = this.previousPosition.x + (markerPosition.x - this.previousPosition.x) * this.data.factor;
-                currentPosition.y = this.previousPosition.y + (markerPosition.y - this.previousPosition.y) * this.data.factor;
-                currentPosition.z = this.previousPosition.z + (markerPosition.z - this.previousPosition.z) * this.data.factor;
+                currentPosition.x = this.previousPosition.x + (currentPosition.x - this.previousPosition.x) * this.data.factor;
+                currentPosition.y = this.previousPosition.y + (currentPosition.y - this.previousPosition.y) * this.data.factor;
+                currentPosition.z = this.previousPosition.z + (currentPosition.z - this.previousPosition.z) * this.data.factor;
 
-                currentRotation.x = this.previousRotation.x + (markerRotation.x - this.previousRotation.x) * this.data.factor;
-                currentRotation.y = this.previousRotation.y + (markerRotation.y - this.previousRotation.y) * this.data.factor;
-                currentRotation.z = this.previousRotation.z + (markerRotation.z - this.previousRotation.z) * this.data.factor;
+                currentRotation.x = this.previousRotation.x + (currentRotation.x - this.previousRotation.x) * this.data.factor;
+                currentRotation.y = this.previousRotation.y + (currentRotation.y - this.previousRotation.y) * this.data.factor;
+                currentRotation.z = this.previousRotation.z + (currentRotation.z - this.previousRotation.z) * this.data.factor;
 
                 // 更新
                 this.previousPosition.copy(currentPosition);
@@ -122,12 +122,12 @@
                 lastRotation.copy(currentRotation);
 
                 // 情報を更新
+                document.getElementById('markerPosition').innerText = `Marker Position: (${markerPosition.x.toFixed(2)}, ${markerPosition.y.toFixed(2)}, ${markerPosition.z.toFixed(2)})`;
+                document.getElementById('markerRotation').innerText = `Marker Rotation: (${markerRotation.x.toFixed(2)}, ${markerRotation.y.toFixed(2)}, ${markerRotation.z.toFixed(2)})`;
                 document.getElementById('currentPosition').innerText = `Current Position: (${currentPosition.x.toFixed(2)}, ${currentPosition.y.toFixed(2)}, ${currentPosition.z.toFixed(2)})`;
                 document.getElementById('currentRotation').innerText = `Current Rotation: (${currentRotation.x.toFixed(2)}, ${currentRotation.y.toFixed(2)}, ${currentRotation.z.toFixed(2)})`;
                 document.getElementById('lastPosition').innerText = `Last Position: (${lastPosition.x.toFixed(2)}, ${lastPosition.y.toFixed(2)}, ${lastPosition.z.toFixed(2)})`;
                 document.getElementById('lastRotation').innerText = `Last Rotation: (${lastRotation.x.toFixed(2)}, ${lastRotation.y.toFixed(2)}, ${lastRotation.z.toFixed(2)})`;
-                document.getElementById('markerPosition').innerText = `Marker Position: (${markerPosition.x.toFixed(2)}, ${markerPosition.y.toFixed(2)}, ${markerPosition.z.toFixed(2)})`;
-                document.getElementById('markerRotation').innerText = `Marker Rotation: (${markerRotation.x.toFixed(2)}, ${markerRotation.y.toFixed(2)}, ${markerRotation.z.toFixed(2)})`;
             }
         });
 
