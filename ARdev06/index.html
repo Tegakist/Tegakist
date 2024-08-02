@@ -20,7 +20,7 @@
     <div id="version">Ver.1.0</div>
     <script>
         //////////////////// Ver. ////////////////////
-        var versionNumber = "24080211120"; 
+        var versionNumber = "24080211126"; 
         document.getElementById("version").innerText = "Ver." + versionNumber;
 
         // バージョン表示を3秒間表示
@@ -32,7 +32,20 @@
             }, 3000);
         };
     </script>
-    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; patternRatio: 0.90; detectionMode: mono_and_matrix; matrixCodeType: 3x3_PARITY65;" vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true;">        <a-marker preset="custom" type="pattern" url="pattern-a.patt">
+    
+    <a-scene
+        embedded
+        arjs="
+            sourceType: webcam;
+            debugUIEnabled: false;
+            patternRatio: 0.90;
+            detectionMode: mono_and_matrix;
+            matrixCodeType: 3x3_PARITY65;
+        "
+        vr-mode-ui="enabled: false;"
+        renderer="logarithmicDepthBuffer: true;"
+    >
+        <a-marker preset="custom" type="pattern" url="pattern-a.patt">
             <a-box position="0 0.5 0" material="color: red; opacity: 0.5;"></a-box>
         </a-marker>
         <a-entity camera></a-entity>
