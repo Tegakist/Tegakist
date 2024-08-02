@@ -17,14 +17,33 @@
             opacity: 0.5;
             visibility: visible; 
         }
+        #info {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: 'Yu Gothic', sans-serif;
+            color: gray;
+            background-color: rgba(255, 255, 255, 0.5);
+            visibility: visible;
+        }
     </style>
 </head>
 <body style='margin: 0; overflow: hidden;'>
     <div id="version">Ver.1.0</div>
+    <div id="info">
+        <div id="markerStatus">Marker Status: Not Detected</div>
+        <div id="currentPosition">Current Position: N/A</div>
+        <div id="currentRotation">Current Rotation: N/A</div>
+        <div id="lastPosition">Last Position: N/A</div>
+        <div id="lastRotation">Last Rotation: N/A</div>
+    </div>
 
     <script>
         //////////////////// Ver. ////////////////////
-        var versionNumber = "2408021542"; 
+        var versionNumber = "2408021614"; 
         document.getElementById("version").innerText = "Ver." + versionNumber;
     </script>
     
@@ -90,6 +109,12 @@
                 // 最新の位置と回転を保存
                 lastPosition.copy(currentPosition);
                 lastRotation.copy(currentRotation);
+
+                // 情報を更新
+                document.getElementById('currentPosition').innerText = `Current Position: (${currentPosition.x.toFixed(2)}, ${currentPosition.y.toFixed(2)}, ${currentPosition.z.toFixed(2)})`;
+                document.getElementById('currentRotation').innerText = `Current Rotation: (${currentRotation.x.toFixed(2)}, ${currentRotation.y.toFixed(2)}, ${currentRotation.z.toFixed(2)})`;
+                document.getElementById('lastPosition').innerText = `Last Position: (${lastPosition.x.toFixed(2)}, ${lastPosition.y.toFixed(2)}, ${lastPosition.z.toFixed(2)})`;
+                document.getElementById('lastRotation').innerText = `Last Rotation: (${lastRotation.x.toFixed(2)}, ${lastRotation.y.toFixed(2)}, ${lastRotation.z.toFixed(2)})`;
             }
         });
 
@@ -100,6 +125,7 @@
             object.setAttribute('visible', true);
             object.object3D.position.copy(marker.object3D.position);
             object.object3D.rotation.copy(marker.object3D.rotation);
+            document.getElementById('markerStatus').innerText = "Marker Status: Detected";
         });
 
         // マーカーを見失う直前の位置でオブジェクトを空間上に留める
@@ -108,6 +134,7 @@
             object.setAttribute('visible', true);
             object.object3D.position.copy(lastPosition);
             object.object3D.rotation.copy(lastRotation);
+            document.getElementById('markerStatus').innerText = "Marker Status: Not Detected";
         });
     </script>
 </body>
