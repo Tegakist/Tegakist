@@ -21,7 +21,7 @@
 
     <script>
         //////////////////// Ver. ////////////////////
-        var versionNumber = "24080211317"; 
+        var versionNumber = "2408021333"; 
         document.getElementById("version").innerText = "Ver." + versionNumber;
 
         // バージョン表示を3秒間表示
@@ -39,7 +39,7 @@
         embedded
         arjs="
             sourceType: webcam;
-            debugUIEnabled: true;
+            debugUIEnabled: false;
             patternRatio: 0.90;
             detectionMode: mono_and_matrix;
             matrixCodeType: 3x3_PARITY65;
@@ -57,7 +57,7 @@
 <!-- 表示するオブジェクト
     例）ボックス：<a-box position="0 0.5 0" material="color: red; opacity: 0.5;"></a-box>
 -->
-            <a-box position="0 0.5 0" material="color: red; opacity: 0.5;" smooth-movement="factor: 0.05"></a-box>
+            <a-box position="0 0.5 0" material="color: red; opacity: 0.5;" smooth-movement></a-box>
         </a-marker>
         <a-entity camera></a-entity>
     </a-scene>
@@ -73,21 +73,19 @@
             },
             tick: function () {
                 var el = this.el;
-                var currentPosition = el.object3D.position.clone();
-                var currentRotation = el.object3D.rotation.clone();
+                var currentPosition = el.object3D.position;
+                var currentRotation = el.object3D.rotation;
 
                 // 平滑化
-                currentPosition.lerp(this.previousPosition, this.data.factor);
-                currentRotation.set(
-                    THREE.Math.lerp(currentRotation.x, this.previousRotation.x, this.data.factor),
-                    THREE.Math.lerp(currentRotation.y, this.previousRotation.y, this.data.factor),
-                    THREE.Math.lerp(currentRotation.z, this.previousRotation.z, this.data.factor)
-                );
+                currentPosition.x = this.previousPosition.x + (currentPosition.x - this.previousPosition.x) * this.data.factor;
+                currentPosition.y = this.previousPosition.y + (currentPosition.y - this.previousPosition.y) * this.data.factor;
+                currentPosition.z = this.previousPosition.z + (currentPosition.z - this.previousPosition.z) * this.data.factor;
+
+                currentRotation.x = this.previousRotation.x + (currentRotation.x - this.previousRotation.x) * this.data.factor;
+                currentRotation.y = this.previousRotation.y + (currentRotation.y - this.previousRotation.y) * this.data.factor;
+                currentRotation.z = this.previousRotation.z + (currentRotation.z - this.previousRotation.z) * this.data.factor;
 
                 // 更新
-                el.object3D.position.copy(currentPosition);
-                el.object3D.rotation.copy(currentRotation);
-
                 this.previousPosition.copy(currentPosition);
                 this.previousRotation.copy(currentRotation);
             }
