@@ -23,7 +23,7 @@
       </a-marker>
       <a-entity camera></a-entity>
     </a-scene>
-    <div id="version">Ver.2408040000</div>
+    <div id="version">Ver.2408040002</div>
     <script>
       let markerVisible = false;
       let lastPosition = null;
@@ -38,6 +38,8 @@
       });
 
       document.querySelector('a-marker').addEventListener('markerLost', (event) => {
+        const box = document.querySelector('a-box');
+        box.setAttribute('visible', 'false');
         markerVisible = false;
       });
 
