@@ -19,22 +19,33 @@
   <body>
     <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; vrModeEnabled: false; renderer: {logarithmicDepthBuffer: true}; patternRatio: 0.9; detectionMode: mono_and_matrix;">
       <a-marker type="pattern" url="pattern-a.patt" emitevents="true">
-        <a-box position="0 0.5 0" material="opacity: 0.5; color: red;"></a-box>
+        <a-box position="0 0.5 0" material="opacity: 0.5; color: red;" visible="false"></a-box>
       </a-marker>
       <a-entity camera></a-entity>
     </a-scene>
-    <div id="version">Ver.2408032319</div>
+    <div id="version">Ver.1.0</div>
     <script>
+      let markerVisible = false;
+
       document.querySelector('a-marker').addEventListener('markerFound', (event) => {
         const box = document.querySelector('a-box');
         box.setAttribute('visible', 'true');
+        markerVisible = true;
       });
 
       document.querySelector('a-marker').addEventListener('markerLost', (event) => {
-        const box = document.querySelector('a-box');
-        box.setAttribute('visible', 'true');
+        markerVisible = false;
+      });
+
+      // Update the object's position and rotation based on the marker's position and rotation
+      document.querySelector('a-scene').addEventListener('markerFound', (event) => {
+        if (!markerVisible) {
+          const marker = event.target;
+          const box = document.querySelector('a-box');
+          box.object3D.position.copy(marker.object3D.position);
+          box.object3D.rotation.copy(marker.object3D.rotation);
+        }
       });
     </script>
   </body>
 </html>
-
