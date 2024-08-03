@@ -23,7 +23,7 @@
       </a-marker>
       <a-entity camera></a-entity>
     </a-scene>
-    <div id="version">Ver.2408040027</div>
+    <div id="version">Ver.2408040037</div>
     <script>
       let markerVisible = false;
 
@@ -35,10 +35,13 @@
 
       document.querySelector('a-marker').addEventListener('markerLost', (event) => {
         const box = document.querySelector('a-box');
-        box.setAttribute('visible', 'true');
-        box.object3D.position.copy(event.target.object3D.position);
-        box.object3D.rotation.copy(event.target.object3D.rotation);
+        box.setAttribute('visible', 'false');
         markerVisible = false;
+      });
+
+      document.querySelector('a-marker').addEventListener('markerFound', (event) => {
+        const box = document.querySelector('a-box');
+        box.setAttribute('visible', 'true');
       });
     </script>
   </body>
