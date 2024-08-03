@@ -23,7 +23,7 @@
       </a-marker>
       <a-entity camera></a-entity>
     </a-scene>
-    <div id="version">Ver.2408040002</div>
+    <div id="version">Ver.2408040011</div>
     <script>
       let markerVisible = false;
       let lastPosition = null;
@@ -31,10 +31,13 @@
 
       document.querySelector('a-marker').addEventListener('markerFound', (event) => {
         const box = document.querySelector('a-box');
+        if (!markerVisible) {
+          // 初回検知時に位置と回転を初期化
+          lastPosition = event.target.object3D.position.clone();
+          lastRotation = event.target.object3D.rotation.clone();
+        }
         box.setAttribute('visible', 'true');
         markerVisible = true;
-        lastPosition = event.target.object3D.position.clone();
-        lastRotation = event.target.object3D.rotation.clone();
       });
 
       document.querySelector('a-marker').addEventListener('markerLost', (event) => {
@@ -45,11 +48,12 @@
 
       document.querySelector('a-marker').addEventListener('markerFound', (event) => {
         const box = document.querySelector('a-box');
-        if (lastPosition && lastRotation) {
-          box.object3D.position.copy(lastPosition);
-          box.object3D.rotation.copy(lastRotation);
-          box.setAttribute('visible', 'true');
-        }
+        // 再検知時に位置と回転を初期化
+        lastPosition = event.target.object3D.position.clone();
+        lastRotation = event.target.object3D.rotation.clone();
+        box.object3D.position.copy(lastPosition);
+        box.object3D.rotation.copy(lastRotation);
+        box.setAttribute('visible', 'true');
       });
 
       document.querySelector('a-scene').addEventListener('markerLost', (event) => {
