@@ -14,13 +14,16 @@
         color: gray;
         opacity: 0.5;
       }
-      #distance {
+      #distance, #rotation {
         position: absolute;
         top: 10px;
         left: 10px;
         font-family: 'Yu Gothic', sans-serif;
         font-size: 16px;
         color: black;
+      }
+      #rotation {
+        top: 40px;
       }
     </style>
   </head>
@@ -31,8 +34,9 @@
       </a-marker>
       <a-entity camera></a-entity>
     </a-scene>
-    <div id="version">Ver.2408041552</div>
+    <div id="version">Ver.2408041555</div>
     <div id="distance">Distance: N/A</div>
+    <div id="rotation">Rotation Difference: N/A</div>
     <script>
       let markerVisible = false;
 
@@ -48,7 +52,7 @@
         markerVisible = false;
       });
 
-      function updateDistance() {
+      function updateDistanceAndRotation() {
         const marker = document.querySelector('a-marker');
         const camera = document.querySelector('[camera]');
         if (markerVisible) {
@@ -56,12 +60,22 @@
           const cameraPosition = camera.object3D.position;
           const distance = markerPosition.distanceTo(cameraPosition).toFixed(2);
           document.getElementById('distance').innerText = `Distance: ${distance} meters`;
+
+          const markerRotation = marker.object3D.rotation;
+          const cameraRotation = camera.object3D.rotation;
+          const rotationDifference = {
+            x: (markerRotation.x - cameraRotation.x).toFixed(2),
+            y: (markerRotation.y - cameraRotation.y).toFixed(2),
+            z: (markerRotation.z - cameraRotation.z).toFixed(2)
+          };
+          document.getElementById('rotation').innerText = `Rotation Difference: x: ${rotationDifference.x}, y: ${rotationDifference.y}, z: ${rotationDifference.z}`;
         } else {
           document.getElementById('distance').innerText = 'Distance: N/A';
+          document.getElementById('rotation').innerText = 'Rotation Difference: N/A';
         }
       }
 
-      setInterval(updateDistance, 100);
+      setInterval(updateDistanceAndRotation, 100);
     </script>
   </body>
 </html>
