@@ -43,7 +43,7 @@
       </a-marker>
       <a-entity camera></a-entity>
     </a-scene>
-    <div id="version">Ver.2408042125</div>
+    <div id="version">Ver.2408042130</div>
     <div id="distance">Distance: N/A</div>
     <div id="rotation">Rotation Difference: N/A</div>
     <div id="device-orientation">Device Orientation: N/A</div>
@@ -79,21 +79,22 @@
           const distance = markerPosition.distanceTo(cameraPosition).toFixed(2);
           document.getElementById('distance').innerText = `Distance: ${distance} meters`;
 
-          const markerRotation = marker.object3D.rotation;
-          const cameraRotation = camera.object3D.rotation;
-          const rotationDifference = {
-            x: ((cameraRotation.x - initialCameraRotation.x) * (180 / Math.PI)).toFixed(2),
-            y: ((cameraRotation.y - initialCameraRotation.y) * (180 / Math.PI)).toFixed(2),
-            z: ((cameraRotation.z - initialCameraRotation.z) * (180 / Math.PI)).toFixed(2)
-          };
-          document.getElementById('rotation').innerText = `Rotation Difference: x: ${rotationDifference.x}°, y: ${rotationDifference.y}°, z: ${rotationDifference.z}°`;
-
           // カメラの移動距離を計算
           if (initialCameraPosition) {
             const movementX = (cameraPosition.x - initialCameraPosition.x).toFixed(2);
             const movementY = (cameraPosition.y - initialCameraPosition.y).toFixed(2);
             const movementZ = (cameraPosition.z - initialCameraPosition.z).toFixed(2);
             document.getElementById('movement').innerText = `Movement: x: ${movementX} meters, y: ${movementY} meters, z: ${movementZ} meters`;
+          }
+
+          // カメラの回転差を計算
+          if (initialCameraRotation) {
+            const rotationDifference = {
+              x: ((camera.object3D.rotation.x - initialCameraRotation.x) * (180 / Math.PI)).toFixed(2),
+              y: ((camera.object3D.rotation.y - initialCameraRotation.y) * (180 / Math.PI)).toFixed(2),
+              z: ((camera.object3D.rotation.z - initialCameraRotation.z) * (180 / Math.PI)).toFixed(2)
+            };
+            document.getElementById('rotation').innerText = `Rotation Difference: x: ${rotationDifference.x}°, y: ${rotationDifference.y}°, z: ${rotationDifference.z}°`;
           }
         } else {
           document.getElementById('distance').innerText = 'Distance: N/A';
