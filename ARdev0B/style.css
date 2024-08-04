@@ -1,7 +1,7 @@
-      #version, #distance, #rotation, #device-orientation, #movement {
+     #version, #distance, #marker-position, #rotation, #device-orientation, #movement {
         position: absolute;
         font-family: 'Yu Gothic', sans-serif;
-        font-size: 16px;
+        font-size: 14px;
         color: white;
         background-color: gray;
         opacity: 0.5;
@@ -16,15 +16,19 @@
         top: 10px;
         left: 10px;
       }
-      #rotation {
+      #marker-position {
         top: 40px;
         left: 10px;
       }
-      #device-orientation {
+      #rotation {
         top: 70px;
         left: 10px;
       }
-      #movement {
+      #device-orientation {
         top: 100px;
+        left: 10px;
+      }
+      #movement {
+        top: 130px;
         left: 10px;
       }
