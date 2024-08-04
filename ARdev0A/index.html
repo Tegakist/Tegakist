@@ -15,22 +15,30 @@
       <a-marker></a-marker>
       <a-entity camera></a-entity>
     </a-scene>
-    <div id="version">Ver.2408041058</div>
-    <script>
-      let markerVisible = false;
+    <div id="version">Ver.2408041100</div>
 
-      document.querySelector('a-marker').addEventListener('markerFound', (event) => {
-        const box = document.querySelector('a-box');
-        box.setAttribute('visible', 'true');
-        markerVisible = true;
-      });
+  <script>
+    let markerVisible = false;
+    let box = document.querySelector('a-box');
 
-      document.querySelector('a-marker').addEventListener('markerLost', (event) => {
-        const box = document.querySelector('a-box');
-        box.setAttribute('visible', 'true');
-        markerVisible = false;
-      });
-    </script>
+    document.querySelector('a-marker').addEventListener('markerFound', () => {
+      markerVisible = true;
+    });
+
+    document.querySelector('a-marker').addEventListener('markerLost', () => {
+      markerVisible = false;
+    });
+
+  // マーカーが見失われてもオブジェクトを表示し続ける
+    AFRAME.registerComponent('keep-visible', {
+      tick: function () {
+        if (!markerVisible) {
+          box.setAttribute('visible', 'true');
+        }
+      }
+    });
+  </script>
+    
   </body>
 </html>
 
