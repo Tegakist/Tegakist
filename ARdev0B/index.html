@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>AR.js with A-Frame</title>
+    <title>Device Orientation</title>
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <style>
@@ -14,7 +14,7 @@
         color: gray;
         opacity: 0.5;
       }
-      #distance, #rotation {
+      #distance, #rotation, #device-orientation {
         position: absolute;
         top: 10px;
         left: 10px;
@@ -25,6 +25,9 @@
       #rotation {
         top: 40px;
       }
+      #device-orientation {
+        top: 70px;
+      }
     </style>
   </head>
   <body>
@@ -34,9 +37,10 @@
       </a-marker>
       <a-entity camera></a-entity>
     </a-scene>
-    <div id="version">Ver.2408042025</div>
+    <div id="version">Ver.2408042030</div>
     <div id="distance">Distance: N/A</div>
     <div id="rotation">Rotation Difference: N/A</div>
+    <div id="device-orientation">Device Orientation: N/A</div>
     <script>
       let markerVisible = false;
 
@@ -52,29 +56,37 @@
         markerVisible = false;
       });
 
-function updateDistanceAndRotation() {
-  const marker = document.querySelector('a-marker');
-  const camera = document.querySelector('[camera]');
-  if (markerVisible) {
-    const markerPosition = marker.object3D.position;
-    const cameraPosition = camera.object3D.position;
-    const distance = markerPosition.distanceTo(cameraPosition).toFixed(2);
-    document.getElementById('distance').innerText = `Distance: ${distance} meters`;
+      function updateDistanceAndRotation() {
+        const marker = document.querySelector('a-marker');
+        const camera = document.querySelector('[camera]');
+        if (markerVisible) {
+          const markerPosition = marker.object3D.position;
+          const cameraPosition = camera.object3D.position;
+          const distance = markerPosition.distanceTo(cameraPosition).toFixed(2);
+          document.getElementById('distance').innerText = `Distance: ${distance} meters`;
 
-    const markerRotation = marker.object3D.rotation;
-    const cameraRotation = camera.object3D.rotation;
-    const rotationDifference = {
-      x: ((markerRotation.x - cameraRotation.x) * (180 / Math.PI)).toFixed(2),
-      y: ((markerRotation.y - cameraRotation.y) * (180 / Math.PI)).toFixed(2),
-      z: ((markerRotation.z - cameraRotation.z) * (180 / Math.PI)).toFixed(2)
-    };
-    document.getElementById('rotation').innerText = `Rotation Difference: x: ${rotationDifference.x}°, y: ${rotationDifference.y}°, z: ${rotationDifference.z}°`;
-  } else {
-    document.getElementById('distance').innerText = 'Distance: N/A';
-    document.getElementById('rotation').innerText = 'Rotation Difference: N/A';
-  }
-}
+          const markerRotation = marker.object3D.rotation;
+          const cameraRotation = camera.object3D.rotation;
+          const rotationDifference = {
+            x: ((markerRotation.x - cameraRotation.x) * (180 / Math.PI)).toFixed(2),
+            y: ((markerRotation.y - cameraRotation.y) * (180 / Math.PI)).toFixed(2),
+            z: ((markerRotation.z - cameraRotation.z) * (180 / Math.PI)).toFixed(2)
+          };
+          document.getElementById('rotation').innerText = `Rotation Difference: x: ${rotationDifference.x}°, y: ${rotationDifference.y}°, z: ${rotationDifference.z}°`;
+        } else {
+          document.getElementById('distance').innerText = 'Distance: N/A';
+          document.getElementById('rotation').innerText = 'Rotation Difference: N/A';
+        }
+      }
 
+      function updateDeviceOrientation(event) {
+        const alpha = event.alpha.toFixed(2); // Z軸回転
+        const beta = event.beta.toFixed(2);   // X軸回転
+        const gamma = event.gamma.toFixed(2); // Y軸回転
+        document.getElementById('device-orientation').innerText = `Device Orientation: alpha: ${alpha}°, beta: ${beta}°, gamma: ${gamma}°`;
+      }
+
+      window.addEventListener('deviceorientation', updateDeviceOrientation);
 
       setInterval(updateDistanceAndRotation, 100);
     </script>
