@@ -14,20 +14,26 @@
       <a-marker></a-marker>
       <a-entity camera></a-entity>
     </a-scene>
-    <div id="version">Ver.2408041123</div>
-
+    <div id="version">Ver.2408041141</div>
     <script>
       let markerVisible = false;
       let box;
 
-      document.querySelector('a-marker').addEventListener('markerFound', () => {
-        markerVisible = true;
+      document.addEventListener('DOMContentLoaded', () => {
+        box = document.querySelector('a-box');
+      });
+
+      document.querySelector('a-marker').addEventListener('markerFound', (event) => {
         if (box) {
           box.setAttribute('visible', 'true');
         }
+        markerVisible = true;
       });
 
-      document.querySelector('a-marker').addEventListener('markerLost', () => {
+      document.querySelector('a-marker').addEventListener('markerLost', (event) => {
+        if (box) {
+          box.setAttribute('visible', 'true');
+        }
         markerVisible = false;
       });
 
