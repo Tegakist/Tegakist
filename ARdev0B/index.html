@@ -14,13 +14,13 @@
       <a-marker></a-marker>
       <a-entity camera></a-entity>
     </a-scene>
-    <div id="version">Ver.2408042351</div>
+    <div id="version">Ver.2408042358</div>
     
     <div id="distance">Distance: N/A</div>
     <div id="rotation">Rotation Difference: N/A</div>
     <div id="device-orientation">Device Orientation: N/A</div>
     <div id="movement">Movement: N/A</div>
-    <script>
+<script>
       let markerVisible = false;
       let initialCameraPosition = null;
       let initialCameraRotation = null;
@@ -51,6 +51,9 @@
           const distance = markerPosition.distanceTo(cameraPosition).toFixed(2);
           document.getElementById('distance').innerText = `Distance: ${distance} meters`;
 
+          // マーカーポジションの表示
+          document.getElementById('marker-position').innerText = `Marker Position: x: ${markerPosition.x.toFixed(2)}, y: ${markerPosition.y.toFixed(2)}, z: ${markerPosition.z.toFixed(2)}`;
+
           // カメラの移動距離を計算
           if (initialCameraPosition) {
             const movementX = (cameraPosition.x - initialCameraPosition.x).toFixed(2);
@@ -70,6 +73,7 @@
           }
         } else {
           document.getElementById('distance').innerText = 'Distance: N/A';
+          document.getElementById('marker-position').innerText = 'Marker Position: N/A';
           document.getElementById('rotation').innerText = 'Rotation Difference: N/A';
           document.getElementById('movement').innerText = 'Movement: N/A';
         }
@@ -85,6 +89,5 @@
       window.addEventListener('deviceorientation', updateDeviceOrientation);
 
       setInterval(updateDistanceAndRotation, 100);
-    </script>
-  </body>
+    </script>  </body>
 </html>
