@@ -14,7 +14,7 @@
         color: gray;
         opacity: 0.5;
       }
-      #distance, #rotation, #device-orientation {
+      #distance, #rotation, #device-orientation, #movement {
         position: absolute;
         top: 10px;
         left: 10px;
@@ -28,26 +28,35 @@
       #device-orientation {
         top: 70px;
       }
+      #movement {
+        top: 100px;
+      }
     </style>
   </head>
   <body>
     <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; vrModeEnabled: false; renderer: {logarithmicDepthBuffer: true}; patternRatio: 0.9; detectionMode: mono_and_matrix;">
       <a-marker type="pattern" url="pattern-a.patt" emitevents="true">
-        <a-box position="0 0 0" material="opacity: 0.5; color: red;" visible="false" scale="1 1 1"></a-box>
+        <a-box position="0 0 0" material="opacity: 0.5; color: red;" visible="false"></a-box>
       </a-marker>
       <a-entity camera></a-entity>
     </a-scene>
-    <div id="version">Ver.2408042038</div>
+    <div id="version">Ver.2408042048</div>
     <div id="distance">Distance: N/A</div>
     <div id="rotation">Rotation Difference: N/A</div>
     <div id="device-orientation">Device Orientation: N/A</div>
+    <div id="movement">Movement: N/A</div>
     <script>
       let markerVisible = false;
+      let initialCameraPosition = null;
 
       document.querySelector('a-marker').addEventListener('markerFound', (event) => {
         const box = document.querySelector('a-box');
         box.setAttribute('visible', 'true');
         markerVisible = true;
+
+        // 初期カメラ位置を保存
+        const camera = document.querySelector('[camera]');
+        initialCameraPosition = camera.object3D.position.clone();
       });
 
       document.querySelector('a-marker').addEventListener('markerLost', (event) => {
@@ -73,9 +82,16 @@
             z: ((markerRotation.z - cameraRotation.z) * (180 / Math.PI)).toFixed(2)
           };
           document.getElementById('rotation').innerText = `Rotation Difference: x: ${rotationDifference.x}°, y: ${rotationDifference.y}°, z: ${rotationDifference.z}°`;
+
+          // カメラの移動距離を計算
+          if (initialCameraPosition) {
+            const movementDistance = initialCameraPosition.distanceTo(cameraPosition).toFixed(2);
+            document.getElementById('movement').innerText = `Movement: ${movementDistance} meters`;
+          }
         } else {
           document.getElementById('distance').innerText = 'Distance: N/A';
           document.getElementById('rotation').innerText = 'Rotation Difference: N/A';
+          document.getElementById('movement').innerText = 'Movement: N/A';
         }
       }
 
