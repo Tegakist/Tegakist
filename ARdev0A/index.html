@@ -14,7 +14,7 @@
       <a-marker></a-marker>
       <a-entity camera></a-entity>
     </a-scene>
-    <div id="version">Ver.2408050035</div>
+    <div id="version">Ver.2408050054</div>
 
     <script>
       let markerVisible = false;
@@ -30,6 +30,10 @@ document.querySelector('a-marker').addEventListener('markerLost', (event) => {
   console.log('Marker lost, box:', box); // デバッグ用ログ
   box.setAttribute('visible', 'true');
   markerVisible = false;
+
+  // keep-visibleコンポーネントを再度設定
+  const scene = document.querySelector('a-scene');
+  scene.setAttribute('keep-visible', '');
 });
 
       // keep-visibleコンポーネントの定義
