@@ -43,7 +43,7 @@
       </a-marker>
       <a-entity camera></a-entity>
     </a-scene>
-    <div id="version">Ver.2408042146</div>
+    <div id="version">Ver.2408042332</div>
     <div id="distance">Distance: N/A</div>
     <div id="rotation">Rotation Difference: N/A</div>
     <div id="device-orientation">Device Orientation: N/A</div>
@@ -62,6 +62,8 @@
         const camera = document.querySelector('[camera]');
         initialCameraPosition = camera.object3D.position.clone();
         initialCameraRotation = camera.object3D.rotation.clone();
+        console.log('Initial Camera Position:', initialCameraPosition);
+        console.log('Initial Camera Rotation:', initialCameraRotation);
       });
 
       document.querySelector('a-marker').addEventListener('markerLost', (event) => {
@@ -85,6 +87,8 @@
             const movementY = (cameraPosition.y - initialCameraPosition.y).toFixed(2);
             const movementZ = (cameraPosition.z - initialCameraPosition.z).toFixed(2);
             document.getElementById('movement').innerText = `Movement: x: ${movementX} meters, y: ${movementY} meters, z: ${movementZ} meters`;
+            console.log('Current Camera Position:', cameraPosition);
+            console.log('Movement:', { x: movementX, y: movementY, z: movementZ });
           }
 
           // カメラの回転差を計算
@@ -95,6 +99,8 @@
               z: ((camera.object3D.rotation.z - initialCameraRotation.z) * (180 / Math.PI)).toFixed(2)
             };
             document.getElementById('rotation').innerText = `Rotation Difference: x: ${rotationDifference.x}°, y: ${rotationDifference.y}°, z: ${rotationDifference.z}°`;
+            console.log('Current Camera Rotation:', camera.object3D.rotation);
+            console.log('Rotation Difference:', rotationDifference);
           }
         } else {
           document.getElementById('distance').innerText = 'Distance: N/A';
@@ -104,9 +110,9 @@
       }
 
       function updateDeviceOrientation(event) {
-        const x = event.beta.toFixed(2);   // X軸回転
-        const y = event.gamma.toFixed(2);  // Y軸回転
-        const z = event.alpha.toFixed(2);  // Z軸回転
+        const x = event.beta !== null ? event.beta.toFixed(2) : 'N/A';   // X軸回転
+        const y = event.gamma !== null ? event.gamma.toFixed(2) : 'N/A';  // Y軸回転
+        const z = event.alpha !== null ? event.alpha.toFixed(2) : 'N/A';  // Z軸回転
         document.getElementById('device-orientation').innerText = `Device Orientation: x: ${x}°, y: ${y}°, z: ${z}°`;
       }
 
