@@ -52,28 +52,29 @@
         markerVisible = false;
       });
 
-      function updateDistanceAndRotation() {
-        const marker = document.querySelector('a-marker');
-        const camera = document.querySelector('[camera]');
-        if (markerVisible) {
-          const markerPosition = marker.object3D.position;
-          const cameraPosition = camera.object3D.position;
-          const distance = markerPosition.distanceTo(cameraPosition).toFixed(2);
-          document.getElementById('distance').innerText = `Distance: ${distance} meters`;
+function updateDistanceAndRotation() {
+  const marker = document.querySelector('a-marker');
+  const camera = document.querySelector('[camera]');
+  if (markerVisible) {
+    const markerPosition = marker.object3D.position;
+    const cameraPosition = camera.object3D.position;
+    const distance = markerPosition.distanceTo(cameraPosition).toFixed(2);
+    document.getElementById('distance').innerText = `Distance: ${distance} meters`;
 
-          const markerRotation = marker.object3D.rotation;
-          const cameraRotation = camera.object3D.rotation;
-          const rotationDifference = {
-            x: (markerRotation.x - cameraRotation.x).toFixed(2),
-            y: (markerRotation.y - cameraRotation.y).toFixed(2),
-            z: (markerRotation.z - cameraRotation.z).toFixed(2)
-          };
-          document.getElementById('rotation').innerText = `Rotation Difference: x: ${rotationDifference.x}, y: ${rotationDifference.y}, z: ${rotationDifference.z}`;
-        } else {
-          document.getElementById('distance').innerText = 'Distance: N/A';
-          document.getElementById('rotation').innerText = 'Rotation Difference: N/A';
-        }
-      }
+    const markerRotation = marker.object3D.rotation;
+    const cameraRotation = camera.object3D.rotation;
+    const rotationDifference = {
+      x: ((markerRotation.x - cameraRotation.x) * (180 / Math.PI)).toFixed(2),
+      y: ((markerRotation.y - cameraRotation.y) * (180 / Math.PI)).toFixed(2),
+      z: ((markerRotation.z - cameraRotation.z) * (180 / Math.PI)).toFixed(2)
+    };
+    document.getElementById('rotation').innerText = `Rotation Difference: x: ${rotationDifference.x}°, y: ${rotationDifference.y}°, z: ${rotationDifference.z}°`;
+  } else {
+    document.getElementById('distance').innerText = 'Distance: N/A';
+    document.getElementById('rotation').innerText = 'Rotation Difference: N/A';
+  }
+}
+
 
       setInterval(updateDistanceAndRotation, 100);
     </script>
