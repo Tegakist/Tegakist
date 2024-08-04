@@ -1,73 +1,67 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>AR.js with A-Frame and Three.js</title>
+    <title>AR.js with A-Frame</title>
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    <script src="https://unpkg.com/three@0.106.2/build/three.js"></script>
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <script src="scene-config.js"></script>
-    <script src="marker-config.js"></script>
-    <script src="object-config.js"></script>
+    <style>
+      #version {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        font-family: 'Yu Gothic', sans-serif;
+        font-size: 16px;
+        color: gray;
+        opacity: 0.5;
+      }
+      #distance {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        font-family: 'Yu Gothic', sans-serif;
+        font-size: 16px;
+        color: black;
+      }
+    </style>
   </head>
   <body>
-    <a-scene>
-      <a-marker preset="hiro">
-        <a-box position="0 0.5 0" material="color: yellow;"></a-box>
+    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; vrModeEnabled: false; renderer: {logarithmicDepthBuffer: true}; patternRatio: 0.9; detectionMode: mono_and_matrix;">
+      <a-marker type="pattern" url="pattern-a.patt" emitevents="true">
+        <a-box position="0 0 0" material="opacity: 0.5; color: red;" visible="false"></a-box>
       </a-marker>
       <a-entity camera></a-entity>
     </a-scene>
-    <div id="version">Ver.24080401105</div>
-    <canvas id="camerafeed"></canvas>
+    <div id="version">Ver.2408041543</div>
+    <div id="distance">Distance: N/A</div>
     <script>
-      // Three.jsの基本設定
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-      const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('camerafeed') });
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      let markerVisible = false;
 
-      // カメラ映像の取得
-      navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
-        const video = document.createElement('video');
-        video.srcObject = stream;
-        video.play();
-
-        const videoTexture = new THREE.VideoTexture(video);
-        const videoMaterial = new THREE.MeshBasicMaterial({ map: videoTexture });
-        const videoGeometry = new THREE.PlaneGeometry(16, 9);
-        videoGeometry.scale(0.05, 0.05, 0.05);
-
-        const videoMesh = new THREE.Mesh(videoGeometry, videoMaterial);
-        scene.add(videoMesh);
-
-        // オブジェクトの追加
-        const boxGeometry = new THREE.BoxGeometry();
-        const boxMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-        const box = new THREE.Mesh(boxGeometry, boxMaterial);
-        scene.add(box);
-
-        // マーカーの検出と見失いのシミュレーション
-        let markerVisible = false;
-        document.querySelector('a-marker').addEventListener('markerFound', () => {
-          markerVisible = true;
-        });
-
-        document.querySelector('a-marker').addEventListener('markerLost', () => {
-          markerVisible = false;
-        });
-
-        // アニメーションループ
-        function animate() {
-          requestAnimationFrame(animate);
-          if (!markerVisible) {
-            box.visible = true;
-          }
-          renderer.render(scene, camera);
-        }
-        animate();
-      }).catch((error) => {
-        console.error('Error accessing the camera: ', error);
+      document.querySelector('a-marker').addEventListener('markerFound', (event) => {
+        const box = document.querySelector('a-box');
+        box.setAttribute('visible', 'true');
+        markerVisible = true;
       });
+
+      document.querySelector('a-marker').addEventListener('markerLost', (event) => {
+        const box = document.querySelector('a-box');
+        box.setAttribute('visible', 'true');
+        markerVisible = false;
+      });
+
+      function updateDistance() {
+        const marker = document.querySelector('a-marker');
+        const camera = document.querySelector('[camera]');
+        if (markerVisible) {
+          const markerPosition = marker.object3D.position;
+          const cameraPosition = camera.object3D.position;
+          const distance = markerPosition.distanceTo(cameraPosition).toFixed(2);
+          document.getElementById('distance').innerText = `Distance: ${distance} meters`;
+        } else {
+          document.getElementById('distance').innerText = 'Distance: N/A';
+        }
+      }
+
+      setInterval(updateDistance, 100);
     </script>
   </body>
 </html>
