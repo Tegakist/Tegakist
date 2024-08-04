@@ -14,7 +14,7 @@
       <a-marker></a-marker>
       <a-entity camera></a-entity>
     </a-scene>
-    <div id="version">Ver.2408050054</div>
+    <div id="version">Ver.2408050102</div>
 
     <script>
       let markerVisible = false;
@@ -40,7 +40,7 @@ document.querySelector('a-marker').addEventListener('markerLost', (event) => {
 AFRAME.registerComponent('keep-visible', {
   tick: function () {
     const box = document.querySelector('a-box');
-    console.log('Tick function executed', markerVisible); // デバッグ用ログ
+    console.log('Tick function executed', markerVisible, box.getAttribute('visible')); // デバッグ用ログ
     if (!markerVisible && box) {
       box.setAttribute('visible', 'true');
     }
