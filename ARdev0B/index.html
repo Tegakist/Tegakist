@@ -31,7 +31,7 @@
       </a-marker>
       <a-entity camera></a-entity>
     </a-scene>
-    <div id="version">Ver.2408041543</div>
+    <div id="version">Ver.2408041549</div>
     <div id="distance">Distance: N/A</div>
     <script>
       let markerVisible = false;
@@ -54,7 +54,7 @@
         if (markerVisible) {
           const markerPosition = marker.object3D.position;
           const cameraPosition = camera.object3D.position;
-          const distance = markerPosition.distanceTo(cameraPosition).toFixed(2);
+          const distance = markerPosition.distanceTo(cameraPosition)*100.toFixed(2);
           document.getElementById('distance').innerText = `Distance: ${distance} meters`;
         } else {
           document.getElementById('distance').innerText = 'Distance: N/A';
