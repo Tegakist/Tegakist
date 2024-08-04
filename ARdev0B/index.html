@@ -43,7 +43,7 @@
       </a-marker>
       <a-entity camera></a-entity>
     </a-scene>
-    <div id="version">Ver.2408042108</div>
+    <div id="version">Ver.2408042120</div>
     <div id="distance">Distance: N/A</div>
     <div id="rotation">Rotation Difference: N/A</div>
     <div id="device-orientation">Device Orientation: N/A</div>
@@ -51,15 +51,17 @@
     <script>
       let markerVisible = false;
       let initialCameraPosition = null;
+      let initialCameraRotation = null;
 
       document.querySelector('a-marker').addEventListener('markerFound', (event) => {
         const box = document.querySelector('a-box');
         box.setAttribute('visible', 'true');
         markerVisible = true;
 
-        // 初期カメラ位置を保存
+        // 初期カメラ位置と回転を保存
         const camera = document.querySelector('[camera]');
         initialCameraPosition = camera.object3D.position.clone();
+        initialCameraRotation = camera.object3D.rotation.clone();
       });
 
       document.querySelector('a-marker').addEventListener('markerLost', (event) => {
@@ -93,6 +95,14 @@
             const movementZ = (cameraPosition.z - initialCameraPosition.z).toFixed(2);
             document.getElementById('movement').innerText = `Movement: x: ${movementX} meters, y: ${movementY} meters, z: ${movementZ} meters`;
           }
+
+          // カメラの回転差を計算
+          if (initialCameraRotation) {
+            const rotationX = ((cameraRotation.x - initialCameraRotation.x) * (180 / Math.PI)).toFixed(2);
+            const rotationY = ((cameraRotation.y - initialCameraRotation.y) * (180 / Math.PI)).toFixed(2);
+            const rotationZ = ((cameraRotation.z - initialCameraRotation.z) * (180 / Math.PI)).toFixed(2);
+            document.getElementById('rotation').innerText = `Rotation Difference: x: ${rotationX}°, y: ${rotationY}°, z: ${rotationZ}°`;
+          }
         } else {
           document.getElementById('distance').innerText = 'Distance: N/A';
           document.getElementById('rotation').innerText = 'Rotation Difference: N/A';
@@ -101,10 +111,10 @@
       }
 
       function updateDeviceOrientation(event) {
-        const alpha = event.alpha.toFixed(2); // Z軸回転
-        const beta = event.beta.toFixed(2);   // X軸回転
-        const gamma = event.gamma.toFixed(2); // Y軸回転
-        document.getElementById('device-orientation').innerText = `Device Orientation: alpha: ${alpha}°, beta: ${beta}°, gamma: ${gamma}°`;
+        const x = event.beta.toFixed(2);   // X軸回転
+        const y = event.gamma.toFixed(2);  // Y軸回転
+        const z = event.alpha.toFixed(2);  // Z軸回転
+        document.getElementById('device-orientation').innerText = `Device Orientation: x: ${x}°, y: ${y}°, z: ${z}°`;
       }
 
       window.addEventListener('deviceorientation', updateDeviceOrientation);
