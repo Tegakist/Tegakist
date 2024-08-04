@@ -9,16 +9,5 @@ document.addEventListener('DOMContentLoaded', () => {
     patternRatio: 0.9;
     detectionMode: mono_and_matrix;
   `);
-
-  // keep-visibleコンポーネントの定義
-  AFRAME.registerComponent('keep-visible', {
-    tick: function () {
-      const box = document.querySelector('a-box');
-      if (!markerVisible && box) {
-        box.setAttribute('visible', 'true');
-      }
-    }
-  });
-
   scene.setAttribute('keep-visible', '');
 });
