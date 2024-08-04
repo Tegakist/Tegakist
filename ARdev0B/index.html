@@ -10,7 +10,8 @@
         font-family: 'Yu Gothic', sans-serif;
         font-size: 16px;
         color: white;
-        background-color: rgba(128, 128, 128, 0.5); /* 半透明のグレー */
+        background-color: gray;
+        opacity: 0.5;
         padding: 5px;
         border-radius: 5px;
       }
@@ -37,13 +38,12 @@
     </style>
   </head>
   <body>
-    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; vrModeEnabled: false; renderer: {logarithmicDepthBuffer: true}; patternRatio: 0.9; detectionMode: mono_and_matrix;">
-      <a-marker type="pattern" url="pattern-a.patt" emitevents="true">
-        <a-box position="0 0 0" material="opacity: 0.5; color: red;" visible="false"></a-box>
-      </a-marker>
+    <a-scene>
+      <a-marker></a-marker>
       <a-entity camera></a-entity>
     </a-scene>
     <div id="version">Ver.2408042348</div>
+    
     <div id="distance">Distance: N/A</div>
     <div id="rotation">Rotation Difference: N/A</div>
     <div id="device-orientation">Device Orientation: N/A</div>
