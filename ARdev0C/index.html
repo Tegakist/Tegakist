@@ -12,7 +12,7 @@
 </head>
 <body style="margin: 0; overflow: hidden;">
     <a-scene>
-        <a-marker id="marker"></a-marker>
+        <a-marker></a-marker> <!-- idを削除 -->
         <a-entity camera></a-entity>
     </a-scene>
 
@@ -20,7 +20,7 @@
     <div class="marker-status" id="marker-status"></div>
 
     <script>
-        const version = "2408051451"; /* ===バージョン情報=== */
+        const version = "2408051459"; /* ===バージョン情報=== */
         document.getElementById('version').textContent = `Ver. ${version}`;
 
         /* マーカー検知状態表示（デバッグ）用 */
