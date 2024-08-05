@@ -20,7 +20,7 @@
     <div class="version" id="version"></div>
 
     <script>
-        const version = "2408051416"; // バージョン番号をここで設定
+        const version = "2408051418"; // バージョン番号をここで設定
         document.getElementById('version').textContent = `Ver. ${version}`;
 
         const marker = document.querySelector('#marker');
@@ -35,13 +35,6 @@
             isPlaced = true;
             updateBoxPositionAndRotation();
         });
-
-        const updateBoxPositionAndRotation = () => {
-            if (isPlaced && savedPosition && savedRotation) {
-                box.object3D.position.copy(savedPosition);
-                box.object3D.rotation.copy(savedRotation);
-            }
-        };
 
         // マーカーの検出状態にかかわらず、オブジェクトを表示し続ける
         const updatePosition = () => {
