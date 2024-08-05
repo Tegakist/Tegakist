@@ -14,7 +14,7 @@
         <a-entity camera></a-entity>
     </a-scene>
 
-    <script>
+   <script>
         const marker = document.querySelector('#marker');
         const box = document.querySelector('#box');
         let isPlaced = false;
@@ -27,12 +27,14 @@
             }
         });
 
-        marker.addEventListener('markerLost', () => {
+        // マーカーの検出状態にかかわらず、オブジェクトを表示し続ける
+        const updatePosition = () => {
             if (isPlaced && savedPosition) {
-                box.setAttribute('position', savedPosition);
-                box.setAttribute('visible', true);
+                box.object3D.position.copy(savedPosition);
             }
-        });
+            requestAnimationFrame(updatePosition);
+        };
+        updatePosition();
     </script>
 </body>
 </html>
