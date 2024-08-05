@@ -19,10 +19,22 @@
 
     <div class="version" id="version"></div>
     <script>
-        const version = "2408051422"; /* ===バージョン情報=== */
+        const version = "2408051429"; /* ===バージョン情報=== */
         document.getElementById('version').textContent = `Ver. ${version}`;
     </script>
-        
+    
+    <!-- マーカー検知状態表示（デバッグ）用 -->
+    <div class="marker-status" id="marker-status"></div>
+    <script>
+        const markerStatus = document.getElementById('marker-status');
+        marker.addEventListener('markerFound', () => {
+            markerStatus.textContent = 'Marker Found';
+        });
+        marker.addEventListener('markerLost', () => {
+            markerStatus.textContent = 'Marker Lost';
+        });
+    </script>
+    
     <script>
         const marker = document.querySelector('#marker');
         const box = document.querySelector('#box');
@@ -45,6 +57,6 @@
         };
         updatePosition();
     </script>
-
+    
 </body>
 </html>
