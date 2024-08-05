@@ -7,3 +7,13 @@
   color: gray;
   opacity: 0.5;
 }
+
+#marker-status {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  font-family: 'Yu Gothic', sans-serif;
+  font-size: 16px;
+  color: gray;
+  opacity: 0.5;
+}
