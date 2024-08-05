@@ -18,32 +18,33 @@
     </a-scene>
 
     <div class="version" id="version"></div>
-
     <script>
-        const version = "2408051418"; // バージョン番号をここで設定
+        const version = "2408051422"; /* ===バージョン情報=== */
         document.getElementById('version').textContent = `Ver. ${version}`;
-
+    </script>
+        
+    <script>
         const marker = document.querySelector('#marker');
         const box = document.querySelector('#box');
         let isPlaced = false;
         let savedPosition = null;
-        let savedRotation = null;
 
         marker.addEventListener('markerFound', () => {
-            savedPosition = marker.object3D.position.clone();
-            savedRotation = marker.object3D.rotation.clone();
-            isPlaced = true;
-            updateBoxPositionAndRotation();
+            if (!isPlaced) {
+                savedPosition = box.object3D.position.clone();
+                isPlaced = true;
+            }
         });
 
         // マーカーの検出状態にかかわらず、オブジェクトを表示し続ける
         const updatePosition = () => {
-            if (isPlaced) {
-                updateBoxPositionAndRotation();
+            if (isPlaced && savedPosition) {
+                box.object3D.position.copy(savedPosition);
             }
             requestAnimationFrame(updatePosition);
         };
         updatePosition();
     </script>
+
 </body>
 </html>
