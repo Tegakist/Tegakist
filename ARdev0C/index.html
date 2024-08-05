@@ -18,14 +18,13 @@
     </a-scene>
 
     <div class="version" id="version"></div>
-    <script>
-        const version = "2408051429"; /* ===バージョン情報=== */
-        document.getElementById('version').textContent = `Ver. ${version}`;
-    </script>
-    
-    <!-- マーカー検知状態表示（デバッグ）用 -->
     <div class="marker-status" id="marker-status"></div>
+
     <script>
+        const version = "2408051432"; /* ===バージョン情報=== */
+        document.getElementById('version').textContent = `Ver. ${version}`;
+
+        /* マーカー検知状態表示（デバッグ）用 */
         const markerStatus = document.getElementById('marker-status');
         marker.addEventListener('markerFound', () => {
             markerStatus.textContent = 'Marker Found';
