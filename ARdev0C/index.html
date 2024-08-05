@@ -12,7 +12,7 @@
 </head>
 <body style="margin: 0; overflow: hidden;">
     <a-scene>
-        <a-marker></a-marker>
+        <a-marker id="marker"></a-marker>
         <a-entity camera></a-entity>
     </a-scene>
 
@@ -20,43 +20,73 @@
     <div class="marker-status" id="marker-status"></div>
 
     <script>
-        const version = "2408051743"; /* ===バージョン情報=== */
+        AFRAME.registerComponent('persistent-visibility', {
+            init: function () {
+                const el = this.el;
+                const marker = document.querySelector('#marker');
+                let isPlaced = false;
+                let savedPosition = null;
+
+                marker.addEventListener('markerFound', () => {
+                    if (!isPlaced) {
+                        savedPosition = el.object3D.position.clone();
+                        isPlaced = true;
+                    }
+                    el.setAttribute('visible', 'true');
+                });
+
+                marker.addEventListener('markerLost', () => {
+                    if (isPlaced && savedPosition) {
+                        el.object3D.position.copy(savedPosition);
+                        el.setAttribute('visible', 'true');
+                    }
+                });
+
+                const updatePosition = () => {
+                    if (isPlaced && savedPosition) {
+                        el.object3D.position.copy(savedPosition);
+                    }
+                    requestAnimationFrame(updatePosition);
+                };
+                updatePosition();
+            }
+        });
+
+        const version = "2408051756"; /* ===バージョン情報=== */
         document.getElementById('version').textContent = `Ver. ${version}`;
 
         /* マーカー検知状態表示（デバッグ）用 */
-document.addEventListener('DOMContentLoaded', () => {
-    const marker = document.querySelector('#marker');
-    const markerStatus = document.getElementById('marker-status');
-    const box = document.querySelector('#box');
-    let isPlaced = false;
-    let savedPosition = null;
+        const marker = document.querySelector('#marker');
+        const markerStatus = document.getElementById('marker-status');
+        const box = document.querySelector('#box');
+        let isPlaced = false;
+        let savedPosition = null;
 
-    marker.addEventListener('markerFound', () => {
-        markerStatus.textContent = 'Marker Found';
-        if (!isPlaced) {
-            savedPosition = box.object3D.position.clone();
-            isPlaced = true;
-        }
-        box.setAttribute('visible', 'true'); // マーカー検出時に表示
-    });
+        marker.addEventListener('markerFound', () => {
+            markerStatus.textContent = 'Marker Found';
+            if (!isPlaced) {
+                savedPosition = box.object3D.position.clone();
+                isPlaced = true;
+            }
+            box.setAttribute('visible', 'true'); // マーカー検出時に表示
+        });
 
-    marker.addEventListener('markerLost', () => {
-        markerStatus.textContent = 'Marker Lost';
-        if (isPlaced && savedPosition) {
-            box.object3D.position.copy(savedPosition);
-            box.setAttribute('visible', 'true'); // マーカー未検出時も表示
-        }
-    });
+        marker.addEventListener('markerLost', () => {
+            markerStatus.textContent = 'Marker Lost';
+            if (isPlaced && savedPosition) {
+                box.object3D.position.copy(savedPosition);
+                box.setAttribute('visible', 'true'); // マーカー未検出時も表示
+            }
+        });
 
-    // マーカーの検出状態にかかわらず、オブジェクトを表示し続ける
-    const updatePosition = () => {
-        if (isPlaced && savedPosition) {
-            box.object3D.position.copy(savedPosition);
-        }
-        requestAnimationFrame(updatePosition);
-    };
-    updatePosition();
-});
+        // マーカーの検出状態にかかわらず、オブジェクトを表示し続ける
+        const updatePosition = () => {
+            if (isPlaced && savedPosition) {
+                box.object3D.position.copy(savedPosition);
+            }
+            requestAnimationFrame(updatePosition);
+        };
+        updatePosition();
     </script>
 </body>
 </html>
