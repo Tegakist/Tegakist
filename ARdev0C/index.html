@@ -12,7 +12,7 @@
 </head>
 <body style="margin: 0; overflow: hidden;">
     <a-scene>
-        <a-marker></a-marker> <!-- idを削除 -->
+        <a-marker></a-marker>
         <a-entity camera></a-entity>
     </a-scene>
 
@@ -20,29 +20,30 @@
     <div class="marker-status" id="marker-status"></div>
 
     <script>
-        const version = "2408051502"; /* ===バージョン情報=== */
+        const version = "2408051509"; /* ===バージョン情報=== */
         document.getElementById('version').textContent = `Ver. ${version}`;
 
         /* マーカー検知状態表示（デバッグ）用 */
         const marker = document.querySelector('#marker');
         const markerStatus = document.getElementById('marker-status');
-        marker.addEventListener('markerFound', () => {
-            markerStatus.textContent = 'Marker Found';
-        });
-        marker.addEventListener('markerLost', () => {
-            markerStatus.textContent = 'Marker Lost';
-        });
-    </script>
-    
-    <script>
         const box = document.querySelector('#box');
         let isPlaced = false;
         let savedPosition = null;
 
         marker.addEventListener('markerFound', () => {
+            markerStatus.textContent = 'Marker Found';
             if (!isPlaced) {
                 savedPosition = box.object3D.position.clone();
                 isPlaced = true;
+            }
+            box.setAttribute('visible', 'true'); // マーカー検出時に表示
+        });
+
+        marker.addEventListener('markerLost', () => {
+            markerStatus.textContent = 'Marker Lost';
+            if (isPlaced && savedPosition) {
+                box.object3D.position.copy(savedPosition);
+                box.setAttribute('visible', 'true'); // マーカー未検出時も表示
             }
         });
 
