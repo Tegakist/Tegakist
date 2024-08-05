@@ -20,41 +20,43 @@
     <div class="marker-status" id="marker-status"></div>
 
     <script>
-        const version = "2408051509"; /* ===バージョン情報=== */
+        const version = "2408051743"; /* ===バージョン情報=== */
         document.getElementById('version').textContent = `Ver. ${version}`;
 
         /* マーカー検知状態表示（デバッグ）用 */
-        const marker = document.querySelector('#marker');
-        const markerStatus = document.getElementById('marker-status');
-        const box = document.querySelector('#box');
-        let isPlaced = false;
-        let savedPosition = null;
+document.addEventListener('DOMContentLoaded', () => {
+    const marker = document.querySelector('#marker');
+    const markerStatus = document.getElementById('marker-status');
+    const box = document.querySelector('#box');
+    let isPlaced = false;
+    let savedPosition = null;
 
-        marker.addEventListener('markerFound', () => {
-            markerStatus.textContent = 'Marker Found';
-            if (!isPlaced) {
-                savedPosition = box.object3D.position.clone();
-                isPlaced = true;
-            }
-            box.setAttribute('visible', 'true'); // マーカー検出時に表示
-        });
+    marker.addEventListener('markerFound', () => {
+        markerStatus.textContent = 'Marker Found';
+        if (!isPlaced) {
+            savedPosition = box.object3D.position.clone();
+            isPlaced = true;
+        }
+        box.setAttribute('visible', 'true'); // マーカー検出時に表示
+    });
 
-        marker.addEventListener('markerLost', () => {
-            markerStatus.textContent = 'Marker Lost';
-            if (isPlaced && savedPosition) {
-                box.object3D.position.copy(savedPosition);
-                box.setAttribute('visible', 'true'); // マーカー未検出時も表示
-            }
-        });
+    marker.addEventListener('markerLost', () => {
+        markerStatus.textContent = 'Marker Lost';
+        if (isPlaced && savedPosition) {
+            box.object3D.position.copy(savedPosition);
+            box.setAttribute('visible', 'true'); // マーカー未検出時も表示
+        }
+    });
 
-        // マーカーの検出状態にかかわらず、オブジェクトを表示し続ける
-        const updatePosition = () => {
-            if (isPlaced && savedPosition) {
-                box.object3D.position.copy(savedPosition);
-            }
-            requestAnimationFrame(updatePosition);
-        };
-        updatePosition();
+    // マーカーの検出状態にかかわらず、オブジェクトを表示し続ける
+    const updatePosition = () => {
+        if (isPlaced && savedPosition) {
+            box.object3D.position.copy(savedPosition);
+        }
+        requestAnimationFrame(updatePosition);
+    };
+    updatePosition();
+});
     </script>
 </body>
 </html>
