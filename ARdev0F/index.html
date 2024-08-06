@@ -12,7 +12,11 @@
         <a-scene
             vr-mode-ui="enabled: false;"
             loading-screen="enabled: false;"
-            arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+            arjs="trackingMethod: best;
+                sourceType: webcam;
+                debugUIEnabled: false;
+                detectionMode: color_and_matrix;
+                matrixCodeType: 4x4;"
             id="scene"
             embedded
             gesture-detector
