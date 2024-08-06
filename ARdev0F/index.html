@@ -21,12 +21,12 @@
             gesture-detector
         >
             <a-nft
-                id="animated-marker"
+                id="marker"
                 type="nft"
                 url="output"
                 raycaster="objects: .clickable"
                 cursor="fuse: false; rayOrigin: mouse;"
-                id="markerA"
+                emitevents="true"
             >
                 <a-image
                     src="SSS-B.png"
@@ -39,6 +39,15 @@
 
             <a-entity camera></a-entity>
         </a-scene>
+
+        <script>
+    document.querySelector('#marker').addEventListener('markerFound', function() {
+        console.log('マーカーが検出されました');
+    });
+
+    document.querySelector('#marker').addEventListener('markerLost', function() {
+        console.log('マーカーが見失われました');
+    });
+</script>
     </body>
 </html>
-
