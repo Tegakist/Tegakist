@@ -1,156 +1,108 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>A-Frame WebAR Example</title>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- A-Frame を読み込む -->
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
-    <style>
-        #version {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 16px;
-            font-family: 'Yu Gothic', sans-serif;
-            color: gray;
-            opacity: 0.5;
-            visibility: visible; 
-        }
-        #info {
-            position: fixed;
-            bottom: 10px;
-            left: 10px;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 14px;
-            font-family: 'Yu Gothic', sans-serif;
-            color: gray;
-            background-color: rgba(255, 255, 255, 0.5);
-            visibility: visible;
-        }
-    </style>
-</head>
-<body style='margin: 0; overflow: hidden;'>
-    <div id="version">Ver.1.0</div>
-    <div id="info">
-        <div id="markerStatus">Marker Status: Not Detected</div>
-        <div id="markerPosition">Marker Position: N/A</div>
-        <div id="markerRotation">Marker Rotation: N/A</div>
-        <div id="currentPosition">Current Position: N/A</div>
-        <div id="currentRotation">Current Rotation: N/A</div>
-        <div id="lastPosition">Last Position: N/A</div>
-        <div id="lastRotation">Last Rotation: N/A</div>
-    </div>
-
-    <script>
-        //////////////////// Ver. ////////////////////
-        var versionNumber = "2408021758"; 
-        document.getElementById("version").innerText = "Ver." + versionNumber;
-    </script>
-    
-<!-- シーン -->
-    <a-scene
-        embedded
-        arjs="
-            sourceType: webcam;
-            debugUIEnabled: false;
-            patternRatio: 0.90;
-            detectionMode: mono_and_matrix;
-            matrixCodeType: 3x3_PARITY65;
-            "
-        vr-mode-ui="enabled: false;"
-        renderer="logarithmicDepthBuffer: true;"
-    >
-<!-- マーカーパターン
-    例）パターン：type="pattern" url="pattern-a.patt"
--->　　
-        <a-marker 
-            type="pattern" 
-            url="pattern-a.patt"
-            emitevents="true"
-        >
-<!-- 表示するオブジェクト
-    例）ボックス：<a-box position="0 0.5 0" material="color: red; opacity: 0.5;"></a-box>
+    <!-- AR.js を読み込む -->
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+<!-- 
+    A-Frame Extras を読み込む
+    <script src="https://rawgit.com/donmccurdy/aframe-extras/master/dist/aframe-extras.loaders.min.js"></script>
 -->
-            <a-box id="box" position="0 0.5 0" material="color: red; opacity: 0.5;" smooth-movement="factor: 0.01"></a-box>
-        </a-marker>
-        <a-entity camera></a-entity>
+    <title>Test</title>
+    <style>
+      #status {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: 'Yu Gothic', sans-serif;
+        color: gray;
+      }
+      #markerImage {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0.5;
+        display: none;
+        width: 200px; /* ここでマーカー画像の大きさを設定します */
+        height: 200px; /* ここでマーカー画像の大きさを設定します */
+      }
+    </style>
+  </head>
+  <body style="margin: 0; overflow: hidden">
+    <div id="status">Ver.</div>
+    <img id="markerImage" src="">
+    <!-- A-FrameにAR.jsを紐づけ、VRボタン非表示、深度バッファ追加 -->
+    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; patternRatio: 0.90; detectionMode: mono_and_matrix; matrixCodeType: 3x3_PARITY65;" vr-mode-ui="enabled: false;" renderer="logarithmicDepthBuffer: true;">
+      <a-assets>
+        <img id="Logo" src="">
+      </a-assets>
+      <a-marker id="marker" type='pattern' url="" emitevents>
+      </a-marker>
+      <!-- カメラを追加 -->
+      <a-entity camera></a-entity>
     </a-scene>
-
+    
     <script>
-        var lastPosition = new THREE.Vector3();
-        var lastRotation = new THREE.Euler();
-        var markerPosition = new THREE.Vector3();
-        var markerRotation = new THREE.Euler();
+      var versionNumber = "2407311321"; //バージョン情報
+      var markerImageSrc = "pattern-a.png"; //マーカー未検知時に画面表示する画像
+      var logoSrc = "./a.png"; //マーカー検知時の表示オブジェクト
+    　var patternUrl = "./pattern-a.patt"; //ディスクリプタファイル
 
-        AFRAME.registerComponent('smooth-movement', {
-            schema: {
-                factor: {type: 'number'}
-            },
-            init: function () {
-                this.previousPosition = new THREE.Vector3();
-                this.previousRotation = new THREE.Euler();
-            },
-            tick: function () {
-                var el = this.el;
-                var currentPosition = el.object3D.position;
-                var currentRotation = el.object3D.rotation;
+      var marker = document.querySelector('#marker');
+      var statusText = document.querySelector('#status');
+      var markerImage = document.querySelector('#markerImage');
+      var imageDisplayed = false;
+      var markerLostTimeout;
 
-                // マーカーの位置と回転を取得
-                var marker = document.querySelector('a-marker');
-                if (marker.object3D.visible) {
-                    markerPosition.copy(marker.object3D.position);
-                    markerRotation.copy(marker.object3D.rotation);
-                }
+      // 変数を使って要素を設定
+      statusText.innerText = "Ver." + versionNumber;
+      markerImage.src = markerImageSrc;
+      document.querySelector('#Logo').src = logoSrc;
+      marker.setAttribute('url', patternUrl);
 
-                // 平滑化
-                currentPosition.x = this.previousPosition.x + (currentPosition.x - this.previousPosition.x) * this.data.factor;
-                currentPosition.y = this.previousPosition.y + (currentPosition.y - this.previousPosition.y) * this.data.factor;
-                currentPosition.z = this.previousPosition.z + (currentPosition.z - this.previousPosition.z) * this.data.factor;
+      marker.addEventListener('markerFound', function () {
+        clearTimeout(markerLostTimeout);
+        markerImage.style.display = 'none';
+        var image = document.createElement('a-image');
+        image.setAttribute('src', logoSrc);
+        image.setAttribute('position', '0 0 0');
+        image.setAttribute('scale', '1 1 1');
+        image.setAttribute('rotation', '-90 0 0');
+        marker.appendChild(image);
+        imageDisplayed = true;
+      });
 
-                currentRotation.x = this.previousRotation.x + (currentRotation.x - this.previousRotation.x) * this.data.factor;
-                currentRotation.y = this.previousRotation.y + (currentRotation.y - this.previousRotation.y) * this.data.factor;
-                currentRotation.z = this.previousRotation.z + (currentRotation.z - this.previousRotation.z) * this.data.factor;
+      marker.addEventListener('markerLost', function () {
+        markerImage.style.display = 'block';
+        if (!imageDisplayed) {
+          while (marker.firstChild) {
+            marker.removeChild(marker.firstChild);
+          }
+        }
+        imageDisplayed = false;
+        markerLostTimeout = setTimeout(function () {
+          markerImage.style.display = 'none';
+        }, 3000); // 3秒間待つ
+      });
 
-                // 更新
-                this.previousPosition.copy(currentPosition);
-                this.previousRotation.copy(currentRotation);
-
-                // 最新の位置と回転を保存
-                lastPosition.copy(currentPosition);
-                lastRotation.copy(currentRotation);
-
-                // 情報を更新
-                document.getElementById('markerPosition').innerText = `Marker Position: (${markerPosition.x.toFixed(2)}, ${markerPosition.y.toFixed(2)}, ${markerPosition.z.toFixed(2)})`;
-                document.getElementById('markerRotation').innerText = `Marker Rotation: (${markerRotation.x.toFixed(2)}, ${markerRotation.y.toFixed(2)}, ${markerRotation.z.toFixed(2)})`;
-                document.getElementById('currentPosition').innerText = `Current Position: (${currentPosition.x.toFixed(2)}, ${currentPosition.y.toFixed(2)}, ${currentPosition.z.toFixed(2)})`;
-                document.getElementById('currentRotation').innerText = `Current Rotation: (${currentRotation.x.toFixed(2)}, ${currentRotation.y.toFixed(2)}, ${currentRotation.z.toFixed(2)})`;
-                document.getElementById('lastPosition').innerText = `Last Position: (${lastPosition.x.toFixed(2)}, ${lastPosition.y.toFixed(2)}, ${lastPosition.z.toFixed(2)})`;
-                document.getElementById('lastRotation').innerText = `Last Rotation: (${lastRotation.x.toFixed(2)}, ${lastRotation.y.toFixed(2)}, ${lastRotation.z.toFixed(2)})`;
-            }
-        });
-
-        // マーカー検知時及び再検知時にオブジェクト表示を即時更新
-        document.querySelector('a-marker').addEventListener('markerFound', function (evt) {
-            var marker = evt.target;
-            var object = marker.querySelector('#box');
-            object.setAttribute('visible', true);
-            object.object3D.position.copy(marker.object3D.position);
-            object.object3D.rotation.copy(marker.object3D.rotation);
-            document.getElementById('markerStatus').innerText = "Marker Status: Detected";
-            document.getElementById('markerPosition').innerText = `Marker Position: (${marker.object3D.position.x.toFixed(2)}, ${marker.object3D.position.y.toFixed(2)}, ${marker.object3D.position.z.toFixed(2)})`;
-            document.getElementById('markerRotation').innerText = `Marker Rotation: (${marker.object3D.rotation.x.toFixed(2)}, ${marker.object3D.rotation.y.toFixed(2)}, ${marker.object3D.rotation.z.toFixed(2)})`;
-        });
-
-        // マーカーを見失う直前の位置でオブジェクトを空間上に留める
-        document.querySelector('a-marker').addEventListener('markerLost', function (evt) {
-            var object = document.querySelector('#box');
-            object.setAttribute('visible', true);
-            object.object3D.position.copy(lastPosition);
-            object.object3D.rotation.copy(lastRotation);
-            document.getElementById('markerStatus').innerText = "Marker Status: Not Detected";
-        });
+      window.addEventListener('load', function () {
+        setTimeout(function () {
+          statusText.innerText = '';
+          markerImage.style.display = 'block';
+          setTimeout(function () {
+            statusText.innerText = '画像読込完了';
+            setTimeout(function () {
+              statusText.innerText = '';
+            }, 3000);
+          }, 0);
+        }, 3000);
+      });
     </script>
-</body>
+  </body>
 </html>
