@@ -3,7 +3,17 @@
   bottom: 10px;
   right: 10px;
   font-family: 'Yu Gothic', sans-serif;
-  font-size: 16px;
+  font-size: 14px; /* 修正 */
+  color: gray;
+  opacity: 0.5;
+}
+
+#marker-status {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  font-family: 'Yu Gothic', sans-serif;
+  font-size: 14px; /* バージョン表示と同じ */
   color: gray;
   opacity: 0.5;
 }
