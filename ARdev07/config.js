@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // マーカーの設定
   const marker = document.querySelector('a-marker');
   marker.type = 'pattern';
-  marker.url = 'marker.patt';
+  marker.url = 'pattern-OTK.patt';
   marker.emitevents = 'true';
 
   // オブジェクト（イメージ）の設定
