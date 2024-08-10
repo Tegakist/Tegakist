@@ -5,31 +5,31 @@
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
-    <script src="scene-config.js"></script>
-    <script src="marker-config.js"></script>
-    <script src="object-config.js"></script>
+    <script src="config.js"></script> <!-- config.jsに変更 -->
   </head>
   <body>
     <a-scene>
       <a-marker></a-marker>
       <a-entity camera></a-entity>
     </a-scene>
-    <div id="version">Ver.2408101043</div>
+    <div id="version">Ver.2408101115</div>
+    <div id="marker-status">Marker not detected</div> <!-- 追加 -->
     <script>
       let markerVisible = false;
 
       document.querySelector('a-marker').addEventListener('markerFound', (event) => {
-        const box = document.querySelector('a-box');
-        box.setAttribute('visible', 'true');
+        const image = document.querySelector('a-image');
+        image.visible = true; // 画像を表示する
         markerVisible = true;
+        document.getElementById('marker-status').innerText = 'Marker detected'; // マーカー検知状態を表示する
       });
 
       document.querySelector('a-marker').addEventListener('markerLost', (event) => {
-        const box = document.querySelector('a-box');
-        box.setAttribute('visible', 'true');
+        const image = document.querySelector('a-image');
+        image.visible = false; // 画像を非表示にする
         markerVisible = false;
+        document.getElementById('marker-status').innerText = 'Marker not detected'; // マーカー検知状態を表示する
       });
     </script>
   </body>
 </html>
-
