@@ -9,14 +9,17 @@ document.addEventListener('DOMContentLoaded', () => {
     renderer: {logarithmicDepthBuffer: true};
     patternRatio: 0.9;
     detectionMode: mono_and_matrix;
-    matrixCodeType: 3x3_PARITY65; // 追加
+    matrixCodeType: 3x3_PARITY65 // 追加
   `;
 
   // マーカーの設定
   const marker = document.querySelector('a-marker');
   marker.type = 'pattern';
-  marker.url = 'pattern-OTK.patt';
+  marker.url = 'pattern-a.patt';
   marker.emitevents = 'true';
+
+  // マーカー情報をコンソールに表示
+  console.log('Marker pattern URL:', marker.url);
 
   // オブジェクト（イメージ）の設定
   const image = document.createElement('a-image');
