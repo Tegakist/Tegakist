@@ -36,7 +36,7 @@
     </a-scene>
     <video id="video" width="640" height="480" autoplay style="display:none;"></video>
     <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
-    <div class="version-info">Ver.2408120018</div>
+    <div class="version-info">Ver.2408120023</div>
     <div class="comparison-results" id="comparison-results">
       ORB Matches: <span id="orb-matches">0</span><br>
       SIFT Matches: <span id="sift-matches">0</span>
@@ -114,11 +114,11 @@
         orb.detectAndCompute(gray, new cv.Mat(), orbKeypoints, orbDescriptors);
         console.log('ORB Keypoints:', orbKeypoints.size());
 
-        // SIFTを使用してフレーム内の特徴点を検出
-        const sift = new cv.SIFT();
+        // ORBを使用してフレーム内の特徴点を検出（SIFTの代わり）
+        const orb2 = new cv.ORB();
         const siftKeypoints = new cv.KeyPointVector();
         const siftDescriptors = new cv.Mat();
-        sift.detectAndCompute(gray, new cv.Mat(), siftKeypoints, siftDescriptors);
+        orb2.detectAndCompute(gray, new cv.Mat(), siftKeypoints, siftDescriptors);
         console.log('SIFT Keypoints:', siftKeypoints.size());
 
         // 登録されたディスクリプタとフレーム内のディスクリプタを比較
