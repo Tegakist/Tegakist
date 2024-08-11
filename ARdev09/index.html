@@ -36,7 +36,7 @@
     </a-scene>
     <video id="video" width="640" height="480" autoplay style="display:none;"></video>
     <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
-    <div class="version-info">Ver.2408120028</div>
+    <div class="version-info">Ver.2408120042</div>
     <div class="comparison-results" id="comparison-results">
       ORB Matches: <span id="orb-matches">0</span><br>
       SIFT Matches: <span id="sift-matches">0</span>
@@ -121,14 +121,22 @@
         orb2.detectAndCompute(gray, new cv.Mat(), siftKeypoints, siftDescriptors);
         console.log('SIFT Keypoints:', siftKeypoints.size());
 
+        // NaNチェック
+        function isValidDescriptor(descriptor) {
+          return !descriptor.some(isNaN);
+        }
+
+        const validOrbDesc = orbDesc.filter(isValidDescriptor);
+        const validSiftDesc = siftDesc.filter(isValidDescriptor);
+
         // 登録されたディスクリプタとフレーム内のディスクリプタを比較
         const bf = new cv.BFMatcher(cv.NORM_HAMMING, true);
         const orbMatches = new cv.DMatchVector();
-        bf.match(orbDescriptors, new cv.Mat(orbDesc), orbMatches);
+        bf.match(orbDescriptors, new cv.Mat(validOrbDesc), orbMatches);
         console.log('ORB Matches:', orbMatches.size());
 
         const siftMatches = new cv.DMatchVector();
-        bf.match(siftDescriptors, new cv.Mat(siftDesc), siftMatches);
+        bf.match(siftDescriptors, new cv.Mat(validSiftDesc), siftMatches);
         console.log('SIFT Matches:', siftMatches.size());
 
         // 比較結果を表示
