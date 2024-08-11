@@ -2,12 +2,32 @@
 <html>
   <head>
     <title>Markerless AR</title>
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/2.0.0/aframe/build/aframe-ar.js"></script>
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/master/aframe/build/aframe-ar.js"></script>
     <script async src="https://docs.opencv.org/4.x/opencv.js"></script>
+    <style>
+      .version-info, .comparison-results, .detection-status {
+        position: absolute;
+        font-family: 'Arial', sans-serif;
+        font-size: 14px;
+        color: gray;
+      }
+      .version-info {
+        bottom: 10px;
+        right: 10px;
+      }
+      .comparison-results {
+        bottom: 50px;
+        left: 10px;
+      }
+      .detection-status {
+        bottom: 10px;
+        left: 10px;
+      }
+    </style>
   </head>
   <body style="margin: 0; overflow: hidden;">
-    <a-scene embedded arjs="sourceType: webcam;">
+    <a-scene embedded arjs="sourceType: webcam;" vr-mode-ui="enabled: false" debugUIEnabled="false">
       <a-entity camera></a-entity>
       <!-- カスタムスクリプトで検出された画像に対して3Dオブジェクトを配置 -->
       <a-entity id="custom-marker" position="0 0 0">
@@ -16,6 +36,14 @@
     </a-scene>
     <video id="video" width="640" height="480" autoplay style="display:none;"></video>
     <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+    <div class="version-info">Ver.2408112357</div>
+    <div class="comparison-results" id="comparison-results">
+      ORB Matches: <span id="orb-matches">0</span><br>
+      SIFT Matches: <span id="sift-matches">0</span>
+    </div>
+    <div class="detection-status" id="detection-status">
+      Detection Status: <span id="status">Not Detected</span>
+    </div>
     <script>
       // ウェブカメラからのフレームを取得
       async function startVideo() {
@@ -95,10 +123,16 @@
         const siftMatches = new cv.DMatchVector();
         bf.match(siftDescriptors, new cv.Mat(siftDescriptors), siftMatches);
 
-        if (orbMatches.size() > 0 || siftMatches.size() > 0) {
-          // 一致する場合、3Dオブジェクトを表示
+        // 比較結果を表示
+        document.getElementById('orb-matches').textContent = orbMatches.size();
+        document.getElementById('sift-matches').textContent = siftMatches.size();
+
+        // 検知状況を表示
+        if (orbMatches.size() > 0 && siftMatches.size() > 0) {
+          document.getElementById('status').textContent = 'Detected';
           document.querySelector('#custom-marker').setAttribute('visible', true);
         } else {
+          document.getElementById('status').textContent = 'Not Detected';
           document.querySelector('#custom-marker').setAttribute('visible', false);
         }
 
