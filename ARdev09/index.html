@@ -2,8 +2,8 @@
 <html>
   <head>
     <title>Markerless AR</title>
-    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-    <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/2.0.0/aframe/build/aframe-ar.js"></script>
     <script async src="https://docs.opencv.org/4.x/opencv.js"></script>
     <style>
       .version-info, .comparison-results, .detection-status {
@@ -36,7 +36,7 @@
     </a-scene>
     <video id="video" width="640" height="480" autoplay style="display:none;"></video>
     <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
-    <div class="version-info">Ver.2408120011</div>
+    <div class="version-info">Ver.2408120018</div>
     <div class="comparison-results" id="comparison-results">
       ORB Matches: <span id="orb-matches">0</span><br>
       SIFT Matches: <span id="sift-matches">0</span>
@@ -78,26 +78,26 @@
         console.log('isetText:', isetText);
         console.log('fsetText:', fsetText);
         console.log('fset3Text:', fset3Text);
-        
+
         const keypoints = isetText.trim().split('\n').map(line => {
           const [x, y, size, angle] = line.split(' ').map(Number);
           return { x, y, size, angle };
         });
 
-        const orbDescriptors = fsetText.trim().split('\n').map(line => {
-          return line.split(' ').map(Number);
+        const orbDesc = fsetText.trim().split('\n').map(line => {
+          return new Float32Array(line.split(' ').map(Number));
         });
 
-        const siftDescriptors = fset3Text.trim().split('\n').map(line => {
-          return line.split(' ').map(Number);
+        const siftDesc = fset3Text.trim().split('\n').map(line => {
+          return new Float32Array(line.split(' ').map(Number));
         });
 
-        return { keypoints, orbDescriptors, siftDescriptors };
+        return { keypoints, orbDesc, siftDesc };
       }
 
       // カスタム画像検出スクリプト
       async function detectImage() {
-        const { keypoints, orbDescriptors, siftDescriptors } = await loadDescriptors();
+        const { keypoints, orbDesc, siftDesc } = await loadDescriptors();
 
         // ウェブカメラからのフレームを取得
         const frame = drawFrame();
@@ -112,20 +112,24 @@
         const orbKeypoints = new cv.KeyPointVector();
         const orbDescriptors = new cv.Mat();
         orb.detectAndCompute(gray, new cv.Mat(), orbKeypoints, orbDescriptors);
+        console.log('ORB Keypoints:', orbKeypoints.size());
 
         // SIFTを使用してフレーム内の特徴点を検出
         const sift = new cv.SIFT();
         const siftKeypoints = new cv.KeyPointVector();
         const siftDescriptors = new cv.Mat();
         sift.detectAndCompute(gray, new cv.Mat(), siftKeypoints, siftDescriptors);
+        console.log('SIFT Keypoints:', siftKeypoints.size());
 
         // 登録されたディスクリプタとフレーム内のディスクリプタを比較
         const bf = new cv.BFMatcher(cv.NORM_HAMMING, true);
         const orbMatches = new cv.DMatchVector();
-        bf.match(orbDescriptors, new cv.Mat(orbDescriptors), orbMatches);
+        bf.match(orbDescriptors, new cv.Mat(orbDesc), orbMatches);
+        console.log('ORB Matches:', orbMatches.size());
 
         const siftMatches = new cv.DMatchVector();
-        bf.match(siftDescriptors, new cv.Mat(siftDescriptors), siftMatches);
+        bf.match(siftDescriptors, new cv.Mat(siftDesc), siftMatches);
+        console.log('SIFT Matches:', siftMatches.size());
 
         // 比較結果を表示
         document.getElementById('orb-matches').textContent = orbMatches.size();
