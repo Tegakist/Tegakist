@@ -36,7 +36,7 @@
     </a-scene>
     <video id="video" width="640" height="480" autoplay style="display:none;"></video>
     <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
-    <div class="version-info">Ver.2408112357</div>
+    <div class="version-info">Ver.2408120011</div>
     <div class="comparison-results" id="comparison-results">
       ORB Matches: <span id="orb-matches">0</span><br>
       SIFT Matches: <span id="sift-matches">0</span>
@@ -75,6 +75,10 @@
         const fsetText = await fsetResponse.text();
         const fset3Text = await fset3Response.text();
 
+        console.log('isetText:', isetText);
+        console.log('fsetText:', fsetText);
+        console.log('fset3Text:', fset3Text);
+        
         const keypoints = isetText.trim().split('\n').map(line => {
           const [x, y, size, angle] = line.split(' ').map(Number);
           return { x, y, size, angle };
