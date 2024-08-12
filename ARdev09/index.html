@@ -60,6 +60,14 @@
       changeMatrixMode: 'cameraTransformMatrix'
     });
 
+      markerOTK.addEventListener('markerFound', function () {
+        markerStatus.innerText = 'マーカー検出';
+      });
+
+      markerOTK.addEventListener('markerLost', function () {
+        markerStatus.innerText = 'マーカー未検出';
+      });
+    
     renderer.setSize(window.innerWidth, window.innerHeight);
     scene.add(camera); // ❸ カメラをシーンに追加
     
