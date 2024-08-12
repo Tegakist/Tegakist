@@ -32,7 +32,7 @@
   </style>
 </head>
 <body>
-  <div id="version">Ver.2408121158</div>
+  <div id="version">Ver.2408121240</div>
   <div id="markerStatus">マーカー未検出</div>
   <div class="wrapper">
     <canvas></canvas>
@@ -92,8 +92,8 @@
 
     function handleResize() {
       if (arToolkitSource.ready) {
-        arToolkitSource.onResize();
-        arToolkitSource.copySizeTo(renderer.domElement);
+        arToolkitSource.onResizeElement();
+        arToolkitSource.copyElementSizeTo(renderer.domElement);
       }
 
       renderer.setPixelRatio(window.devicePixelRatio);
