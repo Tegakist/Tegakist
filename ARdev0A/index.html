@@ -19,9 +19,6 @@
             .then(buffer => {
                 const descriptors = new Float32Array(buffer);
 
-                // 画像認識とWebARの実装
-                console.log('Descriptors loaded:', descriptors);
-
                 // OpenCV.jsの初期化
                 cv['onRuntimeInitialized'] = () => {
                     // カメラ映像を取得し、特徴点を検出して比較する処理を開始
