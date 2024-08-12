@@ -28,10 +28,7 @@
             const descriptors = await loadDescriptors();
             if (!descriptors) return;
 
-            cv['onRuntimeInitialized'] = () => {
-                console.log('OpenCV.js initialized');
-                startVideoProcessing(descriptors);
-            };
+            startVideoProcessing(descriptors);
         }
 
         function startVideoProcessing(descriptors) {
@@ -88,7 +85,10 @@
             requestAnimationFrame(processVideo);
         }
 
-        init();
+        cv['onRuntimeInitialized'] = () => {
+            console.log('OpenCV.js initialized');
+            init();
+        };
     </script>
 </body>
 </html>
