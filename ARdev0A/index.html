@@ -55,30 +55,34 @@
         }
 
         function detectAndMatchFeatures(video, descriptors) {
-            const src = new cv.Mat(video.height, video.width, cv.CV_8UC4);
+            const src = new cv.Mat(video.videoHeight, video.videoWidth, cv.CV_8UC4);
             const gray = new cv.Mat();
             const cap = new cv.VideoCapture(video);
 
             function processVideo() {
-                cap.read(src);
-                cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0);
+                try {
+                    cap.read(src);
+                    cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0);
 
-                const orb = new cv.ORB();
-                const keypoints = new cv.KeyPointVector();
-                const descriptor = new cv.Mat();
-                orb.detectAndCompute(gray, new cv.Mat(), keypoints, descriptor);
+                    const orb = new cv.ORB();
+                    const keypoints = new cv.KeyPointVector();
+                    const descriptor = new cv.Mat();
+                    orb.detectAndCompute(gray, new cv.Mat(), keypoints, descriptor);
 
-                const bf = new cv.BFMatcher(cv.NORM_HAMMING, true);
-                const matches = new cv.DMatchVector();
-                bf.match(descriptor, descriptors, matches);
+                    const bf = new cv.BFMatcher(cv.NORM_HAMMING, true);
+                    const matches = new cv.DMatchVector();
+                    bf.match(descriptor, descriptors, matches);
 
-                console.log('Matches:', matches.size());
+                    console.log('Matches:', matches.size());
 
-                descriptor.delete();
-                keypoints.delete();
-                matches.delete();
+                    descriptor.delete();
+                    keypoints.delete();
+                    matches.delete();
 
-                requestAnimationFrame(processVideo);
+                    requestAnimationFrame(processVideo);
+                } catch (error) {
+                    console.error('Error processing video frame:', error);
+                }
             }
 
             requestAnimationFrame(processVideo);
