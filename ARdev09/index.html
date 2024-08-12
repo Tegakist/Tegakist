@@ -32,7 +32,7 @@
   </style>
 </head>
 <body>
-  <div id="version">Ver.2408121247</div>
+  <div id="version">Ver.2408121304</div>
   <div id="markerStatus">マーカー未検出</div>
   <div class="wrapper">
     <canvas></canvas>
@@ -43,14 +43,41 @@
     const canvas = document.querySelector('canvas');
     const context = canvas.getContext('2d', { willReadFrequently: true });
 
+    const width = window.innerWidth, height = window.innerHeight;
+
     const renderer = new THREE.WebGLRenderer({
       canvas: canvas,
       antialias: true,
       alpha: true
     });
-    const camera = new THREE.PerspectiveCamera();
+    renderer.setSize(width, height);
+    document.body.appendChild(renderer.domElement);
+
+    const camera = new THREE.PerspectiveCamera(70, width / height, 0.01, 10);
+    camera.position.z = 1;
+
     const scene = new THREE.Scene();
-    const markerRoot = new THREE.Group();
+
+    const geometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
+    const material = new THREE.MeshNormalMaterial();
+
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    function animate(time) {
+      mesh.rotation.x = time / 2000;
+      mesh.rotation.y = time / 1000;
+
+      renderer.render(scene, camera);
+    }
+
+    renderer.setAnimationLoop(animate);
+
+    // バージョン情報とマーカー状態を常に表示
+    document.getElementById('version').style.display = 'block';
+    document.getElementById('markerStatus').style.display = 'block';
+
+    // マーカー検出状態の更新
     const arToolkitContext = new THREEx.ArToolkitContext({
       detectionMode: 'mono'
     });
@@ -72,27 +99,6 @@
       setTimeout(() => handleResize(), 400);
     });
 
-    scene.visible = false;
-    scene.add(markerRoot);
-
-    const cube = new THREE.Mesh(
-      new THREE.BoxGeometry(100, 100, 100), // ❹ 大きめに設定
-      new THREE.MeshNormalMaterial()
-    );
-
-    cube.position.set(0, 0, 0); // ❹ 一旦、原点に表示
-
-    markerRoot.add(cube);
-
-    renderer.setAnimationLoop((delta) => {
-      if (arToolkitSource.ready) {
-        arToolkitContext.update(arToolkitSource.domElement);
-      }
-
-      scene.visible = camera.visible; // ❺ 自力で表示・非表示を切り替える
-      renderer.render(scene, camera);
-    });
-
     function handleResize() {
       if (arToolkitSource.ready) {
         arToolkitSource.onResizeElement();
@@ -102,11 +108,6 @@
       renderer.setPixelRatio(window.devicePixelRatio);
     }
 
-    // バージョン情報とマーカー状態を常に表示
-    document.getElementById('version').style.display = 'block';
-    document.getElementById('markerStatus').style.display = 'block';
-
-    // マーカー検出状態の更新
     arMarkerControls.addEventListener('markerFound', function () {
       document.getElementById('markerStatus').innerText = 'マーカー検出';
     });
@@ -114,6 +115,8 @@
     arMarkerControls.addEventListener('markerLost', function () {
       document.getElementById('markerStatus').innerText = 'マーカー未検出';
     });
+
+    window.addEventListener('resize', handleResize, { passive: true });
   </script>
 </body>
 </html>
