@@ -60,25 +60,6 @@
       changeMatrixMode: 'cameraTransformMatrix'
     });
 
-      markerOTK.addEventListener('markerFound', function () {
-        markerStatus.innerText = 'マーカー検出';
-      });
-
-      markerOTK.addEventListener('markerLost', function () {
-        markerStatus.innerText = 'マーカー未検出';
-      });
-    
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    scene.add(camera); // ❸ カメラをシーンに追加
-    
-    window.addEventListener('resize', handleResize, {
-      passive: true
-    });
-
-    window.addEventListener('arjs-nft-loaded', (evt) =>{
-      console.log(evt);
-    });
-
     arToolkitContext.init(() => {
       camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix());
     });
@@ -117,6 +98,19 @@
 
       renderer.setPixelRatio(window.devicePixelRatio);
     }
+
+    // バージョン情報とマーカー状態を常に表示
+    document.getElementById('version').style.display = 'block';
+    document.getElementById('markerStatus').style.display = 'block';
+
+    // マーカー検出状態の更新
+    arMarkerControls.addEventListener('markerFound', function () {
+      document.getElementById('markerStatus').innerText = 'マーカー検出';
+    });
+
+    arMarkerControls.addEventListener('markerLost', function () {
+      document.getElementById('markerStatus').innerText = 'マーカー未検出';
+    });
   </script>
 </body>
 </html>
