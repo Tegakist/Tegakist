@@ -32,7 +32,7 @@
   </style>
 </head>
 <body>
-  <div id="version">Ver.2408121240</div>
+  <div id="version">Ver.2408121247</div>
   <div id="markerStatus">マーカー未検出</div>
   <div class="wrapper">
     <canvas></canvas>
@@ -40,8 +40,11 @@
   <script src="https://unpkg.com/three@0.127.0/build/three.min.js"></script>
   <script src="https://raw.githack.com/AR-js-org/AR.js/3.3.3/three.js/build/ar-nft.js"></script><!--❶ イメージトラッキング用のスクリプトに変更-->
   <script>
+    const canvas = document.querySelector('canvas');
+    const context = canvas.getContext('2d', { willReadFrequently: true });
+
     const renderer = new THREE.WebGLRenderer({
-      canvas: document.querySelector('canvas'),
+      canvas: canvas,
       antialias: true,
       alpha: true
     });
