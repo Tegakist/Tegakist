@@ -76,6 +76,26 @@
                 };
             });
 
+        // フレームデータを設定する関数
+        function setFrameData(frame, video) {
+            if (!(frame instanceof cv.Mat)) {
+                throw new Error("Please input the valid cv.Mat instance.");
+            }
+            if (frame.type() !== cv.CV_8UC4) {
+                throw new Error("Bad type of input mat: the type should be cv.CV_8UC4.");
+            }
+            if (frame.cols !== video.width || frame.rows !== video.height) {
+                throw new Error("Bad size of input mat: the size should be same as the video.");
+            }
+
+            const canvas = document.createElement('canvas');
+            canvas.width = video.width;
+            canvas.height = video.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, video.width, video.height);
+            frame.data.set(ctx.getImageData(0, 0, video.width, video.height).data);
+        }
+
         // THREE.jsの基本的なセットアップ
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
