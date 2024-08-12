@@ -15,8 +15,10 @@
     <script>
         async function loadDescriptors() {
             try {
+                console.log('Loading descriptors...');
                 const response = await fetch('descriptors.npy');
                 const buffer = await response.arrayBuffer();
+                console.log('Descriptors loaded');
                 return new Float32Array(buffer);
             } catch (error) {
                 console.error('Error loading descriptors:', error);
@@ -25,13 +27,18 @@
         }
 
         async function init() {
+            console.log('Initializing...');
             const descriptors = await loadDescriptors();
-            if (!descriptors) return;
+            if (!descriptors) {
+                console.log('No descriptors found');
+                return;
+            }
 
             startVideoProcessing(descriptors);
         }
 
         function startVideoProcessing(descriptors) {
+            console.log('Starting video processing...');
             const video = document.createElement('video');
             video.setAttribute('autoplay', '');
             video.setAttribute('muted', '');
@@ -42,6 +49,7 @@
                 .then(stream => {
                     video.srcObject = stream;
                     video.onloadedmetadata = () => {
+                        console.log('Video metadata loaded');
                         video.play();
                         detectAndMatchFeatures(video, descriptors);
                     };
@@ -52,6 +60,7 @@
         }
 
         function detectAndMatchFeatures(video, descriptors) {
+            console.log('Detecting and matching features...');
             const src = new cv.Mat(video.videoHeight, video.videoWidth, cv.CV_8UC4);
             const gray = new cv.Mat();
             const cap = new cv.VideoCapture(video);
