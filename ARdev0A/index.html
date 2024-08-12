@@ -18,9 +18,12 @@
             .then(response => response.arrayBuffer())
             .then(buffer => {
                 const descriptors = new Float32Array(buffer);
+                console.log('Descriptors:', descriptors);
 
                 // OpenCV.jsの初期化
                 cv['onRuntimeInitialized'] = () => {
+                    console.log('OpenCV.js initialized');
+
                     // カメラ映像を取得し、特徴点を検出して比較する処理を開始
                     const video = document.createElement('video');
                     video.setAttribute('autoplay', '');
