@@ -1,173 +1,94 @@
-<!DOCTYPE html>
 <html>
-  <head>
-    <title>Markerless AR</title>
-    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-    <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/master/aframe/build/aframe-ar.js"></script>
-    <script async src="https://docs.opencv.org/4.x/opencv.js"></script>
-    <style>
-      .version-info, .comparison-results, .detection-status {
-        position: absolute;
-        font-family: 'Arial', sans-serif;
-        font-size: 14px;
-        color: gray;
-      }
-      .version-info {
-        bottom: 10px;
-        right: 10px;
-      }
-      .comparison-results {
-        bottom: 50px;
-        left: 10px;
-      }
-      .detection-status {
-        bottom: 10px;
-        left: 10px;
-      }
-    </style>
-  </head>
-  <body style="margin: 0; overflow: hidden;">
-    <a-scene embedded arjs="sourceType: webcam;" vr-mode-ui="enabled: false" debugUIEnabled="false">
-      <a-entity camera></a-entity>
-      <!-- カスタムスクリプトで検出された画像に対して3Dオブジェクトを配置 -->
-      <a-entity id="custom-marker" position="0 0 0">
-        <a-box color="red" depth="0.5" height="0.5" width="0.5"></a-box>
-      </a-entity>
-    </a-scene>
-    <video id="video" width="640" height="480" autoplay style="display:none;"></video>
-    <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
-    <div class="version-info">Ver.2408120056</div>
-    <div class="comparison-results" id="comparison-results">
-      ORB Matches: <span id="orb-matches">0</span><br>
-      SIFT Matches: <span id="sift-matches">0</span>
-    </div>
-    <div class="detection-status" id="detection-status">
-      Detection Status: <span id="status">Not Detected</span>
-    </div>
-    <script>
-      // ウェブカメラからのフレームを取得
-      async function startVideo() {
-        try {
-          const video = document.getElementById('video');
-          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-          video.srcObject = stream;
-        } catch (error) {
-          console.error('Error accessing webcam: ', error);
-        }
-      }
+<head>
+  <title>three.js + ar.js</title>
+  <meta name="viewport" content="width=device-width, viewport-fit=cover, shrink-to-fit=no" />
+  <style>
+    * {
+      margin: 0; padding: 0;
+    }
 
-      // フレームをキャンバスに描画
-      function drawFrame() {
-        const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
-        const context = canvas.getContext('2d');
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-        return context.getImageData(0, 0, canvas.width, canvas.height);
-      }
+    .wrapper {
+      position: relative;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <canvas></canvas>
+  </div>
+  <script src="https://unpkg.com/three@0.127.0/build/three.min.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/3.3.3/three.js/build/ar-nft.js"></script><!--❶ イメージトラッキング用のスクリプトに変更-->
+  <script>
+    const renderer = new THREE.WebGLRenderer({
+      canvas: document.querySelector('canvas'),
+      antialias: true,
+      alpha: true
+    });
+    const camera = new THREE.PerspectiveCamera();
+    const scene = new THREE.Scene();
+    const markerRoot = new THREE.Group();
+    const arToolkitContext = new THREEx.ArToolkitContext({
+      detectionMode: 'mono'
+    });
+    const arToolkitSource = new THREEx.ArToolkitSource({
+      sourceType: 'webcam'
+    });
+    const arMarkerControls = new THREEx.ArMarkerControls(arToolkitContext, camera, {
+      type: 'nft', // 'nft'に変更
+      descriptorsUrl : 'a', // ❷ https://carnaux.github.io/NFT-Marker-Creator/ で作成
+      changeMatrixMode: 'cameraTransformMatrix'
+    });
 
-      // 登録された画像の特徴点を読み込む
-      async function loadDescriptors() {
-        const isetResponse = await fetch('a.iset');
-        const fsetResponse = await fetch('a.fset');
-        const fset3Response = await fetch('a.fset3');
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    scene.add(camera); // ❸ カメラをシーンに追加
+    
+    window.addEventListener('resize', handleResize, {
+      passive: true
+    });
 
-        const isetText = await isetResponse.text();
-        const fsetText = await fsetResponse.text();
-        const fset3Text = await fset3Response.text();
+    window.addEventListener('arjs-nft-loaded', (evt) =>{
+      console.log(evt);
+    });
 
-        console.log('isetText:', isetText);
-        console.log('fsetText:', fsetText);
-        console.log('fset3Text:', fset3Text);
+    arToolkitContext.init(() => {
+      camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix());
+    });
 
-        const keypoints = isetText.trim().split('\n').map(line => {
-          const [x, y, size, angle] = line.split(' ').map(Number);
-          return { x, y, size, angle };
-        });
+    arToolkitSource.init(() => {
+      document.querySelector('.wrapper').appendChild(arToolkitSource.domElement);
+      setTimeout(() => handleResize(), 400);
+    });
 
-        const orbDesc = fsetText.trim().split('\n').map(line => {
-          return new Float32Array(line.split(' ').map(Number));
-        });
+    scene.visible = false;
+    scene.add(markerRoot);
 
-        const siftDesc = fset3Text.trim().split('\n').map(line => {
-          return new Float32Array(line.split(' ').map(Number));
-        });
+    const cube = new THREE.Mesh(
+      new THREE.BoxGeometry(100, 100, 100), // ❹ 大きめに設定
+      new THREE.MeshNormalMaterial()
+    );
 
-        return { keypoints, orbDesc, siftDesc };
+    cube.position.set(0, 0, 0); // ❹ 一旦、原点に表示
+
+    markerRoot.add(cube);
+
+    renderer.setAnimationLoop((delta) => {
+      if (arToolkitSource.ready) {
+        arToolkitContext.update(arToolkitSource.domElement);
       }
 
-      // カスタム画像検出スクリプト
-      async function detectImage() {
-        const { keypoints, orbDesc, siftDesc } = await loadDescriptors();
+      scene.visible = camera.visible; // ❺ 自力で表示・非表示を切り替える
+      renderer.render(scene, camera);
+    });
 
-        // ウェブカメラからのフレームを取得
-        const frame = drawFrame();
-        
-        // OpenCV.jsを使用してフレーム内の特徴点を検出
-        const src = cv.matFromImageData(frame);
-        const gray = new cv.Mat();
-        cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0);
-
-        // ORBを使用してフレーム内の特徴点を検出
-        const orb = new cv.ORB();
-        const orbKeypoints = new cv.KeyPointVector();
-        const orbDescriptors = new cv.Mat();
-        orb.detectAndCompute(gray, new cv.Mat(), orbKeypoints, orbDescriptors);
-        console.log('ORB Keypoints:', orbKeypoints.size());
-
-        // ORBを使用してフレーム内の特徴点を検出（SIFTの代わり）
-        const orb2 = new cv.ORB();
-        const siftKeypoints = new cv.KeyPointVector();
-        const siftDescriptors = new cv.Mat();
-        orb2.detectAndCompute(gray, new cv.Mat(), siftKeypoints, siftDescriptors);
-        console.log('SIFT Keypoints:', siftKeypoints.size());
-
-        // NaNチェック
-        function isValidDescriptor(descriptor) {
-          return !descriptor.some(isNaN);
-        }
-
-        const validOrbDesc = orbDesc.filter(isValidDescriptor);
-        const validSiftDesc = siftDesc.filter(isValidDescriptor);
-
-        // 登録されたディスクリプタとフレーム内のディスクリプタを比較
-        const bf = new cv.BFMatcher(cv.NORM_HAMMING, true);
-        const orbMatches = new cv.DMatchVector();
-        bf.match(orbDescriptors, new cv.Mat(validOrbDesc), orbMatches);
-        console.log('ORB Matches:', orbMatches.size());
-
-        const siftMatches = new cv.DMatchVector();
-        bf.match(siftDescriptors, new cv.Mat(validSiftDesc), siftMatches);
-        console.log('SIFT Matches:', siftMatches.size());
-
-        // 比較結果を表示
-        document.getElementById('orb-matches').textContent = orbMatches.size();
-        document.getElementById('sift-matches').textContent = siftMatches.size();
-
-        // 検知状況を表示
-        if (orbMatches.size() > 0 && siftMatches.size() > 0) {
-          document.getElementById('status').textContent = 'Detected';
-          document.querySelector('#custom-marker').setAttribute('visible', true);
-        } else {
-          document.getElementById('status').textContent = 'Not Detected';
-          document.querySelector('#custom-marker').setAttribute('visible', false);
-        }
-
-        // メモリを解放
-        src.delete();
-        gray.delete();
-        orbKeypoints.delete();
-        orbDescriptors.delete();
-        siftKeypoints.delete();
-        siftDescriptors.delete();
-        orbMatches.delete();
-        siftMatches.delete();
+    function handleResize() {
+      if (arToolkitSource.ready) {
+        arToolkitSource.onResize();
+        arToolkitSource.copySizeTo(renderer.domElement);
       }
 
-      // ウェブカメラからのフレームごとに画像検出を実行
-      setInterval(detectImage, 1000 / 30); // 30fpsで実行
-
-      // ビデオストリームの開始
-      startVideo();
-    </script>
-  </body>
+      renderer.setPixelRatio(window.devicePixelRatio);
+    }
+  </script>
+</body>
 </html>
