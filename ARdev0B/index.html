@@ -1,93 +1,62 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Device Orientation</title>
-    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <script src="scene-config.js"></script>
-    <script src="marker-config.js"></script>
-    <script src="object-config.js"></script>
-  </head>
-  <body>
-    <a-scene>
-      <a-marker></a-marker>
-      <a-entity camera></a-entity>
-    </a-scene>
-    <div id="version">Ver.2408042358</div>
-    
-    <div id="distance">Distance: N/A</div>
-    <div id="rotation">Rotation Difference: N/A</div>
-    <div id="device-orientation">Device Orientation: N/A</div>
-    <div id="movement">Movement: N/A</div>
-<script>
-      let markerVisible = false;
-      let initialCameraPosition = null;
-      let initialCameraRotation = null;
+<!-- import aframe and then ar.js with image tracking / location based features -->
+<script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
+<script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
 
-      document.querySelector('a-marker').addEventListener('markerFound', (event) => {
-        const box = document.querySelector('a-box');
-        box.setAttribute('visible', 'true');
-        markerVisible = true;
+<!-- style for the loader -->
+<style>
+  .arjs-loader {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-        // 初期カメラ位置と回転を保存
-        const camera = document.querySelector('[camera]');
-        initialCameraPosition = camera.object3D.position.clone();
-        initialCameraRotation = camera.object3D.rotation.clone();
-      });
+  .arjs-loader div {
+    text-align: center;
+    font-size: 1.25em;
+    color: white;
+  }
+</style>
 
-      document.querySelector('a-marker').addEventListener('markerLost', (event) => {
-        const box = document.querySelector('a-box');
-        box.setAttribute('visible', 'true');
-        markerVisible = false;
-      });
+<body style="margin : 0px; overflow: hidden;">
+  <!-- minimal loader shown until image descriptors are loaded. Loading may take a while according to the device computational power -->
+  <div class="arjs-loader">
+    <div>Loading, please wait...</div>
+  </div>
 
-      function updateDistanceAndRotation() {
-        const marker = document.querySelector('a-marker');
-        const camera = document.querySelector('[camera]');
-        if (markerVisible) {
-          const markerPosition = marker.object3D.position;
-          const cameraPosition = camera.object3D.position;
-          const distance = markerPosition.distanceTo(cameraPosition).toFixed(2);
-          document.getElementById('distance').innerText = `Distance: ${distance} meters`;
-
-          // マーカーポジションの表示
-          document.getElementById('marker-position').innerText = `Marker Position: x: ${markerPosition.x.toFixed(2)}, y: ${markerPosition.y.toFixed(2)}, z: ${markerPosition.z.toFixed(2)}`;
-
-          // カメラの移動距離を計算
-          if (initialCameraPosition) {
-            const movementX = (cameraPosition.x - initialCameraPosition.x).toFixed(2);
-            const movementY = (cameraPosition.y - initialCameraPosition.y).toFixed(2);
-            const movementZ = (cameraPosition.z - initialCameraPosition.z).toFixed(2);
-            document.getElementById('movement').innerText = `Movement: x: ${movementX} meters, y: ${movementY} meters, z: ${movementZ} meters`;
-          }
-
-          // カメラの回転差を計算
-          if (initialCameraRotation) {
-            const rotationDifference = {
-              x: ((camera.object3D.rotation.x - initialCameraRotation.x) * (180 / Math.PI)).toFixed(2),
-              y: ((camera.object3D.rotation.y - initialCameraRotation.y) * (180 / Math.PI)).toFixed(2),
-              z: ((camera.object3D.rotation.z - initialCameraRotation.z) * (180 / Math.PI)).toFixed(2)
-            };
-            document.getElementById('rotation').innerText = `Rotation Difference: x: ${rotationDifference.x}°, y: ${rotationDifference.y}°, z: ${rotationDifference.z}°`;
-          }
-        } else {
-          document.getElementById('distance').innerText = 'Distance: N/A';
-          document.getElementById('marker-position').innerText = 'Marker Position: N/A';
-          document.getElementById('rotation').innerText = 'Rotation Difference: N/A';
-          document.getElementById('movement').innerText = 'Movement: N/A';
-        }
-      }
-
-      function updateDeviceOrientation(event) {
-        const x = event.beta !== null ? event.beta.toFixed(2) : 'N/A';   // X軸回転
-        const y = event.gamma !== null ? event.gamma.toFixed(2) : 'N/A';  // Y軸回転
-        const z = event.alpha !== null ? event.alpha.toFixed(2) : 'N/A';  // Z軸回転
-        document.getElementById('device-orientation').innerText = `Device Orientation: x: ${x}°, y: ${y}°, z: ${z}°`;
-      }
-
-      window.addEventListener('deviceorientation', updateDeviceOrientation);
-
-      setInterval(updateDistanceAndRotation, 100);
-    </script>  </body>
-</html>
+  <!-- a-frame scene -->
+  <a-scene
+    vr-mode-ui="enabled: false;"
+    renderer="logarithmicDepthBuffer: true;"
+    embedded
+    arjs="trackingMethod: best; sourceType: webcam;debugUIEnabled: false;"
+  >
+    <!-- a-nft is the anchor that defines an Image Tracking entity -->
+    <!-- on 'url' use the path to the Image Descriptors created before. -->
+    <!-- the path should end with the name without the extension e.g. if file is 'pinball.fset' the path should end with 'pinball' -->
+    <a-nft
+      type="nft"
+      url="<path-to-your-image-descriptors>"
+      smooth="true"
+      smoothCount="10"
+      smoothTolerance=".01"
+      smoothThreshold="5"
+    >
+      <!-- as a child of the a-nft entity, you can define the content to show. here's a GLTF model entity -->
+      <a-entity
+        gltf-model="<path-to-your-model>"
+        scale="5 5 5"
+        position="50 150 0"
+      >
+      </a-entity>
+    </a-nft>
+    <!-- static camera that moves according to the device movemenents -->
+    <a-entity camera></a-entity>
+  </a-scene>
+</body>
