@@ -70,8 +70,8 @@
       const nftAnchor = document.getElementById("nft-anchor");
       console.log("Loading descriptor file: s");
 
-      nftAnchor.addEventListener("loaded", function() {
-        console.log("Descriptor file loaded: s");
+      nftAnchor.addEventListener("arjs-nft-loaded", function() {
+        console.log("Descriptor file loaded: s.iset, s.fset, s.fset3");
         document.querySelector(".arjs-loader").style.display = "none";
       });
     });
