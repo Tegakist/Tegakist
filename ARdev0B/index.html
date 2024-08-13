@@ -50,6 +50,7 @@
       smoothCount="10"
       smoothTolerance=".01"
       smoothThreshold="5"
+      id="nft-anchor"
     >
       <!-- as a child of the a-nft entity, you can define the content to show. here's a simple box entity -->
       <a-box
@@ -63,5 +64,17 @@
     <!-- static camera that moves according to the device movements -->
     <a-entity camera></a-entity>
   </a-scene>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const nftAnchor = document.getElementById("nft-anchor");
+      console.log("Loading descriptor file: s");
+
+      nftAnchor.addEventListener("loaded", function() {
+        console.log("Descriptor file loaded: s");
+        document.querySelector(".arjs-loader").style.display = "none";
+      });
+    });
+  </script>
 </body>
 </html>
