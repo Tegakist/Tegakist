@@ -1,39 +1,12 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- A-Frameの読み込み -->
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <!-- MindARの読み込み -->
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-  </head>
-  <body>
-    <a-scene 
-      mindar-image="imageTargetSrc: targets.mind;" 
-      color-space="sRGB" 
-      renderer="colorManagement: true, physicallyCorrectLights" 
-      vr-mode-ui="enabled: false" 
-      device-orientation-permission-ui="enabled: false"
-    >
-      <a-assets>
-        <a-asset-item id="model" src="Logo.glb"></a-asset-item>
-      </a-assets>
-
-      <a-camera 
-        position="0 0 0" 
-        look-controls="enabled: false"
-      ></a-camera>
-
-      <a-entity 
-        mindar-image-target="targetIndex: 0"
-      >
-        <a-gltf-model 
-          src="#model" 
-          position="0 0 0" 
-          scale="1 1 1" 
-          rotation="0 0 0"
-          <html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    <!-- A-Frame Extrasの読み込み -->
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
   </head>
   <body>
     <a-scene 
@@ -65,16 +38,7 @@
       </a-entity>
     </a-scene>
     <div class="version-info">
-      Ver.2408171810
-    </div>
-  </body>
-</html>
-
-        ></a-gltf-model>
-      </a-entity>
-    </a-scene>
-    <div class="version-info">
-      Ver.2408171724
+      Ver.2408171814
     </div>
   </body>
 </html>
