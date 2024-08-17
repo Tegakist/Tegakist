@@ -23,7 +23,7 @@
       device-orientation-permission-ui="enabled: false"
     >
       <a-assets>
-        <img id="card" src="SSS.a.png" />
+        <a-asset-item id="model" src="SSS.glb"></a-asset-item>
       </a-assets>
 
       <a-camera 
@@ -36,17 +36,16 @@
         filterMinCF="0.0001" 
         filterBeta="0.001"
       >
-        <a-plane 
-          src="#card" 
+        <a-gltf-model 
+          src="#model" 
           position="0 0 0" 
-          height="1" 
-          width="1" 
+          scale="0.5 0.5 0.5" 
           rotation="0 0 0"
-        ></a-plane>
+        ></a-gltf-model>
       </a-entity>
     </a-scene>
     <div class="version-info">
-      Ver.2408171531
+      Ver.2408171545
     </div>
   </body>
 </html>
