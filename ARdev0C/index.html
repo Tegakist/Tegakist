@@ -7,6 +7,16 @@
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
     <!-- A-Frame Extrasの読み込み -->
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
+    <style>
+      .version-info {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        font-size: 14px;
+        color: gray;
+        font-family: 'Arial', sans-serif; /* 適当なゴシック体 */
+      }
+    </style>
   </head>
   <body>
     <a-scene 
@@ -31,14 +41,14 @@
         <a-gltf-model 
           src="#model" 
           position="0 0 0" 
-          scale="1 1 1" 
+          scale="10 10 10" 
           rotation="0 0 0"
           animation-mixer="clip: *; loop: infinite; timeScale: 1"
         ></a-gltf-model>
       </a-entity>
     </a-scene>
     <div class="version-info">
-      Ver.2408171814
+      Ver.2408171817
     </div>
   </body>
 </html>
