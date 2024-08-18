@@ -28,26 +28,30 @@
     </script>
   </head>
   <body>
-    <div class="version-info">Ver.2408182345</div>
+    <div class="version-info">Ver.2408190005</div>
     <button id="startButton">Start AR</button>
     <script type="module">
       import * as THREE from 'three';
       import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
       import { MindARThree } from 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js';
 
-      navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
-        if (supported) {
-          document.getElementById('startButton').addEventListener('click', () => {
-            navigator.xr.requestSession('immersive-ar', { requiredFeatures: ['local-floor', 'bounded-floor'] })
-              .then(onSessionStarted)
-              .catch(err => {
-                console.error('Failed to start AR session:', err);
-              });
-          });
-        } else {
-          console.log('immersive-ar session is not supported');
-        }
-      });
+      if (navigator.xr) {
+        navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
+          if (supported) {
+            document.getElementById('startButton').addEventListener('click', () => {
+              navigator.xr.requestSession('immersive-ar', { requiredFeatures: ['local-floor', 'bounded-floor'] })
+                .then(onSessionStarted)
+                .catch(err => {
+                  console.error('Failed to start AR session:', err);
+                });
+            });
+          } else {
+            console.log('immersive-ar session is not supported');
+          }
+        });
+      } else {
+        console.log('WebXR is not supported by this browser.');
+      }
 
       function onSessionStarted(session) {
         session.addEventListener('end', onSessionEnded);
