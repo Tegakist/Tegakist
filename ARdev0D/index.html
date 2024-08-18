@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>WebXR Sample with MindAR</title>
+    <title>WebXR Sample with MindAR and THREE.js</title>
     <style>
       .version-info {
         position: fixed;
@@ -16,17 +16,15 @@
         display: block;
       }
     </style>
-    <!-- A-Frameの読み込み -->
-    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-    <!-- MindARの読み込み -->
-    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-    <!-- A-Frame Extrasの読み込み -->
-    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@7.5.1/dist/aframe-extras.min.js"></script>
   </head>
   <body>
-    <div class="version-info">Ver.2408182248</div>
+    <div class="version-info">Ver.2408182252</div>
     <button id="startButton">Start AR</button>
-    <script>
+    <script type="module">
+      import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.125.2/build/three.module.js';
+      import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.125.2/examples/jsm/loaders/GLTFLoader.js';
+      import { MindARThree } from 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js';
+
       document.getElementById('startButton').addEventListener('click', () => {
         if (navigator.xr) {
           navigator.xr.requestSession('immersive-ar', { requiredFeatures: ['hit-test'] }).then(onSessionStarted);
@@ -49,7 +47,7 @@
         light.position.set(0.5, 1, 0.25);
         scene.add(light);
 
-        let loader = new THREE.GLTFLoader();
+        let loader = new GLTFLoader();
         loader.load('Logo.glb', function (gltf) {
           let model = gltf.scene;
           model.scale.set(10, 10, 10);
