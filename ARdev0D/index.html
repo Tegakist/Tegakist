@@ -28,20 +28,22 @@
     </script>
   </head>
   <body>
-    <div class="version-info">Ver.2408182329</div>
+    <div class="version-info">Ver.2408182337</div>
     <button id="startButton">Start AR</button>
     <script type="module">
       import * as THREE from 'three';
       import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
       import { MindARThree } from 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js';
 
-      document.getElementById('startButton').addEventListener('click', () => {
-        if (navigator.xr) {
-          navigator.xr.requestSession('immersive-ar', { requiredFeatures: ['hit-test'] }).then(onSessionStarted);
+     document.getElementById('startButton').addEventListener('click', () => {
+     　 if (navigator.xr) {
+          navigator.xr.requestSession('immersive-ar', { requiredFeatures: ['local-floor', 'bounded-floor'] }).then(onSessionStarted).catch(err => {
+          console.error('Failed to start AR session:', err);
+          });
         } else {
           console.log('WebXR not supported');
         }
-      });
+    });
 
       function onSessionStarted(session) {
         session.addEventListener('end', onSessionEnded);
