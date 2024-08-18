@@ -1,107 +1,60 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>WebXR Sample with MindAR and THREE.js</title>
-    <style>
-      .version-info {
-        position: fixed;
-        bottom: 10px;
-        right: 10px;
-        font-size: 14px;
-        color: gray;
-        font-family: 'Arial', sans-serif';
-      }
-      canvas {
-        display: block;
-      }
-    </style>
-    <!-- Import maps polyfill -->
-    <script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
-    <script type="importmap">
-      {
-        "imports": {
-          "three": "https://cdn.jsdelivr.net/npm/three@0.125.2/build/three.module.js",
-          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.125.2/examples/jsm/"
-        }
-      }
-    </script>
-  </head>
-  <body>
-    <div class="version-info">Ver.2408190013</div>
-    <script type="module">
-      import * as THREE from 'three';
-      import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-      import { MindARThree } from 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js';
+<html lang="ja">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js"></script>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    .version-info {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      font-size: 14px;
+      color: gray;
+      font-family: 'Arial', sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div class="version-info">Ver.2408190021</div>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const mindarThree = new window.MINDAR.IMAGE.MindARThree({
+        container: document.body,
+        imageTargetSrc: 'OTK.mind',
+      });
 
-      if (navigator.xr) {
-        navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
-          if (supported) {
-            startARSession();
-          } else {
-            console.log('immersive-ar session is not supported');
-          }
-        });
-      } else {
-        console.log('WebXR is not supported by this browser.');
-      }
+      const { renderer, scene, camera } = mindarThree;
 
-      function startARSession() {
-        navigator.xr.requestSession('immersive-ar', { requiredFeatures: ['local-floor', 'bounded-floor'] })
-          .then(onSessionStarted)
-          .catch(err => {
-            console.error('Failed to start AR session:', err);
-          });
-      }
+      const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
+      scene.add(light);
 
-      function onSessionStarted(session) {
-        session.addEventListener('end', onSessionEnded);
+      const loader = new THREE.GLTFLoader();
+      loader.load('Logo.glb', (gltf) => {
+        const model = gltf.scene;
+        model.scale.set(10, 10, 10);
+        model.position.set(0, 0, 0);
+        model.rotation.set(0, 0, 0);
+        scene.add(model);
 
-        let renderer = new THREE.WebGLRenderer({ alpha: true });
-        renderer.xr.enabled = true;
-        document.body.appendChild(renderer.domElement);
-
-        let scene = new THREE.Scene();
-        let camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
-
-        let light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
-        light.position.set(0.5, 1, 0.25);
-        scene.add(light);
-
-        let loader = new GLTFLoader();
-        loader.load('Logo.glb', function (gltf) {
-          let model = gltf.scene;
-          model.scale.set(10, 10, 10);
-          scene.add(model);
+        const mixer = new THREE.AnimationMixer(model);
+        gltf.animations.forEach((clip) => {
+          mixer.clipAction(clip).play();
         });
 
-        const mindarThree = new MindARThree({
-          container: document.body,
-          imageTargetSrc: 'OTK.mind',
-        });
+        const clock = new THREE.Clock();
+        const animate = () => {
+          requestAnimationFrame(animate);
+          const delta = clock.getDelta();
+          mixer.update(delta);
+          renderer.render(scene, camera);
+        };
+        animate();
+      });
 
-        const { renderer: mindarRenderer, scene: mindarScene, camera: mindarCamera } = mindarThree;
-
-        mindarThree.start();
-
-        session.requestReferenceSpace('local').then((refSpace) => {
-          renderer.setAnimationLoop((timestamp, frame) => {
-            let pose = frame.getViewerPose(refSpace);
-            if (pose) {
-              let view = pose.views[0];
-              let viewport = session.renderState.baseLayer.getViewport(view);
-              renderer.setSize(viewport.width, viewport.height);
-              camera.matrix.fromArray(view.transform.matrix);
-              camera.updateMatrixWorld(true);
-              renderer.render(scene, camera);
-            }
-          });
-        });
-      }
-
-      function onSessionEnded(event) {
-        console.log('Session ended');
-      }
-    </script>
-  </body>
+      mindarThree.start();
+    });
+  </script>
+</body>
 </html>
