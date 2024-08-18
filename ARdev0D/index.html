@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>WebXR Sample</title>
+    <title>WebXR Sample with MindAR</title>
     <style>
       .version-info {
         position: fixed;
@@ -18,7 +18,10 @@
     </style>
   </head>
   <body>
-    <div class="version-info">Ver.2408181734</div>
+    <div class="version-info">Ver.2408181742</div>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.125.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.125.2/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js"></script>
     <script>
       // WebXRの初期化
       if (navigator.xr) {
@@ -48,6 +51,15 @@
           scene.add(model);
         });
 
+        const mindarThree = new window.MINDAR.IMAGE.MindARThree({
+          container: document.body,
+          imageTargetSrc: 'OTK.mind',
+        });
+
+        const { renderer: mindarRenderer, scene: mindarScene, camera: mindarCamera } = mindarThree;
+
+        mindarThree.start();
+
         session.requestReferenceSpace('local').then((refSpace) => {
           renderer.setAnimationLoop((timestamp, frame) => {
             let pose = frame.getViewerPose(refSpace);
@@ -67,7 +79,5 @@
         console.log('Session ended');
       }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.125.2/build/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.125.2/examples/js/loaders/GLTFLoader.js"></script>
   </body>
 </html>
