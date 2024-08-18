@@ -18,7 +18,7 @@
     </style>
   </head>
   <body>
-    <div class="version-info">Ver.2408181806</div>
+    <div class="version-info">Ver.2408181810</div>
     <button id="startButton">Start AR</button>
     <script type="module">
       import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.125.2/build/three.module.js';
@@ -56,7 +56,7 @@
 
         const mindarThree = new MindARThree({
           container: document.body,
-          imageTargetSrc: 'targets.mind',
+          imageTargetSrc: 'OTK.mind',
         });
 
         const { renderer: mindarRenderer, scene: mindarScene, camera: mindarCamera } = mindarThree;
