@@ -2,9 +2,17 @@
 <html lang="ja">
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.137.5/build/three.module.js",
+        "mindar": "https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js"
+      }
+    }
+  </script>
   <script type="module">
-    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.137.5/build/three.module.js';
-    import { MindARThree } from 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js';
+    import * as THREE from 'three';
+    import { MindARThree } from 'mindar';
 
     document.addEventListener("DOMContentLoaded", () => {
       const mindarThree = new MindARThree({
@@ -56,6 +64,6 @@
   </style>
 </head>
 <body>
-  <div class="version-info">Ver.2408190025</div>
+  <div class="version-info">Ver.2408190030</div>
 </body>
 </html>
