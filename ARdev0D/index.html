@@ -2,27 +2,14 @@
 <html lang="ja">
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script src="https://cdn.jsdelivr.net/npm/three@0.137.5/build/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js"></script>
-  <style>
-    body { margin: 0; overflow: hidden; }
-    .version-info {
-      position: fixed;
-      bottom: 10px;
-      right: 10px;
-      font-size: 14px;
-      color: gray;
-      font-family: 'Arial', sans-serif;
-    }
-  </style>
-</head>
-<body>
-  <div class="version-info">Ver.2408190021</div>
-  <script>
+  <script type="module">
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.137.5/build/three.module.js';
+    import { MindARThree } from 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js';
+
     document.addEventListener("DOMContentLoaded", () => {
-      const mindarThree = new window.MINDAR.IMAGE.MindARThree({
+      const mindarThree = new MindARThree({
         container: document.body,
-        imageTargetSrc: 'OTK.mind',
+        imageTargetSrc: 'targets.mind',
       });
 
       const { renderer, scene, camera } = mindarThree;
@@ -56,5 +43,19 @@
       mindarThree.start();
     });
   </script>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    .version-info {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      font-size: 14px;
+      color: gray;
+      font-family: 'Arial', sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div class="version-info">Ver.2408190025</div>
 </body>
 </html>
