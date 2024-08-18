@@ -1,41 +1,83 @@
-<!doctype html>
 <html>
-    <head>
-        <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
-        <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-        <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-detector.js"></script>
-        <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-handler.js"></script>
-    </head>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- A-Frameの読み込み -->
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <!-- MindARの読み込み -->
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    <!-- A-Frame Extrasの読み込み -->
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@7.5.1/dist/aframe-extras.min.js"></script>
+    <style>
+      .version-info {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        font-size: 14px;
+        color: gray;
+        font-family: 'Arial', sans-serif; /* 適当なゴシック体 */
+      }
+    </style>
+  </head>
+  <body>
+    <a-scene 
+      mindar-image="imageTargetSrc: targets.mind;" 
+      color-space="sRGB" 
+      renderer="colorManagement: true, physicallyCorrectLights" 
+      vr-mode-ui="enabled: false" 
+      device-orientation-permission-ui="enabled: false"
+    >
+      <a-assets>
+        <a-asset-item id="model" src="Logo.glb"></a-asset-item>
+      </a-assets>
 
-    <body style="margin: 0; overflow: hidden;">
-        <a-scene
-            vr-mode-ui="enabled: false;"
-            loading-screen="enabled: false;"
-            arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
-            id="scene"
-            embedded
-            gesture-detector
-        >
-            <a-marker
-                id="animated-marker"
-                type="pattern"
-                preset="custom"
-                url="marker.patt"
-                raycaster="objects: .clickable"
-                emitevents="true"
-                cursor="fuse: false; rayOrigin: mouse;"
-                id="markerA"
-            >
-                <a-image
-                    src="asset.png"
-                    scale="1 1 1"
-                    class="clickable"
-                    rotation="-90 0 0"
-                    gesture-handler
-                ></a-image>
-            </a-marker>
+      <a-camera 
+        position="0 0 0" 
+        look-controls="enabled: false"
+      ></a-camera>
 
-            <a-entity camera></a-entity>
-        </a-scene>
-    </body>
+      <a-entity 
+        id="markerEntity"
+        mindar-image-target="targetIndex: 0"
+      >
+        <a-gltf-model 
+          id="modelEntity"
+          src="#model" 
+          position="0 0 0" 
+          scale="10 10 10" 
+          rotation="0 0 0"
+          animation-mixer="clip: *; loop: infinite; timeScale: 1"
+        ></a-gltf-model>
+      </a-entity>
+    </a-scene>
+    <div class="version-info">
+      Ver.2408181459
+    </div>
+
+    <script>
+      AFRAME.registerComponent('markerhandler', {
+        init: function () {
+          const marker = document.querySelector('#markerEntity');
+          const model = document.querySelector('#modelEntity');
+
+          marker.addEventListener('markerLost', () => {
+            // マーカーが見失われた際にオブジェクトの位置と回転を固定
+            const position = model.getAttribute('position');
+            const rotation = model.getAttribute('rotation');
+            model.setAttribute('position', position);
+            model.setAttribute('rotation', rotation);
+          });
+
+          // デバイスのセンサー情報を使用してオブジェクトの表示を更新
+          window.addEventListener('deviceorientation', (event) => {
+            const alpha = event.alpha; // デバイスの回転角度
+            const beta = event.beta;   // デバイスの傾き
+            const gamma = event.gamma; // デバイスの傾き
+
+            // オブジェクトの表示を更新
+            model.setAttribute('rotation', {x: beta, y: alpha, z: gamma});
+          });
+        }
+      });
+    </script>
+  </body>
 </html>
