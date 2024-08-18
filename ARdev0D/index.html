@@ -6,13 +6,15 @@
     {
       "imports": {
         "three": "https://cdn.jsdelivr.net/npm/three@0.137.5/build/three.module.js",
-        "mindar": "https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js"
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.137.5/examples/jsm/"
       }
     }
   </script>
   <script type="module">
     import * as THREE from 'three';
-    import { MindARThree } from 'mindar';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
+    import { MindARThree } from 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js';
 
     document.addEventListener("DOMContentLoaded", () => {
       const mindarThree = new MindARThree({
@@ -25,7 +27,7 @@
       const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
       scene.add(light);
 
-      const loader = new THREE.GLTFLoader();
+      const loader = new GLTFLoader();
       loader.load('Logo.glb', (gltf) => {
         const model = gltf.scene;
         model.scale.set(10, 10, 10);
@@ -64,6 +66,6 @@
   </style>
 </head>
 <body>
-  <div class="version-info">Ver.2408190030</div>
+  <div class="version-info">Ver.2408190035</div>
 </body>
 </html>
