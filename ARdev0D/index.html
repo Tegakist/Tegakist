@@ -27,7 +27,7 @@
       device-orientation-permission-ui="enabled: false"
     >
       <a-assets>
-        <a-asset-item id="model" src="Logo.glb"></a-asset-item>
+        <a-asset-item id="model" src="Shinjo.fbx"></a-asset-item>
       </a-assets>
 
       <a-camera 
@@ -39,18 +39,18 @@
         id="markerEntity"
         mindar-image-target="targetIndex: 0"
       >
-        <a-gltf-model 
+        <a-entity 
           id="modelEntity"
           src="#model" 
           position="0 0 0" 
           scale="10 10 10" 
           rotation="0 0 0"
           animation-mixer="clip: *; loop: infinite; timeScale: 1"
-        ></a-gltf-model>
+        ></a-entity>
       </a-entity>
     </a-scene>
     <div class="version-info">
-      Ver.2408181459
+      Ver.2408181518
     </div>
 
     <script>
@@ -81,4 +81,3 @@
     </script>
   </body>
 </html>
-
