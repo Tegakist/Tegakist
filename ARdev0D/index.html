@@ -28,8 +28,7 @@
     </script>
   </head>
   <body>
-    <div class="version-info">Ver.2408190005</div>
-    <button id="startButton">Start AR</button>
+    <div class="version-info">Ver.2408190013</div>
     <script type="module">
       import * as THREE from 'three';
       import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -38,19 +37,21 @@
       if (navigator.xr) {
         navigator.xr.isSessionSupported('immersive-ar').then((supported) => {
           if (supported) {
-            document.getElementById('startButton').addEventListener('click', () => {
-              navigator.xr.requestSession('immersive-ar', { requiredFeatures: ['local-floor', 'bounded-floor'] })
-                .then(onSessionStarted)
-                .catch(err => {
-                  console.error('Failed to start AR session:', err);
-                });
-            });
+            startARSession();
           } else {
             console.log('immersive-ar session is not supported');
           }
         });
       } else {
         console.log('WebXR is not supported by this browser.');
+      }
+
+      function startARSession() {
+        navigator.xr.requestSession('immersive-ar', { requiredFeatures: ['local-floor', 'bounded-floor'] })
+          .then(onSessionStarted)
+          .catch(err => {
+            console.error('Failed to start AR session:', err);
+          });
       }
 
       function onSessionStarted(session) {
