@@ -1,12 +1,8 @@
+<!DOCTYPE html>
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- A-Frameの読み込み -->
-    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-    <!-- 最新のAR.jsの読み込み -->
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    <!-- A-Frame Extrasの読み込み -->
-    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@7.5.1/dist/aframe-extras.min.js"></script>
+    <title>WebXR Sample</title>
     <style>
       .version-info {
         position: fixed;
@@ -14,54 +10,64 @@
         right: 10px;
         font-size: 14px;
         color: gray;
-        font-family: 'Arial', sans-serif; /* 適当なゴシック体 */
+        font-family: 'Arial', sans-serif;
+      }
+      canvas {
+        display: block;
       }
     </style>
   </head>
   <body>
-    <a-scene 
-      embedded 
-      arjs="sourceType: webcam; debugUIEnabled: false;"
-    >
-      <a-assets>
-        <a-asset-item id="model" src="Shinjo.glb"></a-asset-item>
-      </a-assets>
-
-      <a-camera 
-        position="0 0 0" 
-        look-controls="enabled: false"
-      ></a-camera>
-
-      <a-entity 
-        id="modelEntity"
-        gltf-model="#model" 
-        position="0 0 0" 
-        scale="1 1 1" 
-        rotation="0 0 0"
-        animation-mixer="clip: *; loop: infinite; timeScale: 1"
-        arjs-anchor="type: plane; minConfidence: 0.6;"
-      ></a-entity>
-    </a-scene>
-    <div class="version-info">
-      Ver.2408181536
-    </div>
-
+    <div class="version-info">Ver.2408181734</div>
     <script>
-      AFRAME.registerComponent('planehandler', {
-        init: function () {
-          const model = document.querySelector('#modelEntity');
+      // WebXRの初期化
+      if (navigator.xr) {
+        navigator.xr.requestSession('immersive-ar', { requiredFeatures: ['hit-test'] }).then(onSessionStarted);
+      } else {
+        console.log('WebXR not supported');
+      }
 
-          // デバイスのセンサー情報を使用してオブジェクトの表示を更新
-          window.addEventListener('deviceorientation', (event) => {
-            const alpha = event.alpha; // デバイスの回転角度
-            const beta = event.beta;   // デバイスの傾き
-            const gamma = event.gamma; // デバイスの傾き
+      function onSessionStarted(session) {
+        session.addEventListener('end', onSessionEnded);
 
-            // オブジェクトの表示を更新
-            model.setAttribute('rotation', {x: beta, y: alpha, z: gamma});
+        let renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.xr.enabled = true;
+        document.body.appendChild(renderer.domElement);
+
+        let scene = new THREE.Scene();
+        let camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
+
+        let light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
+        light.position.set(0.5, 1, 0.25);
+        scene.add(light);
+
+        let loader = new THREE.GLTFLoader();
+        loader.load('Logo.glb', function (gltf) {
+          let model = gltf.scene;
+          model.scale.set(10, 10, 10);
+          scene.add(model);
+        });
+
+        session.requestReferenceSpace('local').then((refSpace) => {
+          renderer.setAnimationLoop((timestamp, frame) => {
+            let pose = frame.getViewerPose(refSpace);
+            if (pose) {
+              let view = pose.views[0];
+              let viewport = session.renderState.baseLayer.getViewport(view);
+              renderer.setSize(viewport.width, viewport.height);
+              camera.matrix.fromArray(view.transform.matrix);
+              camera.updateMatrixWorld(true);
+              renderer.render(scene, camera);
+            }
           });
-        }
-      });
+        });
+      }
+
+      function onSessionEnded(event) {
+        console.log('Session ended');
+      }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.125.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.125.2/examples/js/loaders/GLTFLoader.js"></script>
   </body>
 </html>
