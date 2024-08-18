@@ -18,17 +18,19 @@
     </style>
   </head>
   <body>
-    <div class="version-info">Ver.2408181742</div>
+    <div class="version-info">Ver.2408171821</div>
+    <button id="startButton">Start AR</button>
     <script src="https://cdn.jsdelivr.net/npm/three@0.125.2/build/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.125.2/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js"></script>
-    <script>
-      // WebXRの初期化
-      if (navigator.xr) {
-        navigator.xr.requestSession('immersive-ar', { requiredFeatures: ['hit-test'] }).then(onSessionStarted);
-      } else {
-        console.log('WebXR not supported');
-      }
+    <script type="module">
+      document.getElementById('startButton').addEventListener('click', () => {
+        if (navigator.xr) {
+          navigator.xr.requestSession('immersive-ar', { requiredFeatures: ['hit-test'] }).then(onSessionStarted);
+        } else {
+          console.log('WebXR not supported');
+        }
+      });
 
       function onSessionStarted(session) {
         session.addEventListener('end', onSessionEnded);
@@ -44,7 +46,7 @@
         light.position.set(0.5, 1, 0.25);
         scene.add(light);
 
-        let loader = new THREE.GLTFLoader();
+        let loader = new GLTFLoader();
         loader.load('Logo.glb', function (gltf) {
           let model = gltf.scene;
           model.scale.set(10, 10, 10);
@@ -53,7 +55,7 @@
 
         const mindarThree = new window.MINDAR.IMAGE.MindARThree({
           container: document.body,
-          imageTargetSrc: 'OTK.mind',
+          imageTargetSrc: 'targets.mind',
         });
 
         const { renderer: mindarRenderer, scene: mindarScene, camera: mindarCamera } = mindarThree;
