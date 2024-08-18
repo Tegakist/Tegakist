@@ -18,12 +18,13 @@
     </style>
   </head>
   <body>
-    <div class="version-info">Ver.2408181749</div>
+    <div class="version-info">Ver.2408171821</div>
     <button id="startButton">Start AR</button>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.125.2/build/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.125.2/examples/js/loaders/GLTFLoader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js"></script>
     <script type="module">
+      import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.125.2/build/three.module.js';
+      import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.125.2/examples/jsm/loaders/GLTFLoader.js';
+      import { MindARThree } from 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js';
+
       document.getElementById('startButton').addEventListener('click', () => {
         if (navigator.xr) {
           navigator.xr.requestSession('immersive-ar', { requiredFeatures: ['hit-test'] }).then(onSessionStarted);
@@ -53,7 +54,7 @@
           scene.add(model);
         });
 
-        const mindarThree = new window.MINDAR.IMAGE.MindARThree({
+        const mindarThree = new MindARThree({
           container: document.body,
           imageTargetSrc: 'targets.mind',
         });
