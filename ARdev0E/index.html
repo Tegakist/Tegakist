@@ -58,7 +58,7 @@
 
             if (!positionLogged) {
               const position = camera.position;
-              const rotation = camera.rotation;
+              const rotation = new THREE.Euler().setFromQuaternion(camera.quaternion, 'XYZ');
               const worldPosition = new THREE.Vector3();
               model.getWorldPosition(worldPosition);
 
@@ -112,6 +112,6 @@
   </head>
   <body>
     <div id="container"></div>
-    <div id="version">Ver.2408191717</div>
+    <div id="version">Ver.2408191722</div>
   </body>
 </html>
