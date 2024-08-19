@@ -30,6 +30,7 @@
       let mixer;
       let model;
       let addedToScene = false;
+      let positionLogged = false;
 
       loader.load('Logo.glb', (gltf) => {
         model = gltf.scene;
@@ -54,6 +55,30 @@
           if (anchor.group.visible && !addedToScene && model) {
             scene.add(model);
             addedToScene = true;
+
+            if (!positionLogged) {
+              const position = camera.position;
+              const rotation = camera.rotation;
+              const worldPosition = new THREE.Vector3();
+              model.getWorldPosition(worldPosition);
+
+              const positionText = `Position: ${position.x.toFixed(2)}m, ${position.y.toFixed(2)}m, ${position.z.toFixed(2)}m`;
+              const rotationText = `Rotation: ${(rotation.x * (180 / Math.PI)).toFixed(2)}°, ${(rotation.y * (180 / Math.PI)).toFixed(2)}°, ${(rotation.z * (180 / Math.PI)).toFixed(2)}°`;
+              const worldPositionText = `World Position: ${worldPosition.x.toFixed(2)}m, ${worldPosition.y.toFixed(2)}m, ${worldPosition.z.toFixed(2)}m`;
+
+              const infoDiv = document.createElement('div');
+              infoDiv.style.position = 'fixed';
+              infoDiv.style.bottom = '0';
+              infoDiv.style.left = '0';
+              infoDiv.style.zIndex = '2';
+              infoDiv.style.fontFamily = 'Arial, sans-serif';
+              infoDiv.style.color = 'gray';
+              infoDiv.style.fontSize = '14px';
+              infoDiv.innerHTML = `${positionText}<br>${rotationText}<br>${worldPositionText}`;
+              document.body.appendChild(infoDiv);
+
+              positionLogged = true;
+            }
           }
 
           renderer.render(scene, camera);
@@ -87,6 +112,6 @@
   </head>
   <body>
     <div id="container"></div>
-    <div id="version">Ver.2408191701</div>
+    <div id="version">Ver.2408191717</div>
   </body>
 </html>
