@@ -54,11 +54,11 @@
       mindarThree.start();
 
       // ターゲット検出のデバッグ情報
-      mindarThree.on("targetFound", () => {
+      mindarThree.controller.addEventListener("targetFound", () => {
         console.log("Target found!");
       });
 
-      mindarThree.on("targetLost", () => {
+      mindarThree.controller.addEventListener("targetLost", () => {
         console.log("Target lost!");
       });
 
@@ -88,6 +88,6 @@
   </style>
 </head>
 <body>
-  <div class="version-info">Ver.2408190953</div>
+  <div class="version-info">Ver.2408191002</div>
 </body>
 </html>
