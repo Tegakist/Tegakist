@@ -18,7 +18,7 @@
     document.addEventListener("DOMContentLoaded", () => {
       const mindarThree = new MindARThree({
         container: document.body,
-        imageTargetSrc: 'SSS.mind',
+        imageTargetSrc: 'SSS.mind', // 修正されたファイル名
       });
 
       const { renderer, scene, camera } = mindarThree;
@@ -53,6 +53,15 @@
 
       mindarThree.start();
 
+      // ターゲット検出のデバッグ情報
+      mindarThree.on("targetFound", () => {
+        console.log("Target found!");
+      });
+
+      mindarThree.on("targetLost", () => {
+        console.log("Target lost!");
+      });
+
       // ウィンドウのリサイズに対応
       window.addEventListener('resize', () => {
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -79,6 +88,6 @@
   </style>
 </head>
 <body>
-  <div class="version-info">Ver.2408190945</div>
+  <div class="version-info">Ver.2408190953</div>
 </body>
 </html>
