@@ -15,7 +15,7 @@
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     import { MindARThree } from 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js';
 
-    document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", async () => {
       const mindarThree = new MindARThree({
         container: document.body,
         imageTargetSrc: 'SSS.mind', // 修正されたファイル名
@@ -51,7 +51,7 @@
         console.error('An error happened', error);
       });
 
-      mindarThree.start();
+      await mindarThree.start();
 
       // mindarThree.controllerが存在するか確認
       if (mindarThree.controller) {
@@ -92,6 +92,6 @@
   </style>
 </head>
 <body>
-  <div class="version-info">Ver.2408191006</div>
+  <div class="version-info">Ver.2408191011</div>
 </body>
 </html>
