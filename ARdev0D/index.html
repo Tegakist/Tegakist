@@ -52,10 +52,22 @@
       });
 
       mindarThree.start();
+
+      // ウィンドウのリサイズに対応
+      window.addEventListener('resize', () => {
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+      });
     });
   </script>
   <style>
-    body { margin: 0; overflow: hidden; }
+    body {
+      margin: 0;
+      overflow: hidden;
+      height: 100vh; /* 画面全体をカバーするように設定 */
+      width: 100vw;  /* 画面全体をカバーするように設定 */
+    }
     .version-info {
       position: fixed;
       bottom: 10px;
@@ -67,6 +79,6 @@
   </style>
 </head>
 <body>
-  <div class="version-info">Ver.2408190936</div>
+  <div class="version-info">Ver.2408190945</div>
 </body>
 </html>
