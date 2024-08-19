@@ -65,6 +65,8 @@
         if (model) {
           model.visible = true; // ターゲットが検出されたらモデルを表示
           console.log("Model is now visible");
+        } else {
+          console.log("Model is not defined");
         }
       };
 
@@ -73,6 +75,8 @@
         if (model) {
           model.visible = false; // ターゲットが失われたらモデルを非表示
           console.log("Model is now hidden");
+        } else {
+          console.log("Model is not defined");
         }
       };
 
@@ -102,6 +106,6 @@
   </style>
 </head>
 <body>
-  <div class="version-info">Ver.2408191020</div>
+  <div class="version-info">Ver.2408191103</div>
 </body>
 </html>
