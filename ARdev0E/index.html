@@ -51,9 +51,7 @@
           const delta = clock.getDelta();
           if (mixer) mixer.update(delta);
 
-          if (anchor.visible) {
-            addedToScene = false;
-          } else if (!addedToScene && model) {
+          if (anchor.group.visible && !addedToScene && model) {
             scene.add(model);
             addedToScene = true;
           }
@@ -89,6 +87,6 @@
   </head>
   <body>
     <div id="container"></div>
-    <div id="version">Ver.2408191649</div>
+    <div id="version">Ver.2408191658</div>
   </body>
 </html>
