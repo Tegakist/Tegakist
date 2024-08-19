@@ -53,14 +53,18 @@
 
       mindarThree.start();
 
-      // ターゲット検出のデバッグ情報
-      mindarThree.controller.addEventListener("targetFound", () => {
-        console.log("Target found!");
-      });
+      // mindarThree.controllerが存在するか確認
+      if (mindarThree.controller) {
+        mindarThree.controller.addEventListener("targetFound", () => {
+          console.log("Target found!");
+        });
 
-      mindarThree.controller.addEventListener("targetLost", () => {
-        console.log("Target lost!");
-      });
+        mindarThree.controller.addEventListener("targetLost", () => {
+          console.log("Target lost!");
+        });
+      } else {
+        console.error('mindarThree.controller is undefined');
+      }
 
       // ウィンドウのリサイズに対応
       window.addEventListener('resize', () => {
@@ -88,6 +92,6 @@
   </style>
 </head>
 <body>
-  <div class="version-info">Ver.2408191002</div>
+  <div class="version-info">Ver.2408191006</div>
 </body>
 </html>
