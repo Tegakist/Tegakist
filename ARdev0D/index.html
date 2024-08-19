@@ -27,14 +27,16 @@
       scene.add(light);
 
       const loader = new GLTFLoader();
+      let model, mixer;
       loader.load('Logo.glb', (gltf) => {
-        const model = gltf.scene;
+        model = gltf.scene;
         model.scale.set(10, 10, 10);
         model.position.set(0, 0, 0);
         model.rotation.set(0, 0, 0);
+        model.visible = false; // 初期状態では非表示
         scene.add(model);
 
-        const mixer = new THREE.AnimationMixer(model);
+        mixer = new THREE.AnimationMixer(model);
         gltf.animations.forEach((clip) => {
           mixer.clipAction(clip).play();
         });
@@ -43,7 +45,7 @@
         const animate = () => {
           requestAnimationFrame(animate);
           const delta = clock.getDelta();
-          mixer.update(delta);
+          if (mixer) mixer.update(delta);
           renderer.render(scene, camera);
         };
         animate();
@@ -54,12 +56,14 @@
       await mindarThree.start();
 
       // ターゲット検出のデバッグ情報
-      mindarThree.onTargetFound = () => {
+      mindarThree.controller.onTargetFound = () => {
         console.log("Target found!");
+        if (model) model.visible = true; // ターゲットが検出されたらモデルを表示
       };
 
-      mindarThree.onTargetLost = () => {
+      mindarThree.controller.onTargetLost = () => {
         console.log("Target lost!");
+        if (model) model.visible = false; // ターゲットが失われたらモデルを非表示
       };
 
       // ウィンドウのリサイズに対応
@@ -88,6 +92,6 @@
   </style>
 </head>
 <body>
-  <div class="version-info">Ver.2408191015</div>
+  <div class="version-info">Ver.2408191020</div>
 </body>
 </html>
