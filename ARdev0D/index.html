@@ -1,122 +1,85 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script type="importmap">
-  {
-    "imports": {
-      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
-      "mindar-image-three":"https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js"
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
+        "mindar-image-three":"https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js"
+      }
     }
-  }
-  </script>
-  <script type="module">
-    import * as THREE from 'three';
-    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-    import { MindARThree } from 'mindar-image-three';
+    </script>
+    <script type="module">
+      import * as THREE from 'three';
+      import { MindARThree } from 'mindar-image-three';
+      import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-    document.addEventListener("DOMContentLoaded", async () => {
-      console.log("Document loaded");
       const mindarThree = new MindARThree({
         container: document.querySelector("#container"),
-        imageTargetSrc: 'SSS.mind',
-        debug: true // デバッグモードを有効にする
+        imageTargetSrc: "SSS.mind"
       });
 
-      const { renderer, scene, camera } = mindarThree;
-
-      // 以下の行を追加
-      renderer.outputColorSpace = THREE.SRGBColorSpace;
-
-      const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
-      scene.add(light);
+      const {renderer, scene, camera} = mindarThree;
+      const anchor = mindarThree.addAnchor(0);
 
       const loader = new GLTFLoader();
-      let model, mixer;
       loader.load('Logo.glb', (gltf) => {
-        model = gltf.scene;
-        model.scale.set(10, 10, 10);
-        model.position.set(0, 0, 0);
-        model.rotation.set(0, 0, 0);
-        model.visible = false; // 初期状態では非表示
-        scene.add(model);
+        anchor.group.add(gltf.scene);
+      });
 
-        mixer = new THREE.AnimationMixer(model);
-        gltf.animations.forEach((clip) => {
-          mixer.clipAction(clip).play();
-        });
-
-        const clock = new THREE.Clock();
-        const animate = () => {
-          requestAnimationFrame(animate);
-          const delta = clock.getDelta();
-          if (mixer) mixer.update(delta);
+      const start = async() => {
+        await mindarThree.start();
+        renderer.setAnimationLoop(() => {
           renderer.render(scene, camera);
-        };
-        animate();
-      }, undefined, (error) => {
-        console.error('An error happened', error);
+        });
+      }
+
+      const startButton = document.querySelector("#startButton");
+      startButton.addEventListener("click", () => {
+        start();
       });
 
-      console.log("Starting MindAR...");
-      await mindarThree.start();
-      console.log("MindAR started");
-
-      // ターゲット検出のデバッグ情報
-      mindarThree.controller.onTargetFound = () => {
-        console.log("Target found!");
-        if (model) {
-          model.visible = true; // ターゲットが検出されたらモデルを表示
-          console.log("Model is now visible");
-        } else {
-          console.log("Model is not defined");
-        }
-      };
-
-      mindarThree.controller.onTargetLost = () => {
-        console.log("Target lost!");
-        if (model) {
-          model.visible = false; // ターゲットが失われたらモデルを非表示
-          console.log("Model is now hidden");
-        } else {
-          console.log("Model is not defined");
-        }
-      };
-
-      // ウィンドウのリサイズに対応
-      window.addEventListener('resize', () => {
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
+      const stopButton = document.querySelector("#stopButton");
+      stopButton.addEventListener("click", () => {
+        mindarThree.stop();
+        mindarThree.renderer.setAnimationLoop(null);
       });
-    });
-  </script>
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      height: 100vh; /* 画面全体をカバーするように設定 */
-      width: 100vw;  /* 画面全体をカバーするように設定 */
-    }
-    #container {
-      width: 100vw;
-      height: 100vh;
-      position: relative;
-      overflow: hidden;
-    }
-    .version-info {
-      position: fixed;
-      bottom: 10px;
-      right: 10px;
-      font-size: 14px;
-      color: gray;
-      font-family: 'Arial', sans-serif;
-    }
-  </style>
-</head>
-<body>
-  <div id="container"></div>
-  <div class="version-info">Ver.2408191124</div>
-</body>
+    </script>
+    <style>
+      body {
+        margin: 0;
+      }
+      #container {
+        width: 100vw;
+        height: 100vh;
+        position: relative;
+        overflow: hidden;
+      }
+      #control {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 2;
+      }
+      #version {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        z-index: 2;
+        font-family: 'Arial', sans-serif;
+        color: gray;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="control">
+      <button id="startButton">Start</button>
+      <button id="stopButton">Stop</button>
+    </div>
+    <div id="container">
+    </div>
+    <div id="version">Ver.2408191134</div>
+  </body>
 </html>
