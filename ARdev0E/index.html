@@ -22,7 +22,7 @@
       });
 
       const {renderer, scene, camera} = mindarThree;
-      renderer.outputColorSpace = THREE.SRGBColorSpace; // 修正箇所
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
 
       const anchor = mindarThree.addAnchor(0);
 
@@ -30,15 +30,14 @@
       let mixer;
       let model;
       let positionLogged = false;
+      let infoDiv;
 
       loader.load('Logo.glb', (gltf) => {
         model = gltf.scene;
         anchor.group.add(model);
 
-        // モデルのスケールを設定
-        model.scale.set(10, 10, 10); // ここでスケールを調整します
+        model.scale.set(10, 10, 10);
 
-        // アニメーションの設定
         mixer = new THREE.AnimationMixer(model);
         gltf.animations.forEach((clip) => {
           mixer.clipAction(clip).play();
@@ -53,7 +52,27 @@
           const delta = clock.getDelta();
           if (mixer) mixer.update(delta);
 
-          if (anchor.group.visible && !positionLogged) {
+          if (anchor.group.visible) {
+            if (!positionLogged) {
+              const position = camera.position;
+              const rotation = new THREE.Euler().setFromQuaternion(camera.quaternion, 'XYZ');
+              const positionText = `Position: ${position.x.toFixed(2)}m, ${position.y.toFixed(2)}m, ${position.z.toFixed(2)}m`;
+              const rotationText = `Rotation: ${(rotation.x * (180 / Math.PI)).toFixed(2)}°, ${(rotation.y * (180 / Math.PI)).toFixed(2)}°, ${(rotation.z * (180 / Math.PI)).toFixed(2)}°`;
+
+              infoDiv = document.createElement('div');
+              infoDiv.style.position = 'fixed';
+              infoDiv.style.bottom = '0';
+              infoDiv.style.left = '0';
+              infoDiv.style.zIndex = '2';
+              infoDiv.style.fontFamily = 'Arial, sans-serif';
+              infoDiv.style.color = 'gray';
+              infoDiv.style.fontSize = '14px';
+              infoDiv.innerHTML = `${positionText}<br>${rotationText}`;
+              document.body.appendChild(infoDiv);
+
+              positionLogged = true;
+            }
+          } else {
             const position = camera.position;
             const rotation = new THREE.Euler().setFromQuaternion(camera.quaternion, 'XYZ');
             const worldPosition = new THREE.Vector3();
@@ -63,40 +82,31 @@
             const rotationText = `Rotation: ${(rotation.x * (180 / Math.PI)).toFixed(2)}°, ${(rotation.y * (180 / Math.PI)).toFixed(2)}°, ${(rotation.z * (180 / Math.PI)).toFixed(2)}°`;
             const worldPositionText = `World Position: ${worldPosition.x.toFixed(2)}m, ${worldPosition.y.toFixed(2)}m, ${worldPosition.z.toFixed(2)}m`;
 
-            const infoDiv = document.createElement('div');
-            infoDiv.style.position = 'fixed';
-            infoDiv.style.bottom = '0';
-            infoDiv.style.left = '0';
-            infoDiv.style.zIndex = '2';
-            infoDiv.style.fontFamily = 'Arial, sans-serif';
-            infoDiv.style.color = 'gray';
-            infoDiv.style.fontSize = '14px';
-            infoDiv.innerHTML = `${positionText}<br>${rotationText}<br>${worldPositionText}`;
-            document.body.appendChild(infoDiv);
+            if (infoDiv) {
+              infoDiv.innerHTML = `${positionText}<br>${rotationText}<br>${worldPositionText}`;
+            } else {
+              infoDiv = document.createElement('div');
+              infoDiv.style.position = 'fixed';
+              infoDiv.style.bottom = '0';
+              infoDiv.style.left = '0';
+              infoDiv.style.zIndex = '2';
+              infoDiv.style.fontFamily = 'Arial, sans-serif';
+              infoDiv.style.color = 'gray';
+              infoDiv.style.fontSize = '14px';
+              infoDiv.innerHTML = `${positionText}<br>${rotationText}<br>${worldPositionText}`;
+              document.body.appendChild(infoDiv);
+            }
 
-            positionLogged = true;
+            positionLogged = false;
           }
 
           renderer.render(scene, camera);
         });
       }
 
-      // ページが読み込まれたときに自動的にスタート
       window.addEventListener("load", () => {
         start();
       });
-
-      // コメントアウトされたボタンのコード
-      // const startButton = document.querySelector("#startButton");
-      // startButton.addEventListener("click", () => {
-      //   start();
-      // });
-
-      // const stopButton = document.querySelector("#stopButton");
-      // stopButton.addEventListener("click", () => {
-      //   mindarThree.stop();
-      //   mindarThree.renderer.setAnimationLoop(null);
-      // });
     </script>
     <style>
       body {
@@ -107,12 +117,6 @@
         height: 100vh;
         position: relative;
         overflow: hidden;
-      }
-      #control {
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 2;
       }
       #version {
         position: fixed;
@@ -126,13 +130,7 @@
     </style>
   </head>
   <body>
-    <!-- コメントアウトされたボタンのコード -->
-    <!-- <div id="control">
-      <button id="startButton">Start</button>
-      <button id="stopButton">Stop</button>
-    </div> -->
-    <div id="container">
-    </div>
-    <div id="version">Ver.2408191727</div>
+    <div id="container"></div>
+    <div id="version">Ver.2408191733</div>
   </body>
 </html>
