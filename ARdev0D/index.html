@@ -23,7 +23,7 @@
       const {scene, camera} = mindarThree;
       const renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.outputColorSpace = THREE.SRGBColorSpace; // 修正箇所
+      // renderer.outputColorSpace = THREE.SRGBColorSpace; 
       document.querySelector("#container").appendChild(renderer.domElement);
 
       const anchor = mindarThree.addAnchor(0);
@@ -105,6 +105,6 @@
     </div>
     <div id="container">
     </div>
-    <div id="version">Ver.2408191314</div>
+    <div id="version">Ver.2408191316</div>
   </body>
 </html>
