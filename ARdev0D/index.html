@@ -58,12 +58,18 @@
       // ターゲット検出のデバッグ情報
       mindarThree.controller.onTargetFound = () => {
         console.log("Target found!");
-        if (model) model.visible = true; // ターゲットが検出されたらモデルを表示
+        if (model) {
+          model.visible = true; // ターゲットが検出されたらモデルを表示
+          console.log("Model is now visible");
+        }
       };
 
       mindarThree.controller.onTargetLost = () => {
         console.log("Target lost!");
-        if (model) model.visible = false; // ターゲットが失われたらモデルを非表示
+        if (model) {
+          model.visible = false; // ターゲットが失われたらモデルを非表示
+          console.log("Model is now hidden");
+        }
       };
 
       // ウィンドウのリサイズに対応
@@ -92,6 +98,6 @@
   </style>
 </head>
 <body>
-  <div class="version-info">Ver.2408191020</div>
+  <div class="version-info">Ver.2408191038</div>
 </body>
 </html>
