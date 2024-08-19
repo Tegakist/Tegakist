@@ -21,16 +21,30 @@
       });
 
       const {renderer, scene, camera} = mindarThree;
+      renderer.outputColorSpace = THREE.SRGBColorSpace; // 修正箇所
+
       const anchor = mindarThree.addAnchor(0);
 
       const loader = new GLTFLoader();
+      let mixer;
       loader.load('Logo.glb', (gltf) => {
-        anchor.group.add(gltf.scene);
+        const model = gltf.scene;
+        anchor.group.add(model);
+
+        // アニメーションの設定
+        mixer = new THREE.AnimationMixer(model);
+        gltf.animations.forEach((clip) => {
+          mixer.clipAction(clip).play();
+        });
       });
+
+      const clock = new THREE.Clock();
 
       const start = async() => {
         await mindarThree.start();
         renderer.setAnimationLoop(() => {
+          const delta = clock.getDelta();
+          if (mixer) mixer.update(delta);
           renderer.render(scene, camera);
         });
       }
@@ -80,6 +94,6 @@
     </div>
     <div id="container">
     </div>
-    <div id="version">Ver.2408191134</div>
+    <div id="version">Ver.2408191140</div>
   </body>
 </html>
