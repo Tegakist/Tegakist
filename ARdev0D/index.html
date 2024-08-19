@@ -16,9 +16,11 @@
     import { MindARThree } from 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js';
 
     document.addEventListener("DOMContentLoaded", async () => {
+      console.log("Document loaded");
       const mindarThree = new MindARThree({
         container: document.body,
-        imageTargetSrc: 'SSS.mind', // 修正されたファイル名
+        imageTargetSrc: 'SSS.mind',
+        debug: true // デバッグモードを有効にする
       });
 
       const { renderer, scene, camera } = mindarThree;
@@ -53,7 +55,9 @@
         console.error('An error happened', error);
       });
 
+      console.log("Starting MindAR...");
       await mindarThree.start();
+      console.log("MindAR started");
 
       // ターゲット検出のデバッグ情報
       mindarThree.controller.onTargetFound = () => {
@@ -98,6 +102,6 @@
   </style>
 </head>
 <body>
-  <div class="version-info">Ver.2408191038</div>
+  <div class="version-info">Ver.2408191044</div>
 </body>
 </html>
