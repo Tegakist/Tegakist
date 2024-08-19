@@ -31,6 +31,9 @@
         const model = gltf.scene;
         anchor.group.add(model);
 
+        // モデルのスケールを設定
+        model.scale.set(10, 10, 10); // ここでスケールを調整します
+
         // アニメーションの設定
         mixer = new THREE.AnimationMixer(model);
         gltf.animations.forEach((clip) => {
@@ -98,6 +101,6 @@
     </div>
     <div id="container">
     </div>
-    <div id="version">Ver.2408191354</div>
+    <div id="version">Ver.2408191401</div>
   </body>
 </html>
