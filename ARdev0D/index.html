@@ -47,6 +47,8 @@
           renderer.render(scene, camera);
         };
         animate();
+      }, undefined, (error) => {
+        console.error('An error happened', error);
       });
 
       mindarThree.start();
@@ -65,6 +67,6 @@
   </style>
 </head>
 <body>
-  <div class="version-info">Ver.2408190924</div>
+  <div class="version-info">Ver.2408190926</div>
 </body>
 </html>
