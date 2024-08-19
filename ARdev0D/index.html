@@ -41,6 +41,11 @@
         });
       });
 
+      // ライトの追加
+      const light = new THREE.DirectionalLight(0xffffff, 1);
+      light.position.set(0, 1, 0).normalize();
+      scene.add(light);
+
       const clock = new THREE.Clock();
 
       const start = async() => {
@@ -97,6 +102,6 @@
     </div>
     <div id="container">
     </div>
-    <div id="version">Ver.2408191248</div>
+    <div id="version">Ver.2408191301</div>
   </body>
 </html>
