@@ -52,16 +52,22 @@
         });
       }
 
-      const startButton = document.querySelector("#startButton");
-      startButton.addEventListener("click", () => {
+      // ページが読み込まれたときに自動的にスタート
+      window.addEventListener("load", () => {
         start();
       });
 
-      const stopButton = document.querySelector("#stopButton");
-      stopButton.addEventListener("click", () => {
-        mindarThree.stop();
-        mindarThree.renderer.setAnimationLoop(null);
-      });
+      // コメントアウトされたボタンのコード
+      // const startButton = document.querySelector("#startButton");
+      // startButton.addEventListener("click", () => {
+      //   start();
+      // });
+
+      // const stopButton = document.querySelector("#stopButton");
+      // stopButton.addEventListener("click", () => {
+      //   mindarThree.stop();
+      //   mindarThree.renderer.setAnimationLoop(null);
+      // });
     </script>
     <style>
       body {
@@ -72,10 +78,6 @@
         height: 100vh;
         position: relative;
         overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        aspect-ratio: 1 / 1; /* 正円を保つ */
       }
       #control {
         position: fixed;
@@ -95,12 +97,13 @@
     </style>
   </head>
   <body>
-    <div id="control">
+    <!-- コメントアウトされたボタンのコード -->
+    <!-- <div id="control">
       <button id="startButton">Start</button>
       <button id="stopButton">Stop</button>
-    </div>
+    </div> -->
     <div id="container">
     </div>
-    <div id="version">Ver.2408191401</div>
+    <div id="version">Ver.2408191404</div>
   </body>
 </html>
