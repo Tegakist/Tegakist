@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script type="importmap">
-    {
-      "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@0.137.5/build/three.module.js",
-        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.137.5/examples/jsm/"
-      }
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
+      "mindar-image-three":"https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js"
     }
+  }
   </script>
   <script type="module">
     import * as THREE from 'three';
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-    import { MindARThree } from 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js';
+    import { MindARThree } from 'mindar-image-three';
 
     document.addEventListener("DOMContentLoaded", async () => {
       console.log("Document loaded");
       const mindarThree = new MindARThree({
-        container: document.body,
+        container: document.querySelector("#container"),
         imageTargetSrc: 'SSS.mind',
         debug: true // デバッグモードを有効にする
       });
@@ -95,6 +96,12 @@
       height: 100vh; /* 画面全体をカバーするように設定 */
       width: 100vw;  /* 画面全体をカバーするように設定 */
     }
+    #container {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
     .version-info {
       position: fixed;
       bottom: 10px;
@@ -106,6 +113,7 @@
   </style>
 </head>
 <body>
-  <div class="version-info">Ver.2408191103</div>
+  <div id="container"></div>
+  <div class="version-info">Ver.2408191119</div>
 </body>
 </html>
