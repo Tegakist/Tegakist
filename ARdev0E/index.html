@@ -91,6 +91,7 @@
 
             infoDiv.innerHTML = `${positionText}<br>${rotationText}<br>${worldPositionText}`;
 
+            console.log('InfoDiv updated:', infoDiv.innerHTML);
             console.log('Camera Position:', camera.position);
             console.log('Camera Rotation:', camera.rotation);
             console.log('Renderer rendering...');
@@ -119,7 +120,7 @@
         bottom: 0;
         right: 0;
         z-index: 2;
-        font-family: 'Arial', sans-serif';
+        font-family: 'Arial, sans-serif';
         color: gray;
         font-size: 14px;
       }
@@ -127,6 +128,6 @@
   </head>
   <body>
     <div id="container"></div>
-    <div id="version">Ver.2408231527</div>
+    <div id="version">Ver.2408231533</div>
   </body>
 </html>
