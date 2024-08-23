@@ -57,6 +57,8 @@
           if (mixer) mixer.update(delta);
 
           if (anchor.group.visible) {
+            console.log('Anchor visible:', anchor.group.visible);
+
             if (!infoDiv) {
               initialPosition.copy(camera.position);
               initialRotation.copy(camera.rotation);
@@ -88,6 +90,10 @@
             const worldPositionText = `World Position: ${currentWorldPosition.x.toFixed(2)}m, ${currentWorldPosition.y.toFixed(2)}m, ${currentWorldPosition.z.toFixed(2)}m`;
 
             infoDiv.innerHTML = `${positionText}<br>${rotationText}<br>${worldPositionText}`;
+
+            console.log('Camera Position:', camera.position);
+            console.log('Camera Rotation:', camera.rotation);
+            console.log('Renderer rendering...');
           }
 
           renderer.render(scene, camera);
@@ -113,7 +119,7 @@
         bottom: 0;
         right: 0;
         z-index: 2;
-        font-family: 'Arial', sans-serif;
+        font-family: 'Arial', sans-serif';
         color: gray;
         font-size: 14px;
       }
@@ -121,6 +127,6 @@
   </head>
   <body>
     <div id="container"></div>
-    <div id="version">Ver.2408231505</div>
+    <div id="version">Ver.2408231512</div>
   </body>
 </html>
