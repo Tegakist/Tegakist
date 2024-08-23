@@ -77,7 +77,10 @@
             console.log('Anchor visible:', anchor.group.visible);
 
             const currentPosition = camera.position.clone().sub(initialPosition);
-            const currentRotation = new THREE.Euler().setFromQuaternion(camera.quaternion).toVector3().sub(initialRotation.toVector3());
+            const currentRotation = new THREE.Euler().setFromQuaternion(camera.quaternion);
+            currentRotation.x -= initialRotation.x;
+            currentRotation.y -= initialRotation.y;
+            currentRotation.z -= initialRotation.z;
             const currentWorldPosition = new THREE.Vector3();
             model.getWorldPosition(currentWorldPosition);
             currentWorldPosition.sub(initialWorldPosition);
@@ -127,6 +130,6 @@
   </head>
   <body>
     <div id="container"></div>
-    <div id="version">Ver.2408231748</div>
+    <div id="version">Ver.2408231754</div>
   </body>
 </html>
