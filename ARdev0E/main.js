@@ -39,9 +39,7 @@ const clock = new THREE.Clock();
 const start = async() => {
   await mindarThree.start();
 
-  infoDiv = document.createElement('div');
-  infoDiv.id = 'infoDiv';
-  document.body.appendChild(infoDiv);
+  infoDiv = document.getElementById('infoDiv');
 
   console.log('InfoDiv created:', infoDiv);
 
@@ -63,7 +61,7 @@ const start = async() => {
 
       // infoDivの内容をクリアしてから新しい情報を追加
       if (infoDiv) {
-        infoDiv.innerHTML = `${worldPositionText}`;
+        infoDiv.innerHTML = `${worldPositionText}\n${infoDiv.innerHTML.split('\n').slice(1).join('\n')}`;
       } else {
         console.error('infoDiv is not initialized');
       }
@@ -75,7 +73,7 @@ const start = async() => {
     } else {
       targetDetected = false;
       if (infoDiv) {
-        infoDiv.innerHTML = `World Position: ---`;
+        infoDiv.innerHTML = `World Position: ---\n${infoDiv.innerHTML.split('\n').slice(1).join('\n')}`;
       } else {
         console.error('infoDiv is not initialized');
       }
@@ -101,7 +99,7 @@ window.addEventListener('deviceorientation', (event) => {
 
   const orientationText = `Orientation: alpha ${alpha}°, beta ${beta}°, gamma ${gamma}°`;
   if (infoDiv) {
-    infoDiv.innerHTML = `${orientationText}\n` + infoDiv.innerHTML;
+    infoDiv.innerHTML = `${infoDiv.innerHTML.split('\n')[0]}\n${orientationText}\n${infoDiv.innerHTML.split('\n').slice(2).join('\n')}`;
   } else {
     console.error('infoDiv is not initialized');
   }
@@ -129,7 +127,7 @@ window.addEventListener('devicemotion', (event) => {
   const accText = `Acceleration: x ${acc.x !== null ? acc.x.toFixed(2) : '0.00'}m/s², y ${acc.y !== null ? acc.y.toFixed(2) : '0.00'}m/s², z ${acc.z !== null ? acc.z.toFixed(2) : '0.00'}m/s²`;
   const positionText = `Position: x ${position.x.toFixed(2)}m, y ${position.y.toFixed(2)}m, z ${position.z.toFixed(2)}m`;
   if (infoDiv) {
-    infoDiv.innerHTML = `${accText}\n${positionText}\n` + infoDiv.innerHTML;
+    infoDiv.innerHTML = `${infoDiv.innerHTML.split('\n').slice(0, 2).join('\n')}\n${accText}\n${positionText}`;
   } else {
     console.error('infoDiv is not initialized');
   }
