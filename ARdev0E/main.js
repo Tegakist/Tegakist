@@ -104,8 +104,7 @@ window.addEventListener('deviceorientation', (event) => {
 
   const orientationText = `Orientation: alpha ${alpha}°, beta ${beta}°, gamma ${gamma}°`;
   if (deviceInfoDiv) {
-    const currentContent = deviceInfoDiv.innerHTML.split('<br>');
-    deviceInfoDiv.innerHTML = `${orientationText}<br>${currentContent[1]}<br>${currentContent[2]}`;
+    deviceInfoDiv.innerHTML = `${orientationText}\n${deviceInfoDiv.innerHTML.split('\n').slice(1).join('\n')}`;
   } else {
     console.error('deviceInfoDiv is not initialized');
   }
@@ -133,8 +132,7 @@ window.addEventListener('devicemotion', (event) => {
   const accText = `Acceleration: x ${acc.x !== null ? acc.x.toFixed(2) : '---'}m/s², y ${acc.y !== null ? acc.y.toFixed(2) : '---'}m/s², z ${acc.z !== null ? acc.z.toFixed(2) : '---'}m/s²`;
   const positionText = `Position: x ${position.x.toFixed(2)}m, y ${position.y.toFixed(2)}m, z ${position.z.toFixed(2)}m`;
   if (deviceInfoDiv) {
-    const currentContent = deviceInfoDiv.innerHTML.split('<br>');
-    deviceInfoDiv.innerHTML = `${currentContent[0]}<br>${accText}<br>${positionText}`;
+    deviceInfoDiv.innerHTML = `${deviceInfoDiv.innerHTML.split('\n')[0]}\n${accText}\n${positionText}`;
   } else {
     console.error('deviceInfoDiv is not initialized');
   }
