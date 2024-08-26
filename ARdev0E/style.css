@@ -2,6 +2,7 @@ body {
   margin: 0;
 }
 
+/* Fullscreen container for the AR experience */
 #container {
   width: 100vw;
   height: 100vh;
@@ -9,6 +10,7 @@ body {
   overflow: hidden;
 }
 
+/* Version display at the bottom right */
 #version {
   position: fixed;
   bottom: 0;
@@ -19,6 +21,7 @@ body {
   font-size: 14px;
 }
 
+/* Info display at the bottom left */
 #infoDiv {
   position: fixed;
   bottom: 28px;
@@ -28,4 +31,3 @@ body {
   color: gray;
   font-size: 14px;
 }
-
