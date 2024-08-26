@@ -36,7 +36,7 @@
       let infoDiv;
       let targetDetected = false;
 
-      loader.load('Logo12.glb', (gltf) => {
+      loader.load('Logo.glb', (gltf) => {
         model = gltf.scene;
         anchor.group.add(model);
 
@@ -66,6 +66,8 @@
             .then(permissionState => {
               if (permissionState === 'granted') {
                 window.addEventListener('deviceorientation', handleOrientation);
+              } else {
+                alert('Device Orientation permission denied.');
               }
             })
             .catch(console.error);
@@ -78,6 +80,8 @@
             .then(permissionState => {
               if (permissionState === 'granted') {
                 window.addEventListener('devicemotion', handleMotion);
+              } else {
+                alert('Device Motion permission denied.');
               }
             })
             .catch(console.error);
@@ -149,7 +153,7 @@
   </head>
   <body>
     <div id="container"></div>
-    <div id="version">Ver.2408261401</div>
+    <div id="version">Ver.2408261412</div>
     <div id="infoDiv"></div>
   </body>
 </html>
