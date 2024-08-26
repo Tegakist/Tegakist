@@ -30,8 +30,6 @@
       const loader = new GLTFLoader();
       let mixer;
       let model;
-      let initialPosition = new THREE.Vector3();
-      let initialRotation = new THREE.Euler();
       let initialWorldPosition = new THREE.Vector3();
       let infoDiv;
       let targetDetected = false;
@@ -61,90 +59,33 @@
 
         console.log('InfoDiv created:', infoDiv);
 
-        if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-          DeviceOrientationEvent.requestPermission()
-            .then(permissionState => {
-              if (permissionState === 'granted') {
-                window.addEventListener('deviceorientation', handleOrientation);
-              } else {
-                alert('Device Orientation permission denied.');
-              }
-            })
-            .catch(console.error);
-        } else {
-          window.addEventListener('deviceorientation', handleOrientation);
-        }
-
-        if (typeof DeviceMotionEvent.requestPermission === 'function') {
-          DeviceMotionEvent.requestPermission()
-            .then(permissionState => {
-              if (permissionState === 'granted') {
-                window.addEventListener('devicemotion', handleMotion);
-              } else {
-                alert('Device Motion permission denied.');
-              }
-            })
-            .catch(console.error);
-        } else {
-          window.addEventListener('devicemotion', handleMotion);
-        }
-
         renderer.setAnimationLoop(() => {
           const delta = clock.getDelta();
           if (mixer) mixer.update(delta);
 
           if (anchor.group.visible) {
             if (!targetDetected) {
-              initialPosition.copy(camera.position);
-              initialRotation.copy(camera.rotation);
               model.getWorldPosition(initialWorldPosition);
               targetDetected = true;
             }
 
-            const currentPosition = camera.position.clone().sub(initialPosition);
-            const currentRotation = new THREE.Euler().setFromQuaternion(camera.quaternion, 'XYZ');
-            currentRotation.x -= initialRotation.x;
-            currentRotation.y -= initialRotation.y;
-            currentRotation.z -= initialRotation.z;
             const currentWorldPosition = new THREE.Vector3();
             model.getWorldPosition(currentWorldPosition);
             currentWorldPosition.sub(initialWorldPosition);
 
-            const positionText = `Position: ${currentPosition.x.toFixed(2)}m, ${currentPosition.y.toFixed(2)}m, ${currentPosition.z.toFixed(2)}m`;
-            const rotationText = `Rotation: ${(currentRotation.x * (180 / Math.PI)).toFixed(2)}°, ${(currentRotation.y * (180 / Math.PI)).toFixed(2)}°, ${(currentRotation.z * (180 / Math.PI)).toFixed(2)}°`;
             const worldPositionText = `World Position: ${currentWorldPosition.x.toFixed(2)}m, ${currentWorldPosition.y.toFixed(2)}m, ${currentWorldPosition.z.toFixed(2)}m`;
 
-            infoDiv.innerHTML = `${positionText}<br>${rotationText}<br>${worldPositionText}`;
+            infoDiv.innerHTML = `${worldPositionText}`;
 
-            console.log('Camera Position:', camera.position);
-            console.log('Camera Rotation:', camera.rotation);
+            console.log('World Position:', currentWorldPosition);
           } else {
             targetDetected = false;
-            infoDiv.innerHTML = `Position: ---<br>Rotation: ---<br>World Position: ---`;
+            infoDiv.innerHTML = `World Position: ---`;
           }
 
           renderer.render(scene, camera);
         });
       }
-
-      const handleOrientation = (event) => {
-        const alpha = event.alpha ? event.alpha.toFixed(2) : 0;
-        const beta = event.beta ? event.beta.toFixed(2) : 0;
-        const gamma = event.gamma ? event.gamma.toFixed(2) : 0;
-
-        const rotationText = `Rotation: Alpha: ${alpha}°, Beta: ${beta}°, Gamma: ${gamma}°`;
-        infoDiv.innerHTML = `Position: ---<br>${rotationText}<br>World Position: ---`;
-
-        console.log('Device Orientation:', rotationText);
-      };
-
-      const handleMotion = (event) => {
-        const acceleration = event.acceleration;
-        const positionText = `Position: X: ${acceleration.x ? acceleration.x.toFixed(2) : 0}m, Y: ${acceleration.y ? acceleration.y.toFixed(2) : 0}m, Z: ${acceleration.z ? acceleration.z.toFixed(2) : 0}m`;
-        infoDiv.innerHTML = `${positionText}<br>Rotation: ---<br>World Position: ---`;
-
-        console.log('Device Motion:', positionText);
-      };
 
       window.addEventListener("load", () => {
         start();
@@ -153,7 +94,7 @@
   </head>
   <body>
     <div id="container"></div>
-    <div id="version">Ver.2408261507</div>
+    <div id="version">Ver.2408261516</div>
     <div id="infoDiv"></div>
   </body>
 </html>
