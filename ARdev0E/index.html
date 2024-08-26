@@ -88,7 +88,7 @@
             currentWorldPosition.sub(initialWorldPosition);
 
             const positionText = `Position: ${currentPosition.x.toFixed(2)}m, ${currentPosition.y.toFixed(2)}m, ${currentPosition.z.toFixed(2)}m`;
-            const rotationText = `Rotation: ${(currentRotation.x * (180 / Math.PI)).toFixed(2)}°, ${(currentRotation.y * (180 / Math.PI)).toFixed(2)}°, ${(currentRotation.z * (180 / Math.PI)).toFixed(2)}°`;
+            const rotationText = `Rotation: ${(currentRotation.x * (180 / Math.PI)).toFixed(2)}°, ${(currentRotation.y * (180 / Math.PI)).toFixed(2)}°, ${(currentRotation.z * (180 /  Math.PI)).toFixed(2)}°`;
             const worldPositionText = `World Position: ${currentWorldPosition.x.toFixed(2)}m, ${currentWorldPosition.y.toFixed(2)}m, ${currentWorldPosition.z.toFixed(2)}m`;
 
             infoDiv.innerHTML = `${positionText}<br>${rotationText}<br>${worldPositionText}`;
@@ -128,6 +128,6 @@
   </head>
   <body>
     <div id="container"></div>
-    <div id="version">Ver.2408261144</div>
+    <div id="version">Ver.2408261153</div>
   </body>
 </html>
