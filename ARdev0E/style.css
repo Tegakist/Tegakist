@@ -21,10 +21,22 @@ body {
   font-size: 14px;
 }
 
-/* Info display at the bottom left */
-#infoDiv {
+/* World info display at the bottom left */
+#worldInfo {
   position: fixed;
   bottom: 28px;
+  left: 0;
+  z-index: 2;
+  font-family: 'Arial, sans-serif';
+  color: gray;
+  font-size: 14px;
+  white-space: pre-line; /* 改行を保持 */
+}
+
+/* Device info display above the world info */
+#deviceInfo {
+  position: fixed;
+  bottom: 80px;
   left: 0;
   z-index: 2;
   font-family: 'Arial, sans-serif';
