@@ -87,9 +87,9 @@ let lastTime = Date.now();
 
 window.addEventListener('deviceorientation', (event) => {
   console.log('Device Orientation Event:', event); // デバッグ用ログ
-  const alpha = event.alpha !== null ? event.alpha.toFixed(2) : '0.00';
-  const beta = event.beta !== null ? event.beta.toFixed(2) : '0.00';
-  const gamma = event.gamma !== null ? event.gamma.toFixed(2) : '0.00';
+  const alpha = event.alpha !== null ? event.alpha.toFixed(2) : 'null';
+  const beta = event.beta !== null ? event.beta.toFixed(2) : 'null';
+  const gamma = event.gamma !== null ? event.gamma.toFixed(2) : 'null';
 
   const orientationText = `Orientation: alpha ${alpha}°, beta ${beta}°, gamma ${gamma}°`;
   if (infoDiv) {
