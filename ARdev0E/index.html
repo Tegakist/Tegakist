@@ -77,6 +77,14 @@
           console.log('Device Orientation:', rotationText);
         });
 
+        window.addEventListener('devicemotion', (event) => {
+          const acceleration = event.acceleration;
+          const positionText = `Position: X: ${acceleration.x ? acceleration.x.toFixed(2) : 0}m, Y: ${acceleration.y ? acceleration.y.toFixed(2) : 0}m, Z: ${acceleration.z ? acceleration.z.toFixed(2) : 0}m`;
+          infoDiv.innerHTML = `${positionText}<br>Rotation: ---<br>World Position: ---`;
+
+          console.log('Device Motion:', positionText);
+        });
+
         renderer.setAnimationLoop(() => {
           const delta = clock.getDelta();
           if (mixer) mixer.update(delta);
@@ -142,6 +150,6 @@
   </head>
   <body>
     <div id="container"></div>
-    <div id="version">Ver.2408261200</div>
+    <div id="version">Ver.2408261301</div>
   </body>
 </html>
