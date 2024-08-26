@@ -86,6 +86,7 @@ let position = { x: 0, y: 0, z: 0 };
 let lastTime = Date.now();
 
 window.addEventListener('deviceorientation', (event) => {
+  console.log('Device Orientation Event:', event); // デバッグ用ログ
   const alpha = event.alpha ? event.alpha.toFixed(2) : 0;
   const beta = event.beta ? event.beta.toFixed(2) : 0;
   const gamma = event.gamma ? event.gamma.toFixed(2) : 0;
@@ -97,6 +98,7 @@ window.addEventListener('deviceorientation', (event) => {
 });
 
 window.addEventListener('devicemotion', (event) => {
+  console.log('Device Motion Event:', event); // デバッグ用ログ
   const acc = event.acceleration;
   const currentTime = Date.now();
   const deltaTime = (currentTime - lastTime) / 1000; // 秒単位に変換
