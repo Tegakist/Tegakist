@@ -17,7 +17,8 @@ let mixer;
 let model;
 let initialWorldPosition = new THREE.Vector3();
 let lastKnownPosition = new THREE.Vector3();
-let infoDiv;
+let worldInfoDiv;
+let deviceInfoDiv;
 let targetDetected = false;
 
 loader.load('Logo.glb', (gltf) => {
@@ -39,9 +40,11 @@ const clock = new THREE.Clock();
 const start = async() => {
   await mindarThree.start();
 
-  infoDiv = document.getElementById('infoDiv');
+  worldInfoDiv = document.getElementById('worldInfo');
+  deviceInfoDiv = document.getElementById('deviceInfo');
 
-  console.log('InfoDiv created:', infoDiv);
+  console.log('WorldInfoDiv created:', worldInfoDiv);
+  console.log('DeviceInfoDiv created:', deviceInfoDiv);
 
   renderer.setAnimationLoop(() => {
     const delta = clock.getDelta();
@@ -59,11 +62,11 @@ const start = async() => {
 
       const worldPositionText = `World Position: ${currentWorldPosition.x.toFixed(2)}m, ${currentWorldPosition.y.toFixed(2)}m, ${currentWorldPosition.z.toFixed(2)}m`;
 
-      // infoDivの内容をクリアしてから新しい情報を追加
-      if (infoDiv) {
-        infoDiv.innerHTML = `${worldPositionText}\n${infoDiv.innerHTML.split('\n').slice(1).join('\n')}`;
+      // worldInfoDivの内容を更新
+      if (worldInfoDiv) {
+        worldInfoDiv.innerHTML = worldPositionText;
       } else {
-        console.error('infoDiv is not initialized');
+        console.error('worldInfoDiv is not initialized');
       }
 
       console.log('World Position:', currentWorldPosition);
@@ -72,10 +75,10 @@ const start = async() => {
       lastKnownPosition.copy(currentWorldPosition);
     } else {
       targetDetected = false;
-      if (infoDiv) {
-        infoDiv.innerHTML = `World Position: ---\n${infoDiv.innerHTML.split('\n').slice(1).join('\n')}`;
+      if (worldInfoDiv) {
+        worldInfoDiv.innerHTML = `World Position: ---`;
       } else {
-        console.error('infoDiv is not initialized');
+        console.error('worldInfoDiv is not initialized');
       }
 
       // 対象を見失った場合、最後に検知した位置にオブジェクトを保持
@@ -93,15 +96,16 @@ let lastTime = Date.now();
 
 window.addEventListener('deviceorientation', (event) => {
   console.log('Device Orientation Event:', event); // デバッグ用ログ
-  const alpha = event.alpha !== null ? event.alpha.toFixed(2) : '0.00';
-  const beta = event.beta !== null ? event.beta.toFixed(2) : '0.00';
-  const gamma = event.gamma !== null ? event.gamma.toFixed(2) : '0.00';
+  const alpha = event.alpha !== null ? event.alpha.toFixed(2) : '---';
+  const beta = event.beta !== null ? event.beta.toFixed(2) : '---';
+  const gamma = event.gamma !== null ? event.gamma.toFixed(2) : '---';
 
   const orientationText = `Orientation: alpha ${alpha}°, beta ${beta}°, gamma ${gamma}°`;
-  if (infoDiv) {
-    infoDiv.innerHTML = `${infoDiv.innerHTML.split('\n')[0]}\n${orientationText}\n${infoDiv.innerHTML.split('\n').slice(2).join('\n')}`;
+  if (deviceInfoDiv) {
+    const currentContent = deviceInfoDiv.innerHTML.split('<br>');
+    deviceInfoDiv.innerHTML = `${orientationText}<br>${currentContent[1]}<br>${currentContent[2]}`;
   } else {
-    console.error('infoDiv is not initialized');
+    console.error('deviceInfoDiv is not initialized');
   }
 
   console.log('Orientation:', { alpha, beta, gamma });
@@ -124,12 +128,13 @@ window.addEventListener('devicemotion', (event) => {
   position.y += velocity.y * deltaTime;
   position.z += velocity.z * deltaTime;
 
-  const accText = `Acceleration: x ${acc.x !== null ? acc.x.toFixed(2) : '0.00'}m/s², y ${acc.y !== null ? acc.y.toFixed(2) : '0.00'}m/s², z ${acc.z !== null ? acc.z.toFixed(2) : '0.00'}m/s²`;
+  const accText = `Acceleration: x ${acc.x !== null ? acc.x.toFixed(2) : '---'}m/s², y ${acc.y !== null ? acc.y.toFixed(2) : '---'}m/s², z ${acc.z !== null ? acc.z.toFixed(2) : '---'}m/s²`;
   const positionText = `Position: x ${position.x.toFixed(2)}m, y ${position.y.toFixed(2)}m, z ${position.z.toFixed(2)}m`;
-  if (infoDiv) {
-    infoDiv.innerHTML = `${infoDiv.innerHTML.split('\n').slice(0, 2).join('\n')}\n${accText}\n${positionText}`;
+  if (deviceInfoDiv) {
+    const currentContent = deviceInfoDiv.innerHTML.split('<br>');
+    deviceInfoDiv.innerHTML = `${currentContent[0]}<br>${accText}<br>${positionText}`;
   } else {
-    console.error('infoDiv is not initialized');
+    console.error('deviceInfoDiv is not initialized');
   }
 
   console.log('Acceleration:', acc);
