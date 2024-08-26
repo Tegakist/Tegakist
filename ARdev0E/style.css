@@ -30,4 +30,5 @@ body {
   font-family: 'Arial, sans-serif';
   color: gray;
   font-size: 14px;
+  white-space: pre-line; /* 改行を保持 */
 }
