@@ -87,12 +87,16 @@ let lastTime = Date.now();
 
 window.addEventListener('deviceorientation', (event) => {
   console.log('Device Orientation Event:', event); // デバッグ用ログ
-  const alpha = event.alpha ? event.alpha.toFixed(2) : 0;
-  const beta = event.beta ? event.beta.toFixed(2) : 0;
-  const gamma = event.gamma ? event.gamma.toFixed(2) : 0;
+  const alpha = event.alpha !== null ? event.alpha.toFixed(2) : 0;
+  const beta = event.beta !== null ? event.beta.toFixed(2) : 0;
+  const gamma = event.gamma !== null ? event.gamma.toFixed(2) : 0;
 
   const orientationText = `Orientation: alpha ${alpha}°, beta ${beta}°, gamma ${gamma}°`;
-  infoDiv.innerHTML = `${orientationText}\n` + infoDiv.innerHTML;
+  if (infoDiv) {
+    infoDiv.innerHTML = `${orientationText}\n` + infoDiv.innerHTML;
+  } else {
+    console.error('infoDiv is not initialized');
+  }
 
   console.log('Orientation:', { alpha, beta, gamma });
 });
@@ -116,7 +120,11 @@ window.addEventListener('devicemotion', (event) => {
 
   const accText = `Acceleration: x ${acc.x.toFixed(2)}m/s², y ${acc.y.toFixed(2)}m/s², z ${acc.z.toFixed(2)}m/s²`;
   const positionText = `Position: x ${position.x.toFixed(2)}m, y ${position.y.toFixed(2)}m, z ${position.z.toFixed(2)}m`;
-  infoDiv.innerHTML = `${accText}\n${positionText}\n` + infoDiv.innerHTML;
+  if (infoDiv) {
+    infoDiv.innerHTML = `${accText}\n${positionText}\n` + infoDiv.innerHTML;
+  } else {
+    console.error('infoDiv is not initialized');
+  }
 
   console.log('Acceleration:', acc);
   console.log('Position:', position);
