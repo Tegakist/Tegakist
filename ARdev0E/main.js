@@ -62,7 +62,11 @@ const start = async() => {
       const worldPositionText = `World Position: ${currentWorldPosition.x.toFixed(2)}m, ${currentWorldPosition.y.toFixed(2)}m, ${currentWorldPosition.z.toFixed(2)}m`;
 
       // infoDivの内容をクリアしてから新しい情報を追加
-      infoDiv.innerHTML = `${worldPositionText}`;
+      if (infoDiv) {
+        infoDiv.innerHTML = `${worldPositionText}`;
+      } else {
+        console.error('infoDiv is not initialized');
+      }
 
       console.log('World Position:', currentWorldPosition);
 
@@ -70,7 +74,11 @@ const start = async() => {
       lastKnownPosition.copy(currentWorldPosition);
     } else {
       targetDetected = false;
-      infoDiv.innerHTML = `World Position: ---`;
+      if (infoDiv) {
+        infoDiv.innerHTML = `World Position: ---`;
+      } else {
+        console.error('infoDiv is not initialized');
+      }
 
       // 対象を見失った場合、最後に検知した位置にオブジェクトを保持
       model.position.copy(lastKnownPosition);
@@ -87,9 +95,9 @@ let lastTime = Date.now();
 
 window.addEventListener('deviceorientation', (event) => {
   console.log('Device Orientation Event:', event); // デバッグ用ログ
-  const alpha = event.alpha !== null ? event.alpha.toFixed(2) : 'null';
-  const beta = event.beta !== null ? event.beta.toFixed(2) : 'null';
-  const gamma = event.gamma !== null ? event.gamma.toFixed(2) : 'null';
+  const alpha = event.alpha !== null ? event.alpha.toFixed(2) : '0.00';
+  const beta = event.beta !== null ? event.beta.toFixed(2) : '0.00';
+  const gamma = event.gamma !== null ? event.gamma.toFixed(2) : '0.00';
 
   const orientationText = `Orientation: alpha ${alpha}°, beta ${beta}°, gamma ${gamma}°`;
   if (infoDiv) {
@@ -109,9 +117,9 @@ window.addEventListener('devicemotion', (event) => {
   lastTime = currentTime;
 
   // 速度を更新
-  velocity.x += acc.x * deltaTime;
-  velocity.y += acc.y * deltaTime;
-  velocity.z += acc.z * deltaTime;
+  velocity.x += acc.x !== null ? acc.x * deltaTime : 0;
+  velocity.y += acc.y !== null ? acc.y * deltaTime : 0;
+  velocity.z += acc.z !== null ? acc.z * deltaTime : 0;
 
   // 位置を更新
   position.x += velocity.x * deltaTime;
