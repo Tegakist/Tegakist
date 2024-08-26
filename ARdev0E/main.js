@@ -60,8 +60,8 @@ const start = async() => {
       model.getWorldPosition(currentWorldPosition);
       currentWorldPosition.sub(initialWorldPosition);
 
-      // ワールド座標の値を1000分の1に調整
-      const adjustedWorldPosition = currentWorldPosition.multiplyScalar(0.001);
+      // ワールド座標の値を10分の1に調整
+      const adjustedWorldPosition = currentWorldPosition.multiplyScalar(0.1);
       const worldPositionText = `World Position: ${adjustedWorldPosition.x.toFixed(3)}m, ${adjustedWorldPosition.y.toFixed(3)}m, ${adjustedWorldPosition.z.toFixed(3)}m`;
 
       // worldInfoDivの内容を更新
