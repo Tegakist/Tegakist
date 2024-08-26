@@ -66,6 +66,17 @@
 
         console.log('InfoDiv created:', infoDiv);
 
+        window.addEventListener('deviceorientation', (event) => {
+          const alpha = event.alpha ? event.alpha.toFixed(2) : 0;
+          const beta = event.beta ? event.beta.toFixed(2) : 0;
+          const gamma = event.gamma ? event.gamma.toFixed(2) : 0;
+
+          const rotationText = `Rotation: Alpha: ${alpha}°, Beta: ${beta}°, Gamma: ${gamma}°`;
+          infoDiv.innerHTML = `Position: ---<br>${rotationText}<br>World Position: ---`;
+
+          console.log('Device Orientation:', rotationText);
+        });
+
         renderer.setAnimationLoop(() => {
           const delta = clock.getDelta();
           if (mixer) mixer.update(delta);
@@ -88,10 +99,13 @@
             currentWorldPosition.sub(initialWorldPosition);
 
             const positionText = `Position: ${currentPosition.x.toFixed(2)}m, ${currentPosition.y.toFixed(2)}m, ${currentPosition.z.toFixed(2)}m`;
-            const rotationText = `Rotation: ${(currentRotation.x * (180 / Math.PI)).toFixed(2)}°, ${(currentRotation.y * (180 / Math.PI)).toFixed(2)}°, ${(currentRotation.z * (180 /  Math.PI)).toFixed(2)}°`;
+            const rotationText = `Rotation: ${(currentRotation.x * (180 / Math.PI)).toFixed(2)}°, ${(currentRotation.y * (180 / Math.PI)).toFixed(2)}°, ${(currentRotation.z * (180 / Math.PI)).toFixed(2)}°`;
             const worldPositionText = `World Position: ${currentWorldPosition.x.toFixed(2)}m, ${currentWorldPosition.y.toFixed(2)}m, ${currentWorldPosition.z.toFixed(2)}m`;
 
             infoDiv.innerHTML = `${positionText}<br>${rotationText}<br>${worldPositionText}`;
+
+            console.log('Camera Position:', camera.position);
+            console.log('Camera Rotation:', camera.rotation);
           } else {
             targetDetected = false;
             infoDiv.innerHTML = `Position: ---<br>Rotation: ---<br>World Position: ---`;
@@ -128,6 +142,6 @@
   </head>
   <body>
     <div id="container"></div>
-    <div id="version">Ver.2408261153</div>
+    <div id="version">Ver.2408261200</div>
   </body>
 </html>
