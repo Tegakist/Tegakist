@@ -61,6 +61,7 @@ const start = async() => {
 
       const worldPositionText = `World Position: ${currentWorldPosition.x.toFixed(2)}m, ${currentWorldPosition.y.toFixed(2)}m, ${currentWorldPosition.z.toFixed(2)}m`;
 
+      // infoDivの内容をクリアしてから新しい情報を追加
       infoDiv.innerHTML = `${worldPositionText}`;
 
       console.log('World Position:', currentWorldPosition);
@@ -90,7 +91,7 @@ window.addEventListener('deviceorientation', (event) => {
   const gamma = event.gamma ? event.gamma.toFixed(2) : 0;
 
   const orientationText = `Orientation: alpha ${alpha}°, beta ${beta}°, gamma ${gamma}°`;
-  infoDiv.innerHTML += `<br>${orientationText}`;
+  infoDiv.innerHTML = `${orientationText}\n` + infoDiv.innerHTML;
 
   console.log('Orientation:', { alpha, beta, gamma });
 });
@@ -113,7 +114,7 @@ window.addEventListener('devicemotion', (event) => {
 
   const accText = `Acceleration: x ${acc.x.toFixed(2)}m/s², y ${acc.y.toFixed(2)}m/s², z ${acc.z.toFixed(2)}m/s²`;
   const positionText = `Position: x ${position.x.toFixed(2)}m, y ${position.y.toFixed(2)}m, z ${position.z.toFixed(2)}m`;
-  infoDiv.innerHTML += `<br>${accText}<br>${positionText}`;
+  infoDiv.innerHTML = `${accText}\n${positionText}\n` + infoDiv.innerHTML;
 
   console.log('Acceleration:', acc);
   console.log('Position:', position);
