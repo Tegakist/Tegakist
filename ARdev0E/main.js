@@ -87,9 +87,9 @@ let lastTime = Date.now();
 
 window.addEventListener('deviceorientation', (event) => {
   console.log('Device Orientation Event:', event); // デバッグ用ログ
-  const alpha = event.alpha !== null ? event.alpha.toFixed(2) : 0;
-  const beta = event.beta !== null ? event.beta.toFixed(2) : 0;
-  const gamma = event.gamma !== null ? event.gamma.toFixed(2) : 0;
+  const alpha = event.alpha !== null ? event.alpha.toFixed(2) : '0.00';
+  const beta = event.beta !== null ? event.beta.toFixed(2) : '0.00';
+  const gamma = event.gamma !== null ? event.gamma.toFixed(2) : '0.00';
 
   const orientationText = `Orientation: alpha ${alpha}°, beta ${beta}°, gamma ${gamma}°`;
   if (infoDiv) {
@@ -118,7 +118,7 @@ window.addEventListener('devicemotion', (event) => {
   position.y += velocity.y * deltaTime;
   position.z += velocity.z * deltaTime;
 
-  const accText = `Acceleration: x ${acc.x.toFixed(2)}m/s², y ${acc.y.toFixed(2)}m/s², z ${acc.z.toFixed(2)}m/s²`;
+  const accText = `Acceleration: x ${acc.x !== null ? acc.x.toFixed(2) : '0.00'}m/s², y ${acc.y !== null ? acc.y.toFixed(2) : '0.00'}m/s², z ${acc.z !== null ? acc.z.toFixed(2) : '0.00'}m/s²`;
   const positionText = `Position: x ${position.x.toFixed(2)}m, y ${position.y.toFixed(2)}m, z ${position.z.toFixed(2)}m`;
   if (infoDiv) {
     infoDiv.innerHTML = `${accText}\n${positionText}\n` + infoDiv.innerHTML;
