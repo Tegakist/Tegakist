@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <script type="importmap">
     {
       "imports": {
@@ -55,35 +56,10 @@
         await mindarThree.start();
 
         infoDiv = document.createElement('div');
-        infoDiv.style.position = 'fixed';
-        infoDiv.style.bottom = '28px';
-        infoDiv.style.left = '0';
-        infoDiv.style.zIndex = '2';
-        infoDiv.style.fontFamily = 'Arial, sans-serif';
-        infoDiv.style.color = 'gray';
-        infoDiv.style.fontSize = '14px';
+        infoDiv.id = 'infoDiv';
         document.body.appendChild(infoDiv);
 
         console.log('InfoDiv created:', infoDiv);
-
-        window.addEventListener('deviceorientation', (event) => {
-          const alpha = event.alpha ? event.alpha.toFixed(2) : 0;
-          const beta = event.beta ? event.beta.toFixed(2) : 0;
-          const gamma = event.gamma ? event.gamma.toFixed(2) : 0;
-
-          const rotationText = `Rotation: Alpha: ${alpha}°, Beta: ${beta}°, Gamma: ${gamma}°`;
-          infoDiv.innerHTML = `Position: ---<br>${rotationText}<br>World Position: ---`;
-
-          console.log('Device Orientation:', rotationText);
-        });
-
-        window.addEventListener('devicemotion', (event) => {
-          const acceleration = event.acceleration;
-          const positionText = `Position: X: ${acceleration.x ? acceleration.x.toFixed(2) : 0}m, Y: ${acceleration.y ? acceleration.y.toFixed(2) : 0}m, Z: ${acceleration.z ? acceleration.z.toFixed(2) : 0}m`;
-          infoDiv.innerHTML = `${positionText}<br>Rotation: ---<br>World Position: ---`;
-
-          console.log('Device Motion:', positionText);
-        });
 
         renderer.setAnimationLoop(() => {
           const delta = clock.getDelta();
@@ -127,29 +103,10 @@
         start();
       });
     </script>
-    <style>
-      body {
-        margin: 0;
-      }
-      #container {
-        width: 100vw;
-        height: 100vh;
-        position: relative;
-        overflow: hidden;
-      }
-      #version {
-        position: fixed;
-        bottom: 0;
-        right: 0;
-        z-index: 2;
-        font-family: 'Arial, sans-serif';
-        color: gray;
-        font-size: 14px;
-      }
-    </style>
   </head>
   <body>
     <div id="container"></div>
-    <div id="version">Ver.2408261301</div>
+    <div id="version">Ver.2408261309</div>
+    <div id="infoDiv"></div>
   </body>
 </html>
