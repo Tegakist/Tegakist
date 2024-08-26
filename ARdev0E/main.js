@@ -60,7 +60,9 @@ const start = async() => {
       model.getWorldPosition(currentWorldPosition);
       currentWorldPosition.sub(initialWorldPosition);
 
-      const worldPositionText = `World Position: ${currentWorldPosition.x.toFixed(2)}m, ${currentWorldPosition.y.toFixed(2)}m, ${currentWorldPosition.z.toFixed(2)}m`;
+      // ワールド座標の値を1000分の1に調整
+      const adjustedWorldPosition = currentWorldPosition.multiplyScalar(0.001);
+      const worldPositionText = `World Position: ${adjustedWorldPosition.x.toFixed(3)}m, ${adjustedWorldPosition.y.toFixed(3)}m, ${adjustedWorldPosition.z.toFixed(3)}m`;
 
       // worldInfoDivの内容を更新
       if (worldInfoDiv) {
@@ -69,7 +71,7 @@ const start = async() => {
         console.error('worldInfoDiv is not initialized');
       }
 
-      console.log('World Position:', currentWorldPosition);
+      console.log('World Position:', adjustedWorldPosition);
 
       // 最後に検知した位置を更新
       lastKnownPosition.copy(currentWorldPosition);
