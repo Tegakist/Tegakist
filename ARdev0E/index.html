@@ -61,33 +61,35 @@
 
         console.log('InfoDiv created:', infoDiv);
 
-        if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-          DeviceOrientationEvent.requestPermission()
-            .then(permissionState => {
-              if (permissionState === 'granted') {
-                window.addEventListener('deviceorientation', handleOrientation);
-              } else {
-                alert('Device Orientation permission denied.');
-              }
-            })
-            .catch(console.error);
-        } else {
-          window.addEventListener('deviceorientation', handleOrientation);
-        }
+        document.getElementById('startButton').addEventListener('click', () => {
+          if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+            DeviceOrientationEvent.requestPermission()
+              .then(permissionState => {
+                if (permissionState === 'granted') {
+                  window.addEventListener('deviceorientation', handleOrientation);
+                } else {
+                  alert('Device Orientation permission denied.');
+                }
+              })
+              .catch(console.error);
+          } else {
+            window.addEventListener('deviceorientation', handleOrientation);
+          }
 
-        if (typeof DeviceMotionEvent.requestPermission === 'function') {
-          DeviceMotionEvent.requestPermission()
-            .then(permissionState => {
-              if (permissionState === 'granted') {
-                window.addEventListener('devicemotion', handleMotion);
-              } else {
-                alert('Device Motion permission denied.');
-              }
-            })
-            .catch(console.error);
-        } else {
-          window.addEventListener('devicemotion', handleMotion);
-        }
+          if (typeof DeviceMotionEvent.requestPermission === 'function') {
+            DeviceMotionEvent.requestPermission()
+              .then(permissionState => {
+                if (permissionState === 'granted') {
+                  window.addEventListener('devicemotion', handleMotion);
+                } else {
+                  alert('Device Motion permission denied.');
+                }
+              })
+              .catch(console.error);
+          } else {
+            window.addEventListener('devicemotion', handleMotion);
+          }
+        });
 
         renderer.setAnimationLoop(() => {
           const delta = clock.getDelta();
@@ -153,7 +155,8 @@
   </head>
   <body>
     <div id="container"></div>
-    <div id="version">Ver.2408261456</div>
+    <div id="version">Ver.2408261500</div>
     <div id="infoDiv"></div>
+    <button id="startButton">Start</button>
   </body>
 </html>
