@@ -41,8 +41,8 @@ cv['onRuntimeInitialized'] = async () => {
   const detector = new cv.ORB();
   const bf = new cv.BFMatcher(cv.NORM_HAMMING, true);
 
-  let prevDescriptors = null;
-  let prevKeypoints = null;
+  let prevDescriptors = descriptors;
+  let prevKeypoints = keypoints;
 
   function processFrame() {
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
