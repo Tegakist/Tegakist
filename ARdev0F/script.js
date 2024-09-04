@@ -1,13 +1,14 @@
 function init() {
-navigator.mediaDevices.getUserMedia({ video: true })
-  .then(stream => {
-    const video = document.getElementById('video');
-    video.srcObject = stream;
-    video.play();
-  })
-  .catch(error => {
-    console.error('Error accessing camera: ', error);
-  });
+  navigator.mediaDevices.getUserMedia({ video: true })
+    .then(stream => {
+      const video = document.getElementById('video');
+      video.srcObject = stream;
+      video.play();
+    })
+    .catch(error => {
+      console.error('Error accessing camera: ', error);
+    });
+
   async function loadFeatures() {
     const response = await fetch('features.csv');
     const data = await response.text();
