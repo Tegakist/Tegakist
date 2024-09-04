@@ -12,36 +12,29 @@ function init() {
     });
 
   async function loadFeatures() {
-    try {
-      const response = await fetch('features.csv');
-      const data = await response.text();
-      const rows = data.split('\n').map(row => row.split(','));
+    const response = await fetch('features.csv');
+    const data = await response.text();
+    const rows = data.split('\n').map(row => row.split(','));
 
-      const keypoints = new cv.KeyPointVector();
-      const descriptors = new cv.Mat(rows.length, 32, cv.CV_8U);
+    const keypoints = new cv.KeyPointVector();
+    const descriptors = new cv.Mat(rows.length, 32, cv.CV_8U);
 
-      rows.forEach((row, i) => {
-        if (row.length > 4) {
-          const [x, y, size, angle, ...desc] = row.map(Number);
-          const keypoint = new cv.KeyPoint(x, y, size, angle);
-          keypoints.push_back(keypoint);
-          for (let j = 0; j < desc.length; j++) {
-            descriptors.data[i * 32 + j] = desc[j];
-          }
+    rows.forEach((row, i) => {
+      if (row.length > 4) {
+        const [x, y, size, angle, ...desc] = row.map(Number);
+        const keypoint = new cv.KeyPoint(x, y, size, angle);
+        keypoints.push_back(keypoint);
+        for (let j = 0; j < desc.length; j++) {
+          descriptors.data[i * 32 + j] = desc[j];
         }
-      });
+      }
+    });
 
-      return { keypoints, descriptors };
-    } catch (error) {
-      console.error('Error loading features: ', error);
-      document.getElementById('status').innerHTML = 'Error loading features.';
-    }
+    return { keypoints, descriptors };
   }
 
   cv['onRuntimeInitialized'] = async () => {
     const { keypoints, descriptors } = await loadFeatures();
-    if (!keypoints || !descriptors) return;
-
     console.log('Loaded keypoints:', keypoints);
     console.log('Loaded descriptors:', descriptors);
 
@@ -71,10 +64,6 @@ function init() {
         const imgMatches = new cv.Mat();
         cv.drawMatches(src, prevKeypoints, src, keypoints, matches, imgMatches);
         cv.imshow('canvasOutput', imgMatches);
-
-        console.log('Matches:', matches.size());
-        console.log('Keypoints:', keypoints.size());
-        console.log('Descriptors:', descriptors.size());
 
         matches.delete(); imgMatches.delete();
       }
