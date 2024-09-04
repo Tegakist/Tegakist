@@ -1,1 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SLAM with JavaScript</title>
+  <script async src="https://docs.opencv.org/3.4.0/opencv.js" onload="onOpenCvReady();"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    function onOpenCvReady() {
+      document.getElementById('status').innerHTML = 'OpenCV.js is ready.';
+      init();
+    }
+  </script>
+</head>
+<body>
+  <div id="status">Loading OpenCV.js...</div>
+  <video id="video" width="640" height="480" autoplay playsinline></video>
+  <canvas id="canvasOutput" width="640" height="480"></canvas>
+  <div id="threejs-container"></div>
+  <script src="script.js" defer></script>
+</body>
+</html>
 
