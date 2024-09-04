@@ -1,5 +1,5 @@
 function init() {
-  navigator.mediaDevices.getUserMedia({ video: true })
+  navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: "environment" } } })
     .then(stream => {
       const video = document.getElementById('video');
       video.srcObject = stream;
@@ -71,6 +71,8 @@ function init() {
         const imgMatches = new cv.Mat();
         cv.drawMatches(src, prevKeypoints, src, keypoints, matches, imgMatches);
         cv.imshow('canvasOutput', imgMatches);
+
+        console.log('Matches:', matches.size());
 
         matches.delete(); imgMatches.delete();
       }
