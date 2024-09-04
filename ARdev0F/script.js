@@ -85,6 +85,10 @@ function init() {
         matches.delete();
       }
 
+      // 特徴点をキャンバスに描画
+      cv.drawKeypoints(src, keypoints, src, [0, 255, 0, 255], cv.DrawMatchesFlags_DRAW_RICH_KEYPOINTS);
+      cv.imshow('canvasOutput', src);
+
       prevDescriptors = descriptors.clone();
       prevKeypoints = keypoints.clone();
 
