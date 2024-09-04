@@ -44,8 +44,8 @@ function init() {
 
   cv['onRuntimeInitialized'] = async () => {
     const { keypoints, descriptors } = await loadFeatures();
-    console.log('Loaded keypoints:', keypoints);
-    console.log('Loaded descriptors:', descriptors);
+    console.log('Loaded keypoints:', keypoints.size());
+    console.log('Loaded descriptors:', descriptors.size());
 
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvasOutput');
@@ -66,21 +66,30 @@ function init() {
       const descriptors = new cv.Mat();
       detector.detectAndCompute(gray, new cv.Mat(), keypoints, descriptors);
 
+      console.log('Current keypoints:', keypoints.size());
+      console.log('Current descriptors:', descriptors.size());
+
       if (prevDescriptors && prevKeypoints) {
         const matches = new cv.DMatchVector();
         bf.match(prevDescriptors, descriptors, matches);
 
-        const imgMatches = new cv.Mat();
-        cv.drawMatches(src, prevKeypoints, src, keypoints, matches, imgMatches);
-        cv.imshow('canvasOutput', imgMatches);
+        console.log('Matches:', matches.size());
 
-        matches.delete(); imgMatches.delete();
+        if (matches.size() > 0) {
+          const imgMatches = new cv.Mat();
+          cv.drawMatches(src, prevKeypoints, src, keypoints, matches, imgMatches);
+          cv.imshow('canvasOutput', imgMatches);
+          imgMatches.delete();
+        }
+
+        matches.delete();
       }
 
       prevDescriptors = descriptors.clone();
       prevKeypoints = keypoints.clone();
 
-      src.delete(); gray.delete();
+      src.delete();
+      gray.delete();
       requestAnimationFrame(processFrame);
     }
 
