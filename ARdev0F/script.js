@@ -14,6 +14,7 @@ function init() {
       video.srcObject = stream;
       video.play();
       document.getElementById('status').innerHTML = 'Camera is ready.';
+      console.log('Camera stream started.');
     })
     .catch(error => {
       console.error('Error accessing camera: ', error);
