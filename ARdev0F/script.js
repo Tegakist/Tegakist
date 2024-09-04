@@ -1,5 +1,18 @@
 function init() {
-  navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: "environment" } } })
+  const constraints = {
+    video: {
+      facingMode: "environment"
+    }
+  };
+
+  // PCとスマホの判別
+  if (navigator.userAgent.match(/(iPhone|iPad|iPod|Android)/)) {
+    constraints.video.facingMode = { exact: "environment" };
+  } else {
+    constraints.video.facingMode = "user";
+  }
+
+  navigator.mediaDevices.getUserMedia(constraints)
     .then(stream => {
       const video = document.getElementById('video');
       video.srcObject = stream;
