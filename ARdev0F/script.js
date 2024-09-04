@@ -73,6 +73,8 @@ function init() {
         cv.imshow('canvasOutput', imgMatches);
 
         console.log('Matches:', matches.size());
+        console.log('Keypoints:', keypoints.size());
+        console.log('Descriptors:', descriptors.size());
 
         matches.delete(); imgMatches.delete();
       }
