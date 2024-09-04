@@ -21,31 +21,42 @@ function init() {
     });
 
   async function loadFeatures() {
-    const response = await fetch('features.csv');
-    const data = await response.text();
-    const rows = data.split('\n').map(row => row.split(','));
+    try {
+      const response = await fetch('features.csv');
+      const data = await response.text();
+      const rows = data.split('\n').map(row => row.split(','));
 
-    const keypoints = new cv.KeyPointVector();
-    const descriptors = new cv.Mat(rows.length, 32, cv.CV_8U);
+      const keypoints = new cv.KeyPointVector();
+      const descriptors = new cv.Mat(rows.length, 32, cv.CV_8U);
 
-    rows.forEach((row, i) => {
-      if (row.length > 4) {
-        const [x, y, size, angle, ...desc] = row.map(Number);
-        const keypoint = new cv.KeyPoint(x, y, size, angle);
-        keypoints.push_back(keypoint);
-        for (let j = 0; j < desc.length; j++) {
-          descriptors.data[i * 32 + j] = desc[j];
+      rows.forEach((row, i) => {
+        if (row.length > 4) {
+          const [x, y, size, angle, ...desc] = row.map(Number);
+          const keypoint = new cv.KeyPoint(x, y, size, angle);
+          keypoints.push_back(keypoint);
+          for (let j = 0; j < desc.length; j++) {
+            descriptors.data[i * 32 + j] = desc[j];
+          }
         }
-      }
-    });
+      });
 
-    return { keypoints, descriptors };
+      console.log('Loaded keypoints:', keypoints.size());
+      console.log('Loaded descriptors:', descriptors.size());
+
+      return { keypoints, descriptors };
+    } catch (error) {
+      console.error('Error loading features:', error);
+      document.getElementById('status').innerHTML = 'Error loading features.';
+    }
   }
 
   cv['onRuntimeInitialized'] = async () => {
+    console.log('OpenCV.js is ready.');
     const { keypoints, descriptors } = await loadFeatures();
-    console.log('Loaded keypoints:', keypoints.size());
-    console.log('Loaded descriptors:', descriptors.size());
+    if (!keypoints || !descriptors) {
+      console.error('Failed to load keypoints or descriptors.');
+      return;
+    }
 
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvasOutput');
