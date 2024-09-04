@@ -59,50 +59,44 @@ function init() {
         const matches = new cv.DMatchVector();
         bf.match(prevDescriptors, descriptors, matches);
 
-        const goodMatches = [];
-        for (let i = 0; i < matches.size(); i++) {
-          if (matches.get(i).distance < 30) { // マッチングのしきい値を設定
-            goodMatches.push(matches.get(i));
-          }
-        }
+        const imgMatches = new cv.Mat();
+        cv.drawMatches(src, prevKeypoints, src, keypoints, matches, imgMatches);
+        cv.imshow('canvasOutput', imgMatches);
 
-        if (goodMatches.length > 10) { // 十分なマッチングがある場合
-          // 3Dオブジェクトを表示
-          const container = document.getElementById('threejs-container');
-          const scene = new THREE.Scene();
-          const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-          const renderer = new THREE.WebGLRenderer();
-          renderer.setSize(window.innerWidth, window.innerHeight);
-          container.appendChild(renderer.domElement);
-
-          const geometry = new THREE.BoxGeometry();
-          const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-          const cube = new THREE.Mesh(geometry, material);
-          scene.add(cube);
-
-          camera.position.z = 5;
-
-          function animate() {
-            requestAnimationFrame(animate);
-            cube.rotation.x += 0.01;
-            cube.rotation.y += 0.01;
-            renderer.render(scene, camera);
-          }
-
-          animate();
-        }
-
-        matches.delete();
+        matches.delete(); imgMatches.delete();
       }
 
       prevDescriptors = descriptors.clone();
       prevKeypoints = keypoints.clone();
 
-      src.delete();
-      gray.delete();
+      src.delete(); gray.delete();
       requestAnimationFrame(processFrame);
     }
 
     processFrame();
+
+    // THREE.jsのセットアップ
+    const container = document.getElementById('threejs-container');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    container.appendChild(renderer.domElement);
+
+    const geometry = new THREE.BoxGeometry();
+    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    const cube = new THREE.Mesh(geometry, material);
+    scene.add(cube);
+
+    camera.position.z = 5;
+
+    function animate() {
+      requestAnimationFrame(animate);
+      cube.rotation.x += 0.01;
+      cube.rotation.y += 0.01;
+      renderer.render(scene, camera);
+    }
+
+    animate();
   };
 }
