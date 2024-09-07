@@ -22,7 +22,8 @@
         // シーン、カメラ、レンダラーのセットアップ
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setClearColor(0x000000, 0); // 背景を透明に設定
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
@@ -42,7 +43,7 @@
         loader.setDRACOLoader(dracoLoader);
 
         // 3Dモデルの読み込み
-        loader.load('model.glb', function (gltf) {
+        loader.load('path/to/your/model.gltf', function (gltf) {
             scene.add(gltf.scene);
         }, undefined, function (error) {
             console.error(error);
