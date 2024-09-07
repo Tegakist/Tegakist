@@ -42,7 +42,7 @@
         loader.setDRACOLoader(dracoLoader);
 
         // 3Dモデルの読み込み
-        loader.load('path/to/your/model.gltf', function (gltf) {
+        loader.load('model.glb', function (gltf) {
             scene.add(gltf.scene);
         }, undefined, function (error) {
             console.error(error);
