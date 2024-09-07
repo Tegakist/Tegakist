@@ -8,7 +8,7 @@
         body { margin: 0; }
         canvas { display: block; }
         body {
-            background: linear-gradient(to bottom, blue, white);
+            background: linear-gradient(to bottom, #9B1B30, white); /* 臙脂から白へのグラデーション */
         }
     </style>
 </head>
@@ -21,7 +21,8 @@
     <script>
         // シーン、カメラ、レンダラーのセットアップ
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000); // nearを0.1に、farを2000に設定
+        camera.position.z = 5;
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setClearColor(0x000000, 0); // 背景を透明に設定
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -48,9 +49,6 @@
         }, undefined, function (error) {
             console.error(error);
         });
-
-        // カメラの位置設定
-        camera.position.z = 5;
 
         // OrbitControlsの設定
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
