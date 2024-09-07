@@ -13,6 +13,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/draco/gltf/draco_decoder.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
     <script>
         // シーン、カメラ、レンダラーのセットアップ
         const scene = new THREE.Scene();
@@ -28,9 +30,16 @@
         directionalLight.position.set(1, 1, 1).normalize();
         scene.add(directionalLight);
 
-        // GLTFLoaderを使用して3Dモデルを読み込む
+        // DRACOLoaderの設定
+        const dracoLoader = new THREE.DRACOLoader();
+        dracoLoader.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/draco/gltf/');
+
+        // GLTFLoaderの設定
         const loader = new THREE.GLTFLoader();
-        loader.load('model.glb', function (gltf) {
+        loader.setDRACOLoader(dracoLoader);
+
+        // 3Dモデルの読み込み
+        loader.load('path/to/your/model.gltf', function (gltf) {
             scene.add(gltf.scene);
         }, undefined, function (error) {
             console.error(error);
