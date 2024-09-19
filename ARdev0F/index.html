@@ -55,9 +55,9 @@
         // OrbitControlsの設定
         const controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
-        controls.dampingFactor = 0.125; // 0.25から0.125に変更
-        controls.rotateSpeed = 0.5; // 回転速度を半分に
-        controls.zoomSpeed = 0.5; // ズーム速度を半分に
+        controls.dampingFactor = 0.05; // 0.25から0.125に変更
+        controls.rotateSpeed = 0.1; // 回転速度を半分に
+        controls.zoomSpeed = 0.1; // ズーム速度を半分に
         controls.screenSpacePanning = false;
         controls.maxPolarAngle = Math.PI / 2;
 
