@@ -22,7 +22,7 @@
     <script>
         // シーン、カメラ、レンダラーのセットアップ
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000); // nearを0.1に、farを2000に設定
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.001, 2000); // nearを0.001に、farを2000に設定
         camera.position.z = 5;
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setClearColor(0x000000, 0); // 背景を透明に設定
